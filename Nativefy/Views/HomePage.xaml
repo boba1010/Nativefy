@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Nativefy.Views.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:views="using:Nativefy.Views"
+    xmlns:local="using:Nativefy"
+    xmlns:controls="using:Nativefy.Controls"
+    xmlns:toolkitcontrols="using:CommunityToolkit.WinUI.Controls"
+    xmlns:homemodels="using:Nativefy.Models.Home"
+    x:Name="rootPage">
+
+    <Page.Resources>
+        <DataTemplate 
+            x:DataType="homemodels:HomeSection"
+            x:Key="StandardShelfTemplate">
+            <controls:MediaShelf
+                MediaSource="{x:Bind Items, Mode=OneWay}"
+                ShelfTitle="{x:Bind Title, Mode=OneWay}"
+                Tag="{x:Bind SectionUri, Mode=OneWay}"
+                CardClick="OnCardClick"
+                PlayClick="OnPlayClick"
+                IsLoading="{Binding ElementName=rootPage, Path=ViewModel.IsLoading, Mode=OneWay}" />
+        </DataTemplate>
+
+        <DataTemplate 
+            x:DataType="homemodels:HomeSection"
+            x:Key="HeroPromptShelfTemplate">
+            <controls:FeaturedShelf
+                MediaSource="{x:Bind Items, Mode=OneWay}"
+                Tag="{x:Bind SectionUri, Mode=OneWay}"
+                CardClick="OnCardClick"
+                PlayClick="OnPlayClick"
+                IsLoading="{Binding ElementName=rootPage, Path=ViewModel.IsLoading, Mode=OneWay}" />
+        </DataTemplate>
+
+        <local:ShelfTemplateSelector 
+            x:Key="ShelfSelector"
+            StandardTemplate="{StaticResource StandardShelfTemplate}"
+            HeroPromptTemplate="{StaticResource HeroPromptShelfTemplate}"/>
+    </Page.Resources>
+
+    <ScrollViewer>
+        <Grid
+            Padding="25"
+            RowSpacing="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- User greeting section -->
+            <controls:HomeHeader
+                IsLoading="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                PersonPicture="B"
+                FilterChecked="OnFilterRadioButtonClick" />
+
+            <!-- Hero Section -->
+            <Grid 
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Stretch" 
+                VerticalAlignment="Stretch"
+                RowSpacing="10"
+                ColumnSpacing="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="7*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <toolkitcontrols:Shimmer 
+                    Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                    Height="3"
+                    HorizontalAlignment="Left"
+                    CornerRadius="2" 
+                    Width="200" />
+
+                <Border 
+                    Visibility="{x:Bind ViewModel.IsNotLoading, Mode=OneWay}"
+                    BorderThickness="2" 
+                    BorderBrush="{ThemeResource SystemAccentColor}" 
+                    Width="200" 
+                    CornerRadius="2" 
+                    HorizontalAlignment="Left" />
+
+                <!-- Banner Slide show -->
+                <controls:AmbientImageViewer 
+                    IsLoading="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                    Grid.Row="1"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch" 
+                    ItemsSource="{x:Bind ViewModel.HeroAdapter.HeroSlides, Mode=OneWay}"
+                    ImagesCount="{x:Bind ViewModel.HeroAdapter.HeroSlides.Count, Mode=OneWay}"
+                    FlipViewSelectionChanged="OnBannerSelectionChanged" />
+
+                <!-- Shortcuts Side pane -->
+                <controls:HeroSidePane 
+                    Grid.Column="1" 
+                    Grid.Row="1" 
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Card0="{x:Bind ViewModel.HeroAdapter.Card0, Mode=OneWay}"
+                    Card1="{x:Bind ViewModel.HeroAdapter.Card1, Mode=OneWay}"
+                    Card2="{x:Bind ViewModel.HeroAdapter.Card2, Mode=OneWay}"
+                    IsLoading="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
+            </Grid>
+
+            <!-- Shelves Section -->
+            <Grid Grid.Row="3">
+                <ItemsControl 
+                    x:Name="DynamicShelfOrganizer" 
+                    ItemsSource="{x:Bind ViewModel.Sections, Mode=OneWay}"
+                    ItemTemplateSelector="{StaticResource ShelfSelector}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" Spacing="32"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Grid>
+
+            <!-- Browse all section -->
+            <controls:FilterCollections 
+                Grid.Row="4"
+                IsLoading="{x:Bind ViewModel.IsLoading, Mode=OneWay}" 
+                FilterClicked="OnBrowseAllFilterButtonClick" />
+                <!-- FilterCollectionsSource="{x:Bind ViewModel.HeroAdapter.BrowseGroups, Mode=OneWay}"  -->
+        </Grid>
+    </ScrollViewer>
+</Page>

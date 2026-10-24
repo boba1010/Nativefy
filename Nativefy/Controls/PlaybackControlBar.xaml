@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Nativefy.Controls.PlaybackControlBar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Nativefy.Controls"
+    xmlns:local="using:Nativefy"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:brushes="using:Nativefy.Brushes" xmlns:system="using:System"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <local:TimeSpanTooltipConverter x:Key="TimeSpanTooltipConverter"/>
+    </UserControl.Resources>
+
+    <Grid 
+        CornerRadius="8"
+        Height="60" 
+        Padding="5,0" 
+        Grid.Row="1"
+        VerticalAlignment="Bottom"
+        HorizontalAlignment="Stretch"
+        ColumnSpacing="20">
+        <Grid.Background>
+            <brushes:BlurredImageBrush ImageUrl="{x:Bind ViewModel.AlbumArtUrl, Mode=OneWay}" BlurAmount="25"/>
+        </Grid.Background>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel 
+            Grid.Column="0"
+            Orientation="Horizontal"
+            VerticalAlignment="Center"
+            Spacing="12">
+            <Border 
+                Background="Gray"
+                CornerRadius="4">
+                <Image
+                    Stretch="UniformToFill"
+                    Source="{x:Bind ViewModel.AlbumArtUrl, Mode=OneWay}" 
+                    ImageFailed="AlbumArtImage_ImageFailed"
+                    Width="50" 
+                    Height="50" />
+            </Border>
+
+            <StackPanel VerticalAlignment="Center" Spacing="2">
+                <TextBlock 
+                    Text="{x:Bind ViewModel.TrackTitle, Mode=OneWay}" 
+                    FontWeight="SemiBold" 
+                    Foreground="White" 
+                    FontSize="14"
+                    TextTrimming="CharacterEllipsis"/>
+                <TextBlock 
+                    Text="{x:Bind ViewModel.ArtistName, Mode=OneWay}" 
+                    FontSize="11" 
+                    Foreground="#B3B3B3" 
+                    TextTrimming="CharacterEllipsis"/>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel
+            Orientation="Horizontal"
+            Grid.Column="1">
+            <Button
+                ToolTipService.ToolTip="Save to Liked Songs"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                CommandParameter="Save">
+                <FontIcon Glyph="&#xEB52;" FontSize="15" />
+            </Button>
+            <Button
+                ToolTipService.ToolTip="Shuffle"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Command="{x:Bind ViewModel.ToggleShuffleCommand, Mode=OneWay}"
+                CommandParameter="Shuffle">
+                <FontIcon Glyph="&#xE8B1;" FontSize="15" />
+            </Button>
+            <Button
+                ToolTipService.ToolTip="Backward"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Command="{x:Bind ViewModel.SkipBackwardCommand, Mode=OneWay}">
+                <FontIcon Glyph="&#xE893;" FontSize="20" />
+            </Button>
+            
+            <Button 
+                ToolTipService.ToolTip="{x:Bind GetTooltip(ViewModel.IsPlaying), Mode=OneWay}" 
+                Background="Transparent" 
+                BorderBrush="Transparent" 
+                Command="{x:Bind ViewModel.PlayPauseCommand, Mode=OneWay}">
+                <FontIcon 
+                    Glyph="{x:Bind GetGlyph(ViewModel.IsPlaying), Mode=OneWay}" 
+                    FontSize="20" />
+            </Button>
+            <Button
+                ToolTipService.ToolTip="Forward"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Command="{x:Bind ViewModel.SkipForwardCommand, Mode=OneWay}">
+                <FontIcon Glyph="&#xE892;" FontSize="20" />
+            </Button>
+            <Button
+                ToolTipService.ToolTip="Repeat"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Command="{x:Bind ViewModel.ToggleRepeatCommand, Mode=OneWay}">
+                <FontIcon Glyph="&#xE8EE;" FontSize="15" />
+            </Button>
+        </StackPanel>
+
+        <Grid
+            Grid.Column="2"
+            VerticalAlignment="Center"
+            ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock 
+                Text="{x:Bind ViewModel.PositionText, Mode=OneWay}"
+                VerticalAlignment="Center"
+                Foreground="Gray"/>
+
+            <Slider 
+                Grid.Column="1"
+                Minimum="0"
+                Value="{x:Bind ViewModel.Position, Mode=TwoWay}"
+                Maximum="{x:Bind ViewModel.SliderMaximum, Mode=OneWay}"
+                HorizontalAlignment="Stretch"
+                ThumbToolTipValueConverter="{StaticResource TimeSpanTooltipConverter}"
+                ValueChanged="Slider_ValueChanged"
+                PointerCaptureLost="Slider_PointerCaptureLost"
+                PointerPressed="Slider_PointerPressed"/>
+
+            <TextBlock 
+                Grid.Column="2"
+                Text="{x:Bind ViewModel.DurationText, Mode=OneWay}"
+                VerticalAlignment="Center"
+                Foreground="Gray"/>
+        </Grid>
+        <StackPanel
+            Orientation="Horizontal"
+            VerticalAlignment="Center"
+            Grid.Column="3">
+            <Button 
+                ToolTipService.ToolTip="Volume"
+                Background="Transparent" 
+                Foreground="{ThemeResource SystemAccentColorLight1}"
+                BorderThickness="0">
+                
+                <FontIcon Glyph="&#xE767;" FontSize="17" />
+                
+                <Button.Flyout>
+                    <Flyout
+                        ShowMode="Standard">
+                        <StackPanel 
+                            Width="40" 
+                            Height="120" 
+                            Padding="0,10" 
+                            Spacing="8" 
+                            HorizontalAlignment="Center">
+                            <Slider 
+                                Orientation="Vertical"
+                                Minimum="0" 
+                                Maximum="100" 
+                                Value="50" 
+                                Height="100" 
+                                HorizontalAlignment="Center"
+                                PointerCaptureLost="VolumeSlider_PointerCaptureLost"/>
+                        </StackPanel>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+
+            <ToggleButton 
+                ToolTipService.ToolTip="Queue"
+                Background="Transparent"
+                BorderThickness="0"
+                Command="{x:Bind ViewModel.ToggleQueuePanelCommand, Mode=OneWay}">
+                <FontIcon Glyph="&#xE8fd;" FontSize="17" />
+            </ToggleButton>
+
+            <ToggleButton 
+                ToolTipService.ToolTip="Details"
+                Background="Transparent"
+                BorderThickness="0"
+                Command="{x:Bind ViewModel.ToggleDetailsPanelCommand, Mode=OneWay}">
+                <FontIcon Glyph="&#xE946;" FontSize="17" />
+            </ToggleButton>
+
+            <ToggleButton 
+                ToolTipService.ToolTip="Lyrics"
+                Background="Transparent"
+                BorderThickness="0"
+                Command="{x:Bind ViewModel.ToggleLyricsPanelCommand, Mode=OneWay}">
+                <FontIcon Glyph="&#xEC4F;" FontSize="17" />
+            </ToggleButton>
+        </StackPanel>
+    </Grid>
+</UserControl>

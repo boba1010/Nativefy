@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Nativefy.Controls.LibraryNavigationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Nativefy.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <NavigationView
+            x:Name="navView"
+            IsPaneOpen="{x:Bind IsPaneOpen, Mode=TwoWay}"
+            OpenPaneLength="{x:Bind OpenPaneLength, Mode=TwoWay}"
+            SelectedItem="{x:Bind SelectedItem, Mode=TwoWay}"
+            PaneDisplayMode="{x:Bind PaneDisplayMode, Mode=TwoWay}"
+            ItemInvoked="OnItemInvoked"
+            SelectionChanged="OnSelectionChanged"
+            IsBackButtonVisible="Collapsed"
+            IsPaneToggleButtonVisible="False"
+            CompactPaneLength="60"
+            IsSettingsVisible="False">
+
+
+            <!-- Custom header -->
+            <NavigationView.PaneHeader>
+                <ContentPresenter
+                    Content="{x:Bind Header}"/>
+            </NavigationView.PaneHeader>
+
+            <NavigationView.MenuItems>
+                <NavigationViewItem
+                    Content="Library"
+                    SelectsOnInvoked="False"
+                    IsExpanded="True">
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Library"/>
+                    </NavigationViewItem.Icon>
+
+                    <NavigationViewItem.MenuItems>
+                        <NavigationViewItem
+                            Content="Liked Songs"
+                            Tag="LikedSongs">
+                            <NavigationViewItem.Icon>
+                                <FontIcon Glyph="&#xE00B;" />
+                            </NavigationViewItem.Icon>
+                        </NavigationViewItem>
+
+                        <NavigationViewItem
+                            Content="Albums"
+                            Tag="Albums">
+                            <NavigationViewItem.Icon>
+                                <FontIcon Glyph="&#xE93C;"/>
+                            </NavigationViewItem.Icon>
+                        </NavigationViewItem>
+
+                        <NavigationViewItem
+                            Content="Artists"
+                            Tag="Artists"
+                            Icon="Contact"/>
+
+                        <NavigationViewItem
+                            Tag="Podcasts"
+                            Content="Podcasts">
+                            <NavigationViewItem.Icon>
+                                <FontIcon Glyph="&#xEC05;"/>
+                            </NavigationViewItem.Icon>
+                        </NavigationViewItem>
+                    </NavigationViewItem.MenuItems>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border
+                    x:Name="resizeGrip"
+                    Width="4"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Background="Transparent"
+                    PointerPressed="ResizeGrip_PointerPressed"
+                    PointerMoved="ResizeGrip_PointerMoved"
+                    PointerReleased="ResizeGrip_PointerReleased"
+                    PointerEntered="ResizeGrip_PointerEntered"
+                    PointerExited="ResizeGrip_PointerExited"
+                    Canvas.ZIndex="100"/>
+
+                <ContentPresenter
+                    Grid.Column="1"
+                    Content="{x:Bind InnerContent}"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"/>
+            </Grid>
+        </NavigationView>
+    </Grid>
+</UserControl>

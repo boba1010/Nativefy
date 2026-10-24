@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Nativefy.Controls.HomeHeader"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Nativefy.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Style x:Key="PillRadioButtonStyle" TargetType="RadioButton" BasedOn="{StaticResource DefaultToggleButtonStyle}">
+            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="MinWidth" Value="50"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment"    Value="Center" />
+        </Style>
+    </UserControl.Resources>
+    
+    <Grid VerticalAlignment="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid
+            HorizontalAlignment="Left"
+            ColumnSpacing="8"
+            Visibility="{x:Bind IsLoading, Mode=OneWay}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
+            <controls:Shimmer
+                HorizontalAlignment="Left"
+                Width="50"
+                Height="50"
+                CornerRadius="25" />
+            <controls:Shimmer
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                Width="180"
+                Height="30" />
+            
+            <controls:Shimmer
+                Grid.Row="1"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                Width="120"
+                Height="20" 
+                Visibility="{x:Bind IsLoading, Mode=OneWay}" />
+        </Grid>
+
+
+        <StackPanel 
+            Margin="0, 20, 0 ,0"
+            Grid.Row="2"
+            Orientation="Horizontal"
+            Spacing="10"
+            Visibility="{x:Bind IsLoading, Mode=OneWay}">
+            <controls:Shimmer 
+                Width="60"
+                Height="40"
+                Padding="0"
+                CornerRadius="20"/>
+            <controls:Shimmer  
+                Width="60"
+                Height="40"
+                Padding="0"
+                CornerRadius="20"/>
+            <controls:Shimmer 
+                Width="60"
+                Height="40"
+                CornerRadius="20" />
+        </StackPanel>
+
+        <Grid 
+            Visibility="{x:Bind IsNotLoading, Mode=OneWay}"
+            HorizontalAlignment="Left"
+            ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <PersonPicture 
+                HorizontalAlignment="Left"
+                Initials="{x:Bind PersonPicture, Mode=OneWay}"
+                Width="50"
+                Height="50" />
+            <TextBlock 
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                Text="Good evening" 
+                FontSize="30"/>
+            
+            <TextBlock 
+                Visibility="{x:Bind IsNotLoading, Mode=OneWay}"
+                Foreground="LightGray"
+                HorizontalAlignment="Left"
+                Grid.Row="1"
+                Grid.Column="1"
+                FontSize="12"
+                Text="What do you feel like?" />
+        </Grid>
+
+
+        <StackPanel 
+            Visibility="{x:Bind IsNotLoading, Mode=OneWay}"
+            Margin="0, 20, 0 ,0"
+            Grid.Row="2"
+            Orientation="Horizontal"
+            Spacing="10">
+            <RadioButton 
+                Content="All" 
+                GroupName="Filter" 
+                Style="{StaticResource PillRadioButtonStyle}" 
+                Width="40"
+                Height="40"
+                IsChecked="True" 
+                Checked="OnRadioFilterButtonChecked"/>
+            <RadioButton
+                Content="Music" 
+                GroupName="Filter" 
+                Style="{StaticResource PillRadioButtonStyle}" 
+                Width="60"
+                Height="40"
+                Checked="OnRadioFilterButtonChecked"/>
+            <RadioButton 
+                Height="40"
+                Content="Podcasts"
+                Style="{StaticResource PillRadioButtonStyle}" 
+                GroupName="Filter" 
+                Checked="OnRadioFilterButtonChecked"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

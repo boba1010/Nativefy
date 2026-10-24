@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Nativefy (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Nativefy (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
