@@ -4,6 +4,7 @@ using Microsoft.UI.Windowing;
 using Nativefy.Controls;
 using Nativefy.Messages;
 using Nativefy.Views;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -159,6 +160,30 @@ public sealed partial class MainWindow : Window
         {
             MainNavView.AddItemToGroup("PlaylistGroup", item.Tag, item.Text, imageUrl: item.ImageUrl!);
         }
+    }
+
+    private void Searchbox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    {
+        Debug.WriteLine("SEARCHING");
+
+        var searchQuery = args.QueryText;
+
+        if (string.IsNullOrEmpty(searchQuery))
+        {
+            if (ContentFrame.CurrentSourcePageType == typeof(HomePage))
+                return;
+
+            ContentFrame.Navigate(typeof(HomePage));
+            return;
+        }
+
+        if (ContentFrame.CurrentSourcePageType == typeof(SearchPage))
+        {
+            WeakReferenceMessenger.Default.Send<SearchMessage>(new(searchQuery));
+            return;
+        }
+
+        ContentFrame.Navigate(typeof(SearchPage), searchQuery);
     }
 }
 

@@ -1,3 +1,4 @@
+using Nativefy.Models.Media;
 using System.Diagnostics;
 
 namespace Nativefy.Views;
@@ -18,15 +19,15 @@ public sealed partial class PlaylistPage : Page
     public static string FormatDate(DateTimeOffset d) => d.ToString("MMM d");
     public static string FormatDuration(TimeSpan t) => t.TotalHours >= 1 ? t.ToString(@"h\:mm\:ss") : t.ToString(@"m\:ss");
 
-    public static string FormatTotalDuration(List<PlaylistTrack> tracks)
+    public static string FormatTotalDuration(List<MediaItem> items)
     {
         var hours = 0;
         var minutes = 0;
 
-        foreach (var track in tracks)
+        foreach (var item in items)
         {
-            hours += track.Track.Duration.Hours;
-            minutes += track.Track.Duration.Minutes;
+            hours += item.Duration.Hours;
+            minutes += item.Duration.Minutes;
         }
 
         if (hours >= 1)
@@ -53,7 +54,7 @@ public sealed partial class PlaylistPage : Page
 
     private void Tracks_ItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs args)
     {
-        if (args.InvokedItem is PlaylistTrack track)
+        if (args.InvokedItem is MediaItem track)
         {
             Debug.WriteLine("TRACK CLICKED!");
         }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nativefy.DbContexts;
+using Nativefy.Engine;
+using Nativefy.Engine.DI;
 using Nativefy.Services;
 using Nativefy.ViewModels.Shell;
 using System.Diagnostics;
@@ -35,11 +37,13 @@ public partial class App : Application
         services.AddDbContext<AppDbContext>(options => options.UseSqlite($"Data Source={dbPath}"));
 
         services.AddSingleton<IPlaylistsService, PlaylistsService>();
+        services.AddNativefyEngine();
 
         services.AddTransient<HomeViewModel>();
         services.AddSingleton<ShellViewModel>();
         services.AddSingleton<PlayerBarViewModel>();
         services.AddSingleton<PlaylistViewModel>();
+        services.AddSingleton<SearchViewModel>();
     }
 
 

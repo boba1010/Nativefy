@@ -18,3 +18,5 @@ public sealed class OpenNewPlaylistDialogMessage(
     public string? PrimaryButton => primaryButton;
     public string? ExitButton => exitButton;
 }
+
+public sealed record SearchMessage(string Query);

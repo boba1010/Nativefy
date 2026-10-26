@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Nativefy.Messages;
+using Nativefy.Models.Media;
 using Nativefy.Services;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;

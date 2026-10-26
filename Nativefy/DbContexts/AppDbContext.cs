@@ -1,31 +1,36 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Nativefy.Engine;
+using Nativefy.Models.Media;
 
 namespace Nativefy.DbContexts;
 
 public sealed partial class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public DbSet<Playlist> Playlists { get; set; }
-
-    public DbSet<Track> Tracks { get; set; }
-    public DbSet<PlaylistTrack> PlaylistTracks { get; set; }
+    public DbSet<AppStateEntity> AppStates { get; set; }
+    public DbSet<SearchResultEntity> SearchCache { get; set; }
+    public DbSet<OnlinePlaylist> SavedOnlinePlaylists { get; set; }
+    public DbSet<Playlist> SavedOfflinePlaylists { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Composite key setup for playlist-to-track junction table
-        modelBuilder.Entity<PlaylistTrack>()
-            .HasKey(pt => new { pt.PlaylistId, pt.VideoId });
+        base.OnModelCreating(modelBuilder);
 
-        // Explicitly set up the many-to-many relationship mappings
-        modelBuilder.Entity<PlaylistTrack>()
-            .HasOne(pt => pt.Playlist)
-            .WithMany(p => p.Tracks)
-            .HasForeignKey(pt => pt.PlaylistId);
+        modelBuilder.Entity<AppStateEntity>().OwnsMany(e => e.LikedItems, builder => builder.ToJson());
 
-        modelBuilder.Entity<PlaylistTrack>()
-            .HasOne(pt => pt.Track)
-            .WithMany(t => t.PlaylistTracks)
-            .HasForeignKey(pt => pt.VideoId);
+        modelBuilder.Entity<OnlinePlaylist>(entity => entity.ToTable("SavedOnlinePlaylists"));
+
+        modelBuilder.Entity<Playlist>(entity =>
+        {
+            entity.ToTable("SavedOfflinePlaylists");
+            entity.OwnsMany(p => p.Items, builder => builder.ToJson());
+        });
+
+        modelBuilder.Entity<SearchResultEntity>(entity =>
+        {
+            entity.ToTable("SearchCache");
+            entity.OwnsMany(s => s.Results, builder => builder.ToJson());
+        });
     }
 }
 

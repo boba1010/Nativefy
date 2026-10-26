@@ -17,9 +17,67 @@ namespace Nativefy.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.13");
 
-            modelBuilder.Entity("Nativefy.Models.Playlist", b =>
+            modelBuilder.Entity("Nativefy.Engine.AppStateEntity", b =>
                 {
                     b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppStates");
+                });
+
+            modelBuilder.Entity("Nativefy.Engine.OnlinePlaylist", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("SavedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SavedOnlinePlaylists", (string)null);
+                });
+
+            modelBuilder.Entity("Nativefy.Engine.SearchResultEntity", b =>
+                {
+                    b.Property<string>("Query")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("SearchedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Query");
+
+                    b.ToTable("SearchCache", (string)null);
+                });
+
+            modelBuilder.Entity("Nativefy.Models.Media.Playlist", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ImageUrl")
@@ -30,87 +88,139 @@ namespace Nativefy.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Playlists");
+                    b.ToTable("SavedOfflinePlaylists", (string)null);
                 });
 
-            modelBuilder.Entity("Nativefy.Models.PlaylistTrack", b =>
+            modelBuilder.Entity("Nativefy.Engine.AppStateEntity", b =>
                 {
-                    b.Property<string>("PlaylistId")
-                        .HasColumnType("TEXT");
+                    b.OwnsMany("Nativefy.Engine.PlayableItemDto", "LikedItems", b1 =>
+                        {
+                            b1.Property<string>("AppStateEntityId");
 
-                    b.Property<string>("VideoId")
-                        .HasColumnType("TEXT");
+                            b1.Property<int>("__synthesizedOrdinal")
+                                .ValueGeneratedOnAddOrUpdate();
 
-                    b.Property<int>("Position")
-                        .HasColumnType("INTEGER");
+                            b1.Property<string>("Author")
+                                .IsRequired();
 
-                    b.HasKey("PlaylistId", "VideoId");
+                            b1.Property<TimeSpan?>("Duration");
 
-                    b.HasIndex("VideoId");
+                            b1.Property<string>("Id")
+                                .IsRequired();
 
-                    b.ToTable("PlaylistTracks");
+                            b1.Property<string>("ImageUrl")
+                                .IsRequired();
+
+                            b1.Property<bool>("IsPlaylist");
+
+                            b1.Property<string>("Title")
+                                .IsRequired();
+
+                            b1.Property<string>("Url")
+                                .IsRequired();
+
+                            b1.HasKey("AppStateEntityId", "__synthesizedOrdinal");
+
+                            b1.ToTable("AppStates");
+
+                            b1
+                                .ToJson("LikedItems")
+                                .HasColumnType("TEXT");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AppStateEntityId");
+                        });
+
+                    b.Navigation("LikedItems");
                 });
 
-            modelBuilder.Entity("Nativefy.Models.Track", b =>
+            modelBuilder.Entity("Nativefy.Engine.SearchResultEntity", b =>
                 {
-                    b.Property<string>("VideoId")
-                        .HasColumnType("TEXT");
+                    b.OwnsMany("Nativefy.Engine.PlayableItemDto", "Results", b1 =>
+                        {
+                            b1.Property<string>("SearchResultEntityQuery");
 
-                    b.Property<string>("AlbumArtUrl")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                            b1.Property<int>("__synthesizedOrdinal")
+                                .ValueGeneratedOnAddOrUpdate();
 
-                    b.Property<string>("CustomArtist")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                            b1.Property<string>("Author")
+                                .IsRequired();
 
-                    b.Property<string>("CustomTitle")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                            b1.Property<TimeSpan?>("Duration");
 
-                    b.Property<DateTime>("DateAdded")
-                        .HasColumnType("TEXT");
+                            b1.Property<string>("Id");
 
-                    b.Property<TimeSpan>("Duration")
-                        .HasColumnType("TEXT");
+                            b1.Property<string>("ImageUrl")
+                                .IsRequired();
 
-                    b.Property<bool>("IsExplicit")
-                        .HasColumnType("INTEGER");
+                            b1.Property<bool>("IsPlaylist");
 
-                    b.HasKey("VideoId");
+                            b1.Property<string>("Title")
+                                .IsRequired();
 
-                    b.ToTable("Tracks");
+                            b1.Property<string>("Url")
+                                .IsRequired();
+
+                            b1.HasKey("SearchResultEntityQuery", "__synthesizedOrdinal");
+
+                            b1.ToTable("SearchCache");
+
+                            b1
+                                .ToJson("Results")
+                                .HasColumnType("TEXT");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SearchResultEntityQuery");
+                        });
+
+                    b.Navigation("Results");
                 });
 
-            modelBuilder.Entity("Nativefy.Models.PlaylistTrack", b =>
+            modelBuilder.Entity("Nativefy.Models.Media.Playlist", b =>
                 {
-                    b.HasOne("Nativefy.Models.Playlist", "Playlist")
-                        .WithMany("Tracks")
-                        .HasForeignKey("PlaylistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.OwnsMany("Nativefy.Models.Media.MediaItem", "Items", b1 =>
+                        {
+                            b1.Property<string>("PlaylistId");
 
-                    b.HasOne("Nativefy.Models.Track", "Track")
-                        .WithMany("PlaylistTracks")
-                        .HasForeignKey("VideoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                            b1.Property<int>("__synthesizedOrdinal")
+                                .ValueGeneratedOnAddOrUpdate();
 
-                    b.Navigation("Playlist");
+                            b1.Property<DateTime>("AddedDate");
 
-                    b.Navigation("Track");
-                });
+                            b1.Property<string>("Author")
+                                .IsRequired();
 
-            modelBuilder.Entity("Nativefy.Models.Playlist", b =>
-                {
-                    b.Navigation("Tracks");
-                });
+                            b1.Property<TimeSpan>("Duration");
 
-            modelBuilder.Entity("Nativefy.Models.Track", b =>
-                {
-                    b.Navigation("PlaylistTracks");
+                            b1.Property<string>("ImageUrl")
+                                .IsRequired();
+
+                            b1.Property<int>("Position");
+
+                            b1.Property<string>("Title")
+                                .IsRequired();
+
+                            b1.Property<string>("Url")
+                                .IsRequired();
+
+                            b1.HasKey("PlaylistId", "__synthesizedOrdinal");
+
+                            b1.ToTable("SavedOfflinePlaylists");
+
+                            b1
+                                .ToJson("Items")
+                                .HasColumnType("TEXT");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PlaylistId");
+                        });
+
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

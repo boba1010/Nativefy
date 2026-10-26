@@ -76,10 +76,9 @@ public sealed partial class LibraryNavigationView : UserControl
     private void InitializeDefaultStructure()
     {
         var libraryGroup = new SidebarGroup { HeaderText = "Library", GroupTag = "LibraryGroup" };
-        libraryGroup.Items.Add(new() { Tag = "LikedSongs", Text = "Liked Songs", Glyph = "\uEB51" });
-        libraryGroup.Items.Add(new() { Tag = "Albums", Text = "Albums", Glyph = "\uE93C" });
-        libraryGroup.Items.Add(new() { Tag = "Artists", Text = "Artists", Glyph = "\uE716" });
-        libraryGroup.Items.Add(new() { Tag = "Podcasts", Text = "Podcasts", Glyph = "\uE720" });
+        libraryGroup.Items.Add(new() { Tag = "LikedMedia", Text = "Liked Media", Glyph = "\uEB51" }); // Heart Icon
+        libraryGroup.Items.Add(new() { Tag = "WatchLater", Text = "Watch Later", Glyph = "\uE917" }); // Clock Icon
+        libraryGroup.Items.Add(new() { Tag = "LikedAuthors", Text = "Liked Authors", Glyph = "\uE716" }); // People Icon
         NavigationGroups.Add(libraryGroup);
 
         var playlistGroup = new SidebarGroup 
@@ -166,8 +165,8 @@ public sealed partial class LibraryNavigationView : UserControl
                 headerBtn.Height = isOpen ? 40 : 20;
             }
 
-            if (FindVisualChildByName(groupContainer, "HeaderCompactContent") is Button compactBtn)
-                compactBtn.Visibility = showCompact ? Visibility.Visible : Visibility.Collapsed;
+            if (FindVisualChildByName(groupContainer, "HeaderCompactContent") is StackPanel compactView)
+                compactView.Visibility = showCompact ? Visibility.Visible : Visibility.Collapsed;
 
             if (FindVisualChildByName(groupContainer, "GroupItemsControl") is ItemsControl childItemsControl)
             {

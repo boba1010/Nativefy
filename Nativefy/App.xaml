@@ -16,6 +16,8 @@
             <local:InverseNullToVisibilityConverter x:Key="InverseNullToVisibilityConverter" />
             <local:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
 
+            <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="Transparent" />
+            <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="Transparent" />
             <Thickness x:Key="TextControlBorderThemeThicknessFocused">1.2</Thickness>
             <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent"/>
             <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{ThemeResource SystemAccentColor}"/>

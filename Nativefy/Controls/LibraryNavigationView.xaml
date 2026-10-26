@@ -32,7 +32,6 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="models:SidebarGroup">
                             <StackPanel Spacing="2">
-
                                 <!-- DYNAMIC GROUP HEADER TRIGGER / CONVERTS TO SEPARATOR -->
                                 <Button 
                                     x:Name="GroupHeaderButton"
@@ -50,7 +49,7 @@
                                                 <SymbolIcon Symbol="Library"/>
                                                 <TextBlock Text="{x:Bind HeaderText}" VerticalAlignment="Center"/>
                                             </StackPanel>
-                                            
+
                                             <FontIcon 
                                                 x:Name="GroupChevronGlyph"
                                                 FontFamily="{ThemeResource SymbolThemeFontFamily}" 
@@ -61,7 +60,7 @@
                                         <!-- Mini Separator View -->
                                         <Border 
                                             x:Name="HeaderSeparatorLine" 
-                                            Height="1" 
+                                            Height="1"
                                             Background="{ThemeResource SystemControlBackgroundBaseLowBrush}" 
                                             HorizontalAlignment="Stretch" 
                                             VerticalAlignment="Center" 
@@ -70,12 +69,21 @@
                                     </Grid>
                                 </Button>
 
-                                <Button 
-                                    Command="{x:Bind CompactCommand}" 
-                                    Visibility="Collapsed" 
-                                    x:Name="HeaderCompactContent">
-                                    <FontIcon Glyph="{x:Bind CompactGlyph, Mode=OneWay}" FontSize="14"/>
-                                </Button>
+                                <!-- HEADER COMPACT VIEW -->
+                                <StackPanel Visibility="Collapsed" Spacing="10" x:Name="HeaderCompactContent">
+                                    <Border 
+                                        Height="1" 
+                                        Background="{ThemeResource SystemControlBackgroundBaseLowBrush}" 
+                                        HorizontalAlignment="Stretch" 
+                                        VerticalAlignment="Center" 
+                                        Margin="8,0"/>
+
+                                    <Button 
+                                        Command="{x:Bind CompactCommand}"
+                                        HorizontalAlignment="Center">
+                                        <FontIcon Glyph="{x:Bind CompactGlyph, Mode=OneWay}" FontSize="14"/>
+                                    </Button>
+                                </StackPanel>
 
                                 <!-- INNER SUBMENU ITEMS CONTAINER -->
                                 <ItemsControl x:Name="GroupItemsControl" ItemsSource="{x:Bind Items}">

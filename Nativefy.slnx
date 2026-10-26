@@ -4,12 +4,16 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
+  <Folder Name="/testing/">
+    <Project Path="Nativefy.Test/Nativefy.Test.csproj" Id="d7fcf89d-10fc-4f8a-afdc-c006d060960a" />
+  </Folder>
   <Project Path="CrashReporter/CrashReporter.csproj" Id="c6c34c41-d65f-43a7-ae34-714a32f2bb88">
     <Platform Solution="*|ARM64" Project="ARM64" />
     <Platform Solution="*|x64" Project="x64" />
     <Platform Solution="*|x86" Project="x86" />
     <Deploy />
   </Project>
+  <Project Path="MusicSearchEngine/Nativefy.Engine.csproj" Id="2ae0fd5c-d83c-4ccf-87c1-8ebde4c1941f" />
   <Project Path="Nativefy/Nativefy.csproj">
     <Platform Solution="*|ARM64" Project="ARM64" />
     <Platform Solution="*|x64" Project="x64" />

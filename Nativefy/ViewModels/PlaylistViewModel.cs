@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nativefy.Models.Media;
 using Nativefy.Services;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -15,39 +16,25 @@ public sealed partial class PlaylistViewModel(IPlaylistsService playlistsService
     {
         Playlist = await playlistsService.GetPlaylistByIdAsync(id) ?? new();
         Playlist.ImageUrl = "https://picsum.photos/200";
-        Playlist.Tracks.Add(new()
+        Playlist.Items.Add(new()
         {
-            Playlist = Playlist,
-            PlaylistId = Playlist.Id,
             Position = 1,
-            VideoId = "youtube.com",
-            Track = new()
-            {
-                VideoId = "youtube.com",
-                AlbumArtUrl = "https://picsum.photos/200",
-                CustomArtist = "ME",
-                CustomTitle = "SOOOOOOOOONG",
-                DateAdded = DateTime.Now,
-                Duration = new TimeSpan(1, 0, 0),
-                PlaylistTracks = Playlist.Tracks,
-            }
+            Url = "youtube.com",
+            ImageUrl = "https://picsum.photos/200",
+            Title = "SOOOOOOOOONG",
+            Author = "ME",
+            Duration = new TimeSpan(1, 0, 0),
+            AddedDate = DateTime.Now,
         });
-        Playlist.Tracks.Add(new()
+        Playlist.Items.Add(new()
         {
-            Playlist = Playlist,
-            PlaylistId = Playlist.Id,
             Position = 2,
-            VideoId = "youtube.com",
-            Track = new()
-            {
-                VideoId = "youtube.com",
-                AlbumArtUrl = "https://picsum.photos/200",
-                CustomArtist = "ME",
-                CustomTitle = "SOOOOOOOOONG 1",
-                DateAdded = DateTime.Now,
-                Duration = new TimeSpan(1, 30, 0),
-                PlaylistTracks = Playlist.Tracks,
-            }
+            Url = "youtube.com",
+            ImageUrl = "https://picsum.photos/200",
+            Title = "SOOOOOOOOONG 1",
+            Author = "ME",
+            Duration = new TimeSpan(1, 0, 0),
+            AddedDate = DateTime.Now,
         });
     }
 
