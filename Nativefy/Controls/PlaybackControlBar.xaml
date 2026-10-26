@@ -44,7 +44,6 @@
                 <Image
                     Stretch="UniformToFill"
                     Source="{x:Bind ViewModel.AlbumArtUrl, Mode=OneWay}" 
-                    ImageFailed="AlbumArtImage_ImageFailed"
                     Width="50" 
                     Height="50" />
             </Border>
@@ -91,12 +90,12 @@
             </Button>
             
             <Button 
-                ToolTipService.ToolTip="{x:Bind GetTooltip(ViewModel.IsPlaying), Mode=OneWay}" 
+                ToolTipService.ToolTip="{x:Bind ViewModel.PlayPauseTooltip, Mode=OneWay}" 
                 Background="Transparent" 
                 BorderBrush="Transparent" 
                 Command="{x:Bind ViewModel.PlayPauseCommand, Mode=OneWay}">
                 <FontIcon 
-                    Glyph="{x:Bind GetGlyph(ViewModel.IsPlaying), Mode=OneWay}" 
+                    Glyph="{x:Bind ViewModel.PlayPauseGlyph, Mode=OneWay}" 
                     FontSize="20" />
             </Button>
             <Button
@@ -147,6 +146,7 @@
                 VerticalAlignment="Center"
                 Foreground="Gray"/>
         </Grid>
+        
         <StackPanel
             Orientation="Horizontal"
             VerticalAlignment="Center"

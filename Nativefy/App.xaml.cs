@@ -1,4 +1,7 @@
-﻿using Nativefy.ViewModels.Shell;
+﻿using Microsoft.EntityFrameworkCore;
+using Nativefy.DbContexts;
+using Nativefy.Services;
+using Nativefy.ViewModels.Shell;
 using System.Diagnostics;
 
 namespace Nativefy;
@@ -22,12 +25,23 @@ public partial class App : Application
         UnhandledException += Application_UnhandledException;
     }
 
-    private void ConfigureServices(ServiceCollection services)
+    private static void ConfigureServices(ServiceCollection services)
     {
+        string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        string appFolder = System.IO.Path.Combine(localAppData, "Nativefy");
+        System.IO.Directory.CreateDirectory(appFolder);
+        string dbPath = System.IO.Path.Combine(appFolder, "nativefy.db");
+
+        services.AddDbContext<AppDbContext>(options => options.UseSqlite($"Data Source={dbPath}"));
+
+        services.AddSingleton<IPlaylistsService, PlaylistsService>();
+
         services.AddTransient<HomeViewModel>();
         services.AddSingleton<ShellViewModel>();
         services.AddSingleton<PlayerBarViewModel>();
+        services.AddSingleton<PlaylistViewModel>();
     }
+
 
     /// <summary>
     /// Invoked when the application is launched.
@@ -35,6 +49,12 @@ public partial class App : Application
     /// <param name="args">Details about the launch request and process.</param>
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
+        using (var scope = Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            db.Database.Migrate();
+        }
+
         _window = new MainWindow();
         _window.Activate();
     }

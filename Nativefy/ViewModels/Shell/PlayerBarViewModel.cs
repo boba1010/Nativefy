@@ -7,10 +7,12 @@ namespace Nativefy.ViewModels.Shell;
 public sealed partial class PlayerBarViewModel : BaseViewModel
 {
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PlayPauseGlyph))]
+    [NotifyPropertyChangedFor(nameof(PlayPauseTooltip))]
     public partial bool IsPlaying { get; set; }
 
     [ObservableProperty]
-    public partial string AlbumArtUrl { get; set; } = null!;
+    public partial string AlbumArtUrl { get; set; } = "https://picsum.photos/200";
 
     [ObservableProperty]
     public partial string TrackTitle { get; set; } = null!;
@@ -29,6 +31,9 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
 
     [ObservableProperty]
     public partial double SliderMaximum { get; set; }
+
+    public string PlayPauseGlyph => IsPlaying ? "\uE769" : "\uE768";
+    public string PlayPauseTooltip => IsPlaying ? "Pause" : "Play";
 
     [RelayCommand]
     public async Task ToggleShuffleAsync()

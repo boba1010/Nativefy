@@ -29,19 +29,12 @@ public sealed partial class PlaybackControlBar : UserControl
         //}
     }
 
-    private void VolumeSlider_PointerCaptureLost(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+    private void VolumeSlider_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
     {
     }
-
-    public string PlayPauseGlyph => ViewModel.IsPlaying ? "\uE769" : "\uE768";
-    public string PlayPauseTooltip => ViewModel.IsPlaying ? "Pause" : "Play";
-
-    public string GetGlyph(bool isPlaying) => isPlaying ? "\uE769" : "\uE768";
-    public string GetTooltip(bool isPlaying) => isPlaying ? "Pause" : "Play";
 
     private void AlbumArtImage_ImageFailed(object sender, ExceptionRoutedEventArgs e)
     {
-        ((Image)sender).Source = new BitmapImage(new Uri("ms-appx:///Assets/DefaultAlbumArt.png"));
+        ((Image)sender).Source = new BitmapImage(new Uri("https://picsum.photos/200"));
     }
-
 }

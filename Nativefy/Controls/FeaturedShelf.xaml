@@ -110,7 +110,7 @@
                                     HorizontalAlignment="Left"
                                     Width="100" 
                                     Height="100"
-                                    Source="{x:Bind ImageUrl, Mode=OneWay}" />
+                                    Source="{x:Bind ImageUrl}" />
 
                                 <StackPanel 
                                     Spacing="2"
@@ -118,19 +118,19 @@
                                     VerticalAlignment="Top"
                                     HorizontalAlignment="Left">
                                     <TextBlock 
-                                        Text="{x:Bind Title, Mode=OneWay}" 
+                                        Text="{x:Bind Title}" 
                                         FontWeight="SemiBold" 
                                         Foreground="White" 
                                         TextTrimming="CharacterEllipsis" 
                                         MaxLines="1"/>
                                     <TextBlock 
-                                        Text="{x:Bind Artist, Mode=OneWay}" 
+                                        Text="{x:Bind Artist}" 
                                         FontSize="12" 
                                         Foreground="Gray" 
                                         TextTrimming="CharacterEllipsis" 
                                         MaxLines="1"/>
                                     <TextBlock 
-                                        Text="{x:Bind GetSubtitleText(), Mode=OneWay}" 
+                                        Text="{x:Bind GetSubtitleText()}" 
                                         FontSize="12" 
                                         Foreground="Gray" 
                                         TextTrimming="CharacterEllipsis" 

@@ -31,23 +31,16 @@
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate x:DataType="homemodels:BrowseAllGroup">
                         <StackPanel>
-                            <controls:Shimmer
-                                HorizontalAlignment="Left"
-                                Width="80"
-                                Height="15" />
+                            <controls:Shimmer HorizontalAlignment="Left" Width="80" Height="15" />
 
                             <GridView 
                                 x:Name="FilterMatrixGrid"
-                                ItemsSource="{x:Bind Items, Mode=OneWay}"
+                                ItemsSource="{x:Bind Items}"
                                 SelectionMode="None">
 
                                 <GridView.ItemTemplate>
                                     <DataTemplate>
-                                        <controls:Shimmer 
-                                            Padding="12,8"
-                                            Width="150"
-                                            Height="30"
-                                            CornerRadius="6"/>
+                                        <controls:Shimmer Padding="12,8" Width="150" Height="30" CornerRadius="6"/>
                                     </DataTemplate>
                                 </GridView.ItemTemplate>
                             </GridView>
@@ -66,10 +59,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock 
-                FontSize="30"
-                FontWeight="Bold"
-                Text="Browse All"/>
+            <TextBlock FontSize="30" FontWeight="Bold" Text="Browse All"/>
 
             <ItemsRepeater
                 Grid.Row="1"
@@ -90,10 +80,9 @@
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="homemodels:BrowseAllItem">
                                         <Button 
-                                            Content="{x:Bind Label, Mode=OneWay}"
-                                            Tag="{x:Bind Uri, Mode=OneWay}"
-                                            CommandParameter="{x:Bind Uri, Mode=OneWay}"
-                                            Background="Transparent"
+                                            Content="{x:Bind Label}"
+                                            Tag="{x:Bind Uri}"
+                                            CommandParameter="{x:Bind Uri}"
                                             BorderThickness="0"
                                             Padding="12,8"
                                             Width="150"

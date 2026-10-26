@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.IO;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace CrashReporter.ViewModels

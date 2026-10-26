@@ -7,6 +7,7 @@ namespace Nativefy.ViewModels.Home;
 public sealed partial class HeroAdapter : BaseViewModel
 {
     public ObservableCollection<HeroCarouselItem> HeroSlides { get; } = [];
+    public ObservableCollection<BrowseAllGroup> BrowseGroups { get; } = [];
 
     [ObservableProperty]
     public partial SideCardItem Card0 { get; set; }

@@ -13,21 +13,18 @@
     <EnableMsixTooling>true</EnableMsixTooling>
 
 	<WindowsPackageType>None</WindowsPackageType>
-
 	<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 	<SelfContained>true</SelfContained>
 
-	<PublishSingleFile>true</PublishSingleFile>
-	<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
 	<PublishTrimmed>true</PublishTrimmed>
 	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-	<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+
+	<PublishAot>true</PublishAot>
+	<TrimMode>link</TrimMode>
+	<OptimizationPreference>Speed</OptimizationPreference>
 
 	<DebugType>none</DebugType>
 	<DebugSymbols>false</DebugSymbols>
-
-	<!-- <PublishAot>true</PublishAot> -->
-
 	<Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -68,11 +65,8 @@
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
 
-  <!-- Publish Properties -->
-  <PropertyGroup>
-    <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
-    <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
-    <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
-    <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+	<PublishAot>false</PublishAot>
+    <PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
 </Project>

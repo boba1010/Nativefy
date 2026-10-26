@@ -83,9 +83,7 @@ public sealed class TimeSpanTooltipConverter : IValueConverter
     {
         var ms = System.Convert.ToDouble(value);
         var ts = TimeSpan.FromMilliseconds(ms);
-        return ts.Hours > 0
-            ? ts.ToString(@"h\:mm\:ss")
-            : ts.ToString(@"m\:ss");
+        return ts.Hours > 0 ? ts.ToString(@"h\:mm\:ss") : ts.ToString(@"m\:ss");
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)

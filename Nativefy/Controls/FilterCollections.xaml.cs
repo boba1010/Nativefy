@@ -20,7 +20,7 @@ public sealed partial class FilterCollections : UserControl
         set => SetValue(FilterCollectionsSourceProperty, value);
     }
 
-    private static DependencyProperty FilterCollectionsSourceProperty =
+    private readonly static DependencyProperty FilterCollectionsSourceProperty =
         DependencyProperty.Register(
             nameof(FilterCollectionsSource),
             typeof(object),
@@ -33,7 +33,7 @@ public sealed partial class FilterCollections : UserControl
         set => SetValue(IsLoadingProperty, value);
     }
 
-    private static DependencyProperty IsLoadingProperty =
+    private readonly static DependencyProperty IsLoadingProperty =
         DependencyProperty.Register(
             nameof(IsLoading),
             typeof(bool),
@@ -46,7 +46,7 @@ public sealed partial class FilterCollections : UserControl
         set => SetValue(IsNotLoadingProperty, value);
     }
 
-    private static DependencyProperty IsNotLoadingProperty =
+    private readonly static DependencyProperty IsNotLoadingProperty =
         DependencyProperty.Register(
             nameof(IsNotLoading),
             typeof(bool),

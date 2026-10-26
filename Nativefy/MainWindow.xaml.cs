@@ -1,12 +1,20 @@
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Windowing;
+using Nativefy.Controls;
+using Nativefy.Messages;
 using Nativefy.Views;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Nativefy;
 
 public sealed partial class MainWindow : Window
 {
     public ShellViewModel ViewModel { get; set; }
+
+    public ICommand AddCommand { get; set; }
 
     private readonly IntPtr _hwnd;
     private readonly Win32.SUBCLASSPROC _subclassProc;
@@ -23,17 +31,48 @@ public sealed partial class MainWindow : Window
         _subclassProc = new Win32.SUBCLASSPROC(WindowSubclass);
         Win32.SetWindowSubclass(_hwnd, _subclassProc, 0, IntPtr.Zero);
 
+        Closed += OnWindowClosed;
+
         ViewModel = App.Services.GetRequiredService<ShellViewModel>();
 
-        AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
+        ExtendsContentIntoTitleBar = true;
+        SetTitleBar(Titlebar);
+
         AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
 
-        ExtendsContentIntoTitleBar = true;
-        SetTitleBar(titlebar);
+        ContentFrame.Navigate(typeof(HomePage));
 
-        contentFrame.Navigate(typeof(HomePage));
+        ContentFrame.Navigated += OnNavigated;
 
-        contentFrame.Navigated += OnNavigated;
+        AddCommand = new RelayCommand(AddPlaylist);
+
+        WeakReferenceMessenger.Default.Register<OpenNewPlaylistDialogMessage>(this, (r, m) => m.Reply(ShowDialogAsync(m)));
+    }
+
+    private async Task<DialogResponse> ShowDialogAsync(OpenNewPlaylistDialogMessage m)
+    {
+        var dialog = new NewPlaylistDialog
+        {
+            XamlRoot = Content.XamlRoot,
+            Title = m.Title,
+            PrimaryButtonText = m.PrimaryButton,
+            CloseButtonText = m.ExitButton ?? string.Empty,
+            DefaultButton = ContentDialogButton.Primary
+        };
+
+        var result = await dialog.ShowAsync();
+
+        return result == ContentDialogResult.Primary
+            ? new DialogResponse(DialogResult.Primary, dialog.Playlist)
+            : new DialogResponse(DialogResult.Exit);
+    }
+
+    private void OnWindowClosed(object sender, WindowEventArgs args)
+    {
+        // Break the native lifecycle connection to prevent unmanaged memory leaks
+        Win32.RemoveWindowSubclass(_hwnd, _subclassProc, 0);
+        Closed -= OnWindowClosed;
+        ContentFrame.Navigated -= OnNavigated;
     }
 
     private IntPtr WindowSubclass(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, IntPtr dwRefData)
@@ -49,7 +88,7 @@ public sealed partial class MainWindow : Window
 
             // Copy the updated structure back to the unmanaged memory pointer
             Marshal.StructureToPtr(mmi, lParam, false);
-            return IntPtr.Zero; // Message handled
+            return IntPtr.Zero;
         }
 
         return Win32.DefSubclassProc(hWnd, uMsg, wParam, lParam);
@@ -57,82 +96,101 @@ public sealed partial class MainWindow : Window
 
     private void OnNavigated(object sender, NavigationEventArgs e)
     {
-        if (e.SourcePageType == contentFrame.CurrentSourcePageType)
-            return;
-
-        titlebar.IsBackButtonEnabled = contentFrame.CanGoBack;
+        Titlebar.IsBackButtonEnabled = ContentFrame.CanGoBack;
     }
 
     private void OnHomeButtonClick(object sender, RoutedEventArgs e)
     {
-        contentFrame.Navigate(typeof(HomePage));
+        ContentFrame.Navigate(typeof(HomePage));
     }
 
-    private void OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+    private void OnItemInvoked(object sender, string tag)
     {
-        if (args.InvokedItemContainer is NavigationViewItem selectedItem)
+        if (string.IsNullOrEmpty(tag))
+            return;
+
+        switch (tag)
         {
-            if (selectedItem.DataContext != null) { }
+            case "LikedSongs":
+                 //ContentFrame.Navigate(typeof(LikedSongsPage));
+                break;
 
-            string targetTag = selectedItem.Tag?.ToString()!;
+            case "Albums":
+                ContentFrame.Navigate(typeof(AlbumsPage));
+                break;
 
-            if (string.IsNullOrEmpty(targetTag))
-                return;
+            case "LibraryGroup":
+                break;
 
-            switch (targetTag)
-            {
-                case "LikedSongs":
-                    // contentFrame.Navigate(typeof(LikedSongsPage));
-                    break;
+            case "PlaylistGroup":
+                break;
 
-                case "Albums":
-                     //contentFrame.Navigate(typeof(AlbumsPage));
-                    break;
-
-                default:
-                    // contentFrame.Navigate(typeof(), targetTag);
-                    break;
-            }
+            default:
+                if (string.IsNullOrEmpty(tag))
+                    return;
+                 ContentFrame.Navigate(typeof(PlaylistPage), tag);
+                break;
         }
     }
 
     private void OnPaneToggleRequested(TitleBar sender, object args)
     {
-        mainNavView.IsPaneOpen = !mainNavView.IsPaneOpen;
+        MainNavView.IsPaneOpen = !MainNavView.IsPaneOpen;
     }
 
     private async void ContentFrame_Loading(FrameworkElement sender, object args)
     {
-        await ViewModel.LoadPlaylistsAsync();
+        await LoadAsync();   
     }
 
-    internal static class Win32
+    public async void AddPlaylist()
     {
-        public const uint WM_GETMINMAXINFO = 0x0024;
-
-        public delegate IntPtr SUBCLASSPROC(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, IntPtr dwRefData);
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct POINT
-        {
-            public int X;
-            public int Y;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct MINMAXINFO
-        {
-            public POINT ptReserved;
-            public POINT ptMaxSize;
-            public POINT ptMaxPosition;
-            public POINT ptMinTrackSize; // This controls the minimum resize limit
-            public POINT ptMaxTrackSize;
-        }
-
-        [DllImport("Comctl32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern bool SetWindowSubclass(IntPtr hWnd, SUBCLASSPROC pfnSubclass, uint uIdSubclass, IntPtr dwRefData);
-
-        [DllImport("Comctl32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern IntPtr DefSubclassProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
+        await ViewModel.CreatePlaylistAsync();
+        await LoadAsync();
     }
+
+    private async Task LoadAsync()
+    {
+        await ViewModel.LoadPlaylistsAsync();
+
+        MainNavView.ClearGroupItems("PlaylistGroup");
+
+        foreach (var item in ViewModel.MenuItems)
+        {
+            MainNavView.AddItemToGroup("PlaylistGroup", item.Tag, item.Text, imageUrl: item.ImageUrl!);
+        }
+    }
+}
+
+internal static class Win32
+{
+    public const uint WM_GETMINMAXINFO = 0x0024;
+
+    public delegate IntPtr SUBCLASSPROC(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, IntPtr dwRefData);
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct POINT
+    {
+        public int X;
+        public int Y;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MINMAXINFO
+    {
+        public POINT ptReserved;
+        public POINT ptMaxSize;
+        public POINT ptMaxPosition;
+        public POINT ptMinTrackSize; // This controls the minimum resize limit
+        public POINT ptMaxTrackSize;
+    }
+
+    [DllImport("Comctl32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern bool SetWindowSubclass(IntPtr hWnd, SUBCLASSPROC pfnSubclass, uint uIdSubclass, IntPtr dwRefData);
+
+    [DllImport("Comctl32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern bool RemoveWindowSubclass(IntPtr hWnd, SUBCLASSPROC pfnSubclass, uint uIdSubclass);
+
+    [DllImport("Comctl32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr DefSubclassProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
 }

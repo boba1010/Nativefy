@@ -5,13 +5,8 @@ namespace Nativefy.ViewModels;
 public partial class BaseViewModel : ObservableObject
 {
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsNotLoading))]
     public partial bool IsLoading { get; set; } = true;
 
-    [ObservableProperty]
-    public partial bool IsNotLoading { get; set; } = false;
-
-    partial void OnIsLoadingChanged(bool value)
-    {
-        IsNotLoading = !IsLoading;
-    }
+    public bool IsNotLoading => !IsLoading;
 }

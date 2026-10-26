@@ -15,9 +15,9 @@
             x:DataType="homemodels:HomeSection"
             x:Key="StandardShelfTemplate">
             <controls:MediaShelf
-                MediaSource="{x:Bind Items, Mode=OneWay}"
-                ShelfTitle="{x:Bind Title, Mode=OneWay}"
-                Tag="{x:Bind SectionUri, Mode=OneWay}"
+                MediaSource="{x:Bind Items}"
+                ShelfTitle="{x:Bind Title}"
+                Tag="{x:Bind SectionUri}"
                 CardClick="OnCardClick"
                 PlayClick="OnPlayClick"
                 IsLoading="{Binding ElementName=rootPage, Path=ViewModel.IsLoading, Mode=OneWay}" />
@@ -27,8 +27,8 @@
             x:DataType="homemodels:HomeSection"
             x:Key="HeroPromptShelfTemplate">
             <controls:FeaturedShelf
-                MediaSource="{x:Bind Items, Mode=OneWay}"
-                Tag="{x:Bind SectionUri, Mode=OneWay}"
+                MediaSource="{x:Bind Items}"
+                Tag="{x:Bind SectionUri}"
                 CardClick="OnCardClick"
                 PlayClick="OnPlayClick"
                 IsLoading="{Binding ElementName=rootPage, Path=ViewModel.IsLoading, Mode=OneWay}" />
@@ -131,8 +131,8 @@
             <controls:FilterCollections 
                 Grid.Row="4"
                 IsLoading="{x:Bind ViewModel.IsLoading, Mode=OneWay}" 
+                FilterCollectionsSource="{x:Bind ViewModel.HeroAdapter.BrowseGroups, Mode=OneWay}"
                 FilterClicked="OnBrowseAllFilterButtonClick" />
-                <!-- FilterCollectionsSource="{x:Bind ViewModel.HeroAdapter.BrowseGroups, Mode=OneWay}"  -->
         </Grid>
     </ScrollViewer>
 </Page>

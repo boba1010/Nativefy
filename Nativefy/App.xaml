@@ -20,19 +20,52 @@
             <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent"/>
             <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{ThemeResource SystemAccentColor}"/>
 
-            <LinearGradientBrush x:Key="ShimmerBrush" StartPoint="0,0" EndPoint="1,0">
-                <GradientStop Color="#2E2E2E" Offset="0.0" />
-                <GradientStop Color="#3A3A3A" Offset="0.5" />
-                <GradientStop Color="#2E2E2E" Offset="1.0" />
-            </LinearGradientBrush>
+            <Style x:Key="HeartHoverButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="Padding" Value="0"/>
 
-            <Storyboard x:Key="ShimmerStoryboard" RepeatBehavior="Forever">
-                <DoubleAnimation 
-                    Storyboard.TargetName="ShimmerTransform" 
-                    Storyboard.TargetProperty="X"
-                    From="-150" To="150" 
-                    Duration="0:0:1.5"/>
-            </Storyboard>
+                <!-- Define the Template -->
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <!-- Normal State -->
+                                        <VisualState x:Name="Normal" />
+
+                                        <!-- Hover State (Fills the heart) -->
+                                        <VisualState x:Name="PointerOver">
+                                            <VisualState.Setters>
+                                                <Setter Target="HeartIcon.Glyph" Value="&#xEB52;" />
+                                                <Setter Target="HeartIcon.Foreground" Value="{ThemeResource SystemAccentColor}" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+
+                                        <!-- Clicked State (Keeps it filled) -->
+                                        <VisualState x:Name="Pressed">
+                                            <VisualState.Setters>
+                                                <Setter Target="HeartIcon.Glyph" Value="&#xEB52;" />
+                                                <Setter Target="HeartIcon.Foreground" Value="{ThemeResource SystemAccentColorDark1}" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+
+                                        <VisualState x:Name="Disabled" />
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+
+                                <!-- The Icon -->
+                                <FontIcon 
+                                    x:Name="HeartIcon"
+                                    Glyph="&#xEB51;"
+                                    FontSize="20"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
             <Style x:Key="TitleBarBackButtonStyle" TargetType="Button">
                 <Setter Property="Background" Value="{ThemeResource TitleBarBackButtonBackground}" />
@@ -116,21 +149,6 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
-            <ResourceDictionary.ThemeDictionaries>
-                <!-- Dark Mode Values -->
-                <ResourceDictionary x:Key="Dark">
-                    <SolidColorBrush x:Key="SpotifyCardBackgroundBrush" Color="#121212" Opacity="0.75"/>
-                    <SolidColorBrush x:Key="LibraryHeaderForegroundBrush" Color="#B3B3B3"/>
-                </ResourceDictionary>
-
-                <!-- Light Mode Values -->
-                <ResourceDictionary x:Key="Light">
-                    <SolidColorBrush x:Key="SpotifyCardBackgroundBrush" Color="#FFFFFF" Opacity="0.70"/>
-                    <SolidColorBrush x:Key="LibraryHeaderForegroundBrush" Color="#5C5C5C"/>
-                </ResourceDictionary>
-            </ResourceDictionary.ThemeDictionaries>
-
         </ResourceDictionary>
     </Application.Resources>
 </Application>

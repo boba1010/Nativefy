@@ -28,7 +28,9 @@
     <None Remove="Controls\HeroSidePane.xaml" />
     <None Remove="Controls\HomeHeader.xaml" />
     <None Remove="Controls\MediaShelf.xaml" />
+    <None Remove="Controls\NewPlaylistDialog.xaml" />
     <None Remove="Controls\PlaybackControlBar.xaml" />
+    <None Remove="Views\AlbumsPage.xaml" />
     <None Remove="Views\HomePage.xaml" />
     <None Remove="Views\Local\AlbumPage.xaml" />
     <None Remove="Views\Local\ArtistPage.xaml" />
@@ -71,17 +73,30 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="1.5.2" />
     <PackageReference Include="CommunityToolkit.Labs.WinUI.Controls.Shimmer" Version="0.1.251217-build.2433" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.3.260402-preview2" />
-    <PackageReference Include="FontAwesome6.Svg.WinUI" Version="2.5.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.13">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.13" />
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.4.0" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2270" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.3.1" />
-    <PackageReference Include="Netcorext.Extensions.DependencyInjection.Abstractions" Version="1.0.0" />
-    <PackageReference Include="YoutubeExplode" Version="6.6.0" />
+    <PackageReference Include="YoutubeExplode" Version="6.6.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\AlbumsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\NewPlaylistDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\PlaybackControlBar.xaml">
@@ -137,10 +152,6 @@
     <Page Update="Views\HomePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Contracts\Requests\" />
-    <Folder Include="Contracts\Responses\" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\Local\LibraryPage.xaml">

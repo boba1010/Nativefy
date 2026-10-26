@@ -8,7 +8,6 @@ public sealed partial class HomePage : Page
         InitializeComponent();
 
         ViewModel = App.Services.GetRequiredService<HomeViewModel>();
-        ViewModel.IsLoading = false;
     }
 
     protected override async void OnNavigatedTo(NavigationEventArgs e)
