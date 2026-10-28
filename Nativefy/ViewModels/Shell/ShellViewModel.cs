@@ -36,7 +36,7 @@ public sealed partial class ShellViewModel(IPlaylistsService playlistsService) :
             response.GetData<Playlist>() is not { Name.Length: > 0 } created)
             return;
 
-        await playlistsService.CreatePlaylistAsync(created);
+        await playlistsService.CreatePlaylistAsync((OfflinePlaylist)created);
         await LoadPlaylistsAsync();
     }
 }

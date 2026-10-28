@@ -44,8 +44,17 @@ public sealed partial class SearchPage : Page
         Debug.WriteLine("RESULT INVOKED");
     }
 
-    private void Like_Click(object sender, RoutedEventArgs e)
+    private async void Like_Click(object sender, RoutedEventArgs e)
     {
+        Debug.WriteLine("LIKE CLICK");
 
+        var btn = (Button)sender;
+
+        await ViewModel.LikeMediaAsync((string)btn.Tag);
+    }
+
+    private void Filter_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+    {
+        Debug.WriteLine("FILTER CHANGED");
     }
 }

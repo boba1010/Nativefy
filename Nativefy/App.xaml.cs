@@ -2,6 +2,7 @@
 using Nativefy.DbContexts;
 using Nativefy.Engine;
 using Nativefy.Engine.DI;
+using Nativefy.Models.Media;
 using Nativefy.Services;
 using Nativefy.ViewModels.Shell;
 using System.Diagnostics;
@@ -37,13 +38,15 @@ public partial class App : Application
         services.AddDbContext<AppDbContext>(options => options.UseSqlite($"Data Source={dbPath}"));
 
         services.AddSingleton<IPlaylistsService, PlaylistsService>();
+        services.AddSingleton<ILikedMediaService, LikedMediaService>();
         services.AddNativefyEngine();
 
         services.AddTransient<HomeViewModel>();
         services.AddSingleton<ShellViewModel>();
         services.AddSingleton<PlayerBarViewModel>();
-        services.AddSingleton<PlaylistViewModel>();
-        services.AddSingleton<SearchViewModel>();
+        services.AddTransient<PlaylistViewModel>();
+        services.AddTransient<SearchViewModel>();
+        services.AddTransient<LikedMediaViewModel>();
     }
 
 
@@ -57,6 +60,21 @@ public partial class App : Application
         {
             var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             db.Database.Migrate();
+
+            if (!db.LikedMedia.Any(m => m.Id == AppDbContext.SingletonLikedMediaId))
+            {
+                db.LikedMedia.Add(new LikedMediaPlaylist
+                {
+                    Id = AppDbContext.SingletonLikedMediaId,
+                    Name = "Liked Media",
+                    ImageUrl = "default_liked_cover.png",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
+                    Items = []
+                });
+
+                db.SaveChanges();
+            }
         }
 
         _window = new MainWindow();

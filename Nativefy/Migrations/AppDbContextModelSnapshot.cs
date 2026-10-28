@@ -17,19 +17,6 @@ namespace Nativefy.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.13");
 
-            modelBuilder.Entity("Nativefy.Engine.AppStateEntity", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AppStates");
-                });
-
             modelBuilder.Entity("Nativefy.Engine.OnlinePlaylist", b =>
                 {
                     b.Property<string>("Id")
@@ -72,7 +59,34 @@ namespace Nativefy.Migrations
                     b.ToTable("SearchCache", (string)null);
                 });
 
-            modelBuilder.Entity("Nativefy.Models.Media.Playlist", b =>
+            modelBuilder.Entity("Nativefy.Models.Media.LikedMediaPlaylist", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LikedMedia", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_LikedMedia_SingleRow", "[Id] = 'LIKED_MEDIA_SINGLETON'");
+                        });
+                });
+
+            modelBuilder.Entity("Nativefy.Models.Media.OfflinePlaylist", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -94,49 +108,6 @@ namespace Nativefy.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SavedOfflinePlaylists", (string)null);
-                });
-
-            modelBuilder.Entity("Nativefy.Engine.AppStateEntity", b =>
-                {
-                    b.OwnsMany("Nativefy.Engine.PlayableItemDto", "LikedItems", b1 =>
-                        {
-                            b1.Property<string>("AppStateEntityId");
-
-                            b1.Property<int>("__synthesizedOrdinal")
-                                .ValueGeneratedOnAddOrUpdate();
-
-                            b1.Property<string>("Author")
-                                .IsRequired();
-
-                            b1.Property<TimeSpan?>("Duration");
-
-                            b1.Property<string>("Id")
-                                .IsRequired();
-
-                            b1.Property<string>("ImageUrl")
-                                .IsRequired();
-
-                            b1.Property<bool>("IsPlaylist");
-
-                            b1.Property<string>("Title")
-                                .IsRequired();
-
-                            b1.Property<string>("Url")
-                                .IsRequired();
-
-                            b1.HasKey("AppStateEntityId", "__synthesizedOrdinal");
-
-                            b1.ToTable("AppStates");
-
-                            b1
-                                .ToJson("LikedItems")
-                                .HasColumnType("TEXT");
-
-                            b1.WithOwner()
-                                .HasForeignKey("AppStateEntityId");
-                        });
-
-                    b.Navigation("LikedItems");
                 });
 
             modelBuilder.Entity("Nativefy.Engine.SearchResultEntity", b =>
@@ -181,11 +152,11 @@ namespace Nativefy.Migrations
                     b.Navigation("Results");
                 });
 
-            modelBuilder.Entity("Nativefy.Models.Media.Playlist", b =>
+            modelBuilder.Entity("Nativefy.Models.Media.LikedMediaPlaylist", b =>
                 {
                     b.OwnsMany("Nativefy.Models.Media.MediaItem", "Items", b1 =>
                         {
-                            b1.Property<string>("PlaylistId");
+                            b1.Property<string>("LikedMediaPlaylistId");
 
                             b1.Property<int>("__synthesizedOrdinal")
                                 .ValueGeneratedOnAddOrUpdate();
@@ -208,7 +179,49 @@ namespace Nativefy.Migrations
                             b1.Property<string>("Url")
                                 .IsRequired();
 
-                            b1.HasKey("PlaylistId", "__synthesizedOrdinal");
+                            b1.HasKey("LikedMediaPlaylistId", "__synthesizedOrdinal");
+
+                            b1.ToTable("LikedMedia");
+
+                            b1
+                                .ToJson("Items")
+                                .HasColumnType("TEXT");
+
+                            b1.WithOwner()
+                                .HasForeignKey("LikedMediaPlaylistId");
+                        });
+
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Nativefy.Models.Media.OfflinePlaylist", b =>
+                {
+                    b.OwnsMany("Nativefy.Models.Media.MediaItem", "Items", b1 =>
+                        {
+                            b1.Property<string>("OfflinePlaylistId");
+
+                            b1.Property<int>("__synthesizedOrdinal")
+                                .ValueGeneratedOnAddOrUpdate();
+
+                            b1.Property<DateTime>("AddedDate");
+
+                            b1.Property<string>("Author")
+                                .IsRequired();
+
+                            b1.Property<TimeSpan>("Duration");
+
+                            b1.Property<string>("ImageUrl")
+                                .IsRequired();
+
+                            b1.Property<int>("Position");
+
+                            b1.Property<string>("Title")
+                                .IsRequired();
+
+                            b1.Property<string>("Url")
+                                .IsRequired();
+
+                            b1.HasKey("OfflinePlaylistId", "__synthesizedOrdinal");
 
                             b1.ToTable("SavedOfflinePlaylists");
 
@@ -217,7 +230,7 @@ namespace Nativefy.Migrations
                                 .HasColumnType("TEXT");
 
                             b1.WithOwner()
-                                .HasForeignKey("PlaylistId");
+                                .HasForeignKey("OfflinePlaylistId");
                         });
 
                     b.Navigation("Items");

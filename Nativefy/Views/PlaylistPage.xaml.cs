@@ -44,7 +44,7 @@ public sealed partial class PlaylistPage : Page
         base.OnNavigatedTo(e);
     }
 
-    private async void LikeTrack_Click(object sender, RoutedEventArgs e)
+    private async void LikeItem_Click(object sender, RoutedEventArgs e)
     {
         Debug.WriteLine("LIKE CLICKED!");
 
@@ -52,7 +52,7 @@ public sealed partial class PlaylistPage : Page
         await ViewModel.LikeTrackAsync((string)btn.Tag);
     }
 
-    private void Tracks_ItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs args)
+    private void Items_ItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs args)
     {
         if (args.InvokedItem is MediaItem track)
         {

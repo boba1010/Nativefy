@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Nativefy.ViewModels;
 
-public sealed partial class PlaylistViewModel(IPlaylistsService playlistsService) : BaseViewModel
+public sealed partial class PlaylistViewModel(IPlaylistsService playlistsService, ILikedMediaService likedMedia) : BaseViewModel
 {
     [ObservableProperty]
     public partial Playlist Playlist { get; set; }
@@ -38,9 +38,10 @@ public sealed partial class PlaylistViewModel(IPlaylistsService playlistsService
         });
     }
 
-    public async Task LikeTrackAsync(string id)
+    public async Task LikeTrackAsync(string url)
     {
-
+        var item = Playlist.Items.FirstOrDefault(i => i.Url == url) ?? throw new InvalidDataException();
+        await likedMedia.AddToLikesAsync(item);
     }
 
     [RelayCommand]

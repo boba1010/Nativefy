@@ -2,7 +2,7 @@
 
 namespace Nativefy.Models.Media;
 
-public sealed class Playlist
+public class Playlist
 {
     [Key]
     public string Id { get; set; } = Guid.NewGuid().ToString();

@@ -7,24 +7,35 @@ namespace Nativefy.DbContexts;
 
 public sealed partial class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public DbSet<AppStateEntity> AppStates { get; set; }
+    public const string SingletonLikedMediaId = "LIKED_MEDIA_SINGLETON";
+
+    public DbSet<LikedMediaPlaylist> LikedMedia { get; set; }
+    public DbSet<OfflinePlaylist> SavedOfflinePlaylists { get; set; }
+
     public DbSet<SearchResultEntity> SearchCache { get; set; }
     public DbSet<OnlinePlaylist> SavedOnlinePlaylists { get; set; }
-    public DbSet<Playlist> SavedOfflinePlaylists { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<AppStateEntity>().OwnsMany(e => e.LikedItems, builder => builder.ToJson());
+        modelBuilder.Entity<LikedMediaPlaylist>(entity =>
+        {
+            entity.ToTable("LikedMedia", t => t.HasCheckConstraint(
+                "CK_LikedMedia_SingleRow",
+                $"[Id] = '{SingletonLikedMediaId}'"
+            ));
+            entity.Property(p => p.Id).ValueGeneratedNever();
+            entity.OwnsMany(p => p.Items, builder => builder.ToJson());
+        });
 
-        modelBuilder.Entity<OnlinePlaylist>(entity => entity.ToTable("SavedOnlinePlaylists"));
-
-        modelBuilder.Entity<Playlist>(entity =>
+        modelBuilder.Entity<OfflinePlaylist>(entity =>
         {
             entity.ToTable("SavedOfflinePlaylists");
             entity.OwnsMany(p => p.Items, builder => builder.ToJson());
         });
+
+        modelBuilder.Entity<OnlinePlaylist>(entity => entity.ToTable("SavedOnlinePlaylists"));
 
         modelBuilder.Entity<SearchResultEntity>(entity =>
         {

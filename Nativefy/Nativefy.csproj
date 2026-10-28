@@ -30,24 +30,10 @@
     <None Remove="Controls\MediaShelf.xaml" />
     <None Remove="Controls\NewPlaylistDialog.xaml" />
     <None Remove="Controls\PlaybackControlBar.xaml" />
-    <None Remove="Views\AlbumsPage.xaml" />
     <None Remove="Views\HomePage.xaml" />
-    <None Remove="Views\Local\AlbumPage.xaml" />
-    <None Remove="Views\Local\ArtistPage.xaml" />
-    <None Remove="Views\Local\LibraryPage.xaml" />
-    <None Remove="Views\Local\LocalMovieDetailPage.xaml" />
-    <None Remove="Views\Local\LocalMoviesPage.xaml" />
-    <None Remove="Views\Local\LocalMusicPage.xaml" />
-    <None Remove="Views\Local\LocalMusicVideosPage.xaml" />
-    <None Remove="Views\Local\LocalOtherPage.xaml" />
-    <None Remove="Views\Local\LocalPersonDetailPage.xaml" />
-    <None Remove="Views\Local\LocalShowDetailPage.xaml" />
-    <None Remove="Views\Local\LocalShowsPage.xaml" />
+    <None Remove="Views\LikedMediaPage.xaml" />
     <None Remove="Views\PlaylistPage.xaml" />
-    <None Remove="Views\ProfilePage.xaml" />
     <None Remove="Views\SearchPage.xaml" />
-    <None Remove="Views\ShowPage.xaml" />
-    <None Remove="Views\VideoPlayerPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -91,7 +77,7 @@
     <ProjectReference Include="..\MusicSearchEngine\Nativefy.Engine.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Views\AlbumsPage.xaml">
+    <Page Update="Views\LikedMediaPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -156,87 +142,12 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Views\Local\LibraryPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\Local\LocalMovieDetailPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\Local\LocalShowDetailPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\Local\LocalPersonDetailPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\Local\LocalOtherPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\Local\LocalMusicVideosPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\Local\LocalMusicPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\Local\LocalMoviesPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\Local\LocalShowsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\VideoPlayerPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
     <Page Update="Views\SearchPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Views\ProfilePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\ShowPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
     <Page Update="Views\PlaylistPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\Local\AlbumPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\Local\ArtistPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\Local\LocalLibraryPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

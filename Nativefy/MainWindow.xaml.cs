@@ -112,19 +112,23 @@ public sealed partial class MainWindow : Window
 
         switch (tag)
         {
-            case "LikedSongs":
-                 //ContentFrame.Navigate(typeof(LikedSongsPage));
+            case "LikedMedia":
+                 ContentFrame.Navigate(typeof(LikedMediaPage));
                 break;
 
-            case "Albums":
-                ContentFrame.Navigate(typeof(AlbumsPage));
+            case "LikedAuthors":
                 break;
 
+            case "WatchLater":
+                break;
+
+            /* SHOULD NOT BE REMOVED OR WILL CAUSE UNDEFINED BEHAVIOR */
             case "LibraryGroup":
                 break;
 
             case "PlaylistGroup":
                 break;
+            /* ------------------------------------------------------ */
 
             default:
                 if (string.IsNullOrEmpty(tag))

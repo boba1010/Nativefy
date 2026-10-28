@@ -121,7 +121,6 @@
                 <ColumnDefinition Width="{StaticResource DateColumnWidth}"/>
                 <ColumnDefinition Width="{StaticResource DurationColumnWidth}"/>
                 <ColumnDefinition Width="{StaticResource ActionColumnWidth}"/>
-                <ColumnDefinition Width="{StaticResource ActionColumnWidth}"/>
             </Grid.ColumnDefinitions>
 
             <TextBlock HorizontalAlignment="Center" Grid.Column="0" Text="#" Style="{StaticResource ColumnHeaderText}"/>
@@ -142,7 +141,7 @@
             Padding="0,6,0,6" 
             SelectionMode="None"
             IsItemInvokedEnabled="True"
-            ItemInvoked="Tracks_ItemInvoked"
+            ItemInvoked="Items_ItemInvoked"
             ItemsSource="{x:Bind ViewModel.Playlist.Items}">
 
             <ItemsView.Layout>
@@ -163,7 +162,6 @@
                                 <ColumnDefinition Width="{StaticResource DateColumnWidth}"/>
                                 <ColumnDefinition Width="{StaticResource DurationColumnWidth}"/>
                                 <ColumnDefinition Width="{StaticResource ActionColumnWidth}"/>
-                                <ColumnDefinition Width="{StaticResource ActionColumnWidth}"/>
                             </Grid.ColumnDefinitions>
 
                             <!-- # -->
@@ -181,7 +179,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Style="{StaticResource HeartHoverButtonStyle}"
-                                Click="LikeTrack_Click"
+                                Click="LikeItem_Click"
                                 Tag="{x:Bind Url}"/>
 
                             <!-- Cover + title/artist -->
@@ -223,16 +221,9 @@
                                 HorizontalAlignment="Center"
                                 Style="{StaticResource SecondaryText}"/>
 
-                            <CheckBox 
-                                Grid.Column="5"
-                                MinWidth="0" Width="32"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                IsEnabled="False"/>
-
                             <!-- Chevron -->
                             <FontIcon 
-                                Grid.Column="6"
+                                Grid.Column="5"
                                 Glyph="&#xE76C;"
                                 FontSize="12"
                                 HorizontalAlignment="Center"
@@ -270,7 +261,7 @@
 
                     <TextBlock FontSize="14" Foreground="LightGray">
                         <Run Text="{x:Bind ViewModel.Playlist.Items.Count}" />
-                        <Run Text="songs" />
+                        <Run Text="items" />
                         <Run Text="•" />
                         <Run Text="{x:Bind local:PlaylistPage.FormatTotalDuration(ViewModel.Playlist.Items)}" />
                     </TextBlock>

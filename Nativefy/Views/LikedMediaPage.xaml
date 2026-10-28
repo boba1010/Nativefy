@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Nativefy.Views.LikedMediaPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Nativefy.Views" xmlns:models="using:Nativefy.Models.Media">
+
+    <Page.Resources>
+        <GridLength x:Key="NumberColumnWidth">30</GridLength>
+        <GridLength x:Key="HeartColumnWidth">50</GridLength>
+        <GridLength x:Key="DateColumnWidth">110</GridLength>
+        <GridLength x:Key="DurationColumnWidth">56</GridLength>
+        <GridLength x:Key="ActionColumnWidth">32</GridLength>
+
+        <Style x:Key="ColumnHeaderText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="SecondaryText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="TrackRowStyle" TargetType="ItemContainer">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ItemContainer">
+                        <Grid 
+                            x:Name="PART_ContainerRoot"
+                            Background="Transparent"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CombinedStates">
+                                    <VisualState x:Name="UnselectedNormal"/>
+                                    <VisualState x:Name="UnselectedPointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Target="PART_ContainerRoot.Background" Value="#14FFFFFF"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="UnselectedPressed">
+                                        <VisualState.Setters>
+                                            <Setter Target="PART_ContainerRoot.Background" Value="#0DFFFFFF"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="SelectedNormal">
+                                        <VisualState.Setters>
+                                            <Setter Target="PART_ContainerRoot.Background" Value="#2AFFFFFF"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="SelectedPointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Target="PART_ContainerRoot.Background" Value="#33FFFFFF"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="SelectedPressed">
+                                        <VisualState.Setters>
+                                            <Setter Target="PART_ContainerRoot.Background" Value="#2AFFFFFF"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+
+                                <VisualStateGroup x:Name="MultiSelectStates">
+                                    <VisualState x:Name="Single"/>
+                                    <VisualState x:Name="Multiple"/>
+                                </VisualStateGroup>
+
+                                <VisualStateGroup x:Name="DisabledStates">
+                                    <VisualState x:Name="Enabled"/>
+                                    <VisualState x:Name="Disabled"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid ColumnSpacing="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid
+            Grid.Row="0"
+            Padding="12,8"
+            ColumnSpacing="8">
+
+        </Grid>
+
+        <Grid 
+            Grid.Column="1"
+            Grid.Row="1"
+            Margin="16, 0"
+            Padding="12,8"
+            ColumnSpacing="8"
+            BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+            BorderThickness="0,0,0,1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource NumberColumnWidth}"/>
+                <ColumnDefinition Width="{StaticResource HeartColumnWidth}"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="{StaticResource DateColumnWidth}"/>
+                <ColumnDefinition Width="{StaticResource DurationColumnWidth}"/>
+                <ColumnDefinition Width="{StaticResource ActionColumnWidth}"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock HorizontalAlignment="Center" Grid.Column="0" Text="#" Style="{StaticResource ColumnHeaderText}"/>
+            <TextBlock Grid.Column="2" Text="Title" Style="{StaticResource ColumnHeaderText}"/>
+            <TextBlock Grid.Column="3" Text="Date added" Style="{StaticResource ColumnHeaderText}"/>
+            <FontIcon 
+                Grid.Column="4"
+                Glyph="&#xE121;"
+                FontSize="14"
+                HorizontalAlignment="Center"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+        </Grid>
+
+        <ItemsView
+            Grid.Column="1"
+            Grid.Row="2"
+            Margin="16, 0"
+            Padding="0,6,0,6" 
+            SelectionMode="None"
+            IsItemInvokedEnabled="True"
+            ItemInvoked="Items_ItemInvoked"
+            ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}">
+
+            <ItemsView.Layout>
+                <StackLayout Spacing="5"/>
+            </ItemsView.Layout>
+
+            <ItemsView.ItemTemplate>
+                <DataTemplate x:DataType="models:MediaItem">
+                    <ItemContainer Style="{StaticResource TrackRowStyle}">
+                        <Grid 
+                            Padding="12,6" ColumnSpacing="8" 
+                            Background="{x:Bind local:PlaylistPage.StripeBrush(Position)}"
+                            AutomationProperties.Name="{x:Bind Title}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource NumberColumnWidth}"/>
+                                <ColumnDefinition Width="{StaticResource HeartColumnWidth}"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="{StaticResource DateColumnWidth}"/>
+                                <ColumnDefinition Width="{StaticResource DurationColumnWidth}"/>
+                                <ColumnDefinition Width="{StaticResource ActionColumnWidth}"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- # -->
+                            <TextBlock 
+                                HorizontalAlignment="Center" 
+                                Grid.Column="0" 
+                                Text="{x:Bind Position}" 
+                                Style="{StaticResource SecondaryText}"/>
+
+                            <!-- Unlike -->
+                            <Button 
+                                Grid.Column="1"
+                                Background="Transparent" 
+                                BorderBrush="Transparent"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Style="{StaticResource HeartHoverButtonStyle}"
+                                Click="UnlikeItem_Click"
+                                Tag="{x:Bind Url}"/>
+
+                            <!-- Cover + title/artist -->
+                            <Grid Grid.Column="2" ColumnSpacing="12" VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border 
+                                    Grid.Column="0"
+                                    Width="40" Height="40"
+                                    CornerRadius="4"
+                                    Background="{ThemeResource ControlFillColorSecondaryBrush}">
+                                    <Image Source="{x:Bind ImageUrl}" Stretch="UniformToFill"/>
+                                </Border>
+
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                    <TextBlock 
+                                        Text="{x:Bind Title}" 
+                                        FontSize="14" FontWeight="SemiBold" 
+                                        TextTrimming="CharacterEllipsis"/>
+
+                                    <TextBlock 
+                                        Text="{x:Bind Author}"
+                                        FontSize="12"
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Date added -->
+                            <TextBlock Grid.Column="3" Text="{x:Bind local:PlaylistPage.FormatDate(AddedDate)}" Style="{StaticResource SecondaryText}"/>
+
+                            <!-- Duration -->
+                            <TextBlock 
+                                Grid.Column="4"
+                                Text="{x:Bind local:PlaylistPage.FormatDuration(Duration)}"
+                                HorizontalAlignment="Center"
+                                Style="{StaticResource SecondaryText}"/>
+
+                            <!-- Chevron -->
+                            <FontIcon 
+                                Grid.Column="5"
+                                Glyph="&#xE76C;"
+                                FontSize="12"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        </Grid>
+                    </ItemContainer>
+                </DataTemplate>
+            </ItemsView.ItemTemplate>
+        </ItemsView>
+
+        <ScrollViewer Grid.RowSpan="3" Grid.Column="0" >
+            <Grid 
+                RowSpacing="20" Padding="12"
+                Background="{ThemeResource LayerFillColorAlt}"
+                x:Name="PlaylistSideView">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Border
+                    Width="280" Height="280" 
+                    CornerRadius="12" 
+                    Background="{ThemeResource CardBackgroundFillColorDefault}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top">
+                    <Image Source="{x:Bind ViewModel.Playlist.ImageUrl}" Stretch="UniformToFill" />
+                </Border>
+
+                <StackPanel Grid.Row="1" Spacing="10">
+                    <TextBlock Text="Liked Media" FontSize="32"/>
+
+                    <TextBlock FontSize="14" Foreground="LightGray">
+                        <Run Text="{x:Bind ViewModel.ItemsCount, Mode=OneWay}" />
+                        <Run Text="items" />
+                        <Run Text="•" />
+                        <Run Text="{x:Bind ViewModel.FormattedDuration, Mode=OneWay}" />
+                    </TextBlock>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Spacing="10">
+                        <Button 
+                            HorizontalAlignment="Stretch" Width="220"
+                            Background="{ThemeResource SystemAccentColor}"
+                            CommandParameter="{x:Bind ViewModel.Playlist.Id}"
+                            Command="{x:Bind ViewModel.PlayPlaylistCommand}">
+                            <Button.Resources>
+                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorDark1}"/>
+                                <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{ThemeResource SystemAccentColorDark2}"/>
+                            </Button.Resources>
+
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <SymbolIcon Symbol="Play" />
+                                <TextBlock Text="Play" />
+                            </StackPanel>
+                        </Button>
+
+                        <Button Background="Transparent" BorderBrush="Transparent" Click="SharePlaylist_Click">
+                            <SymbolIcon Symbol="Share" Foreground="{ThemeResource TextFillColorSecondary}"/>
+                        </Button>                           
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>

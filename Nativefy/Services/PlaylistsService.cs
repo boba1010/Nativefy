@@ -9,7 +9,7 @@ internal sealed class PlaylistsService(AppDbContext dbContext) : IPlaylistsServi
 {
     private const string FallbackImageUrl = "music.png";
 
-    public async Task CreatePlaylistAsync(Playlist playlist)
+    public async Task CreatePlaylistAsync(OfflinePlaylist playlist)
     {
         if (string.IsNullOrEmpty(playlist.Name))
             throw new InvalidDataException("Playlist Name must not be null");
@@ -29,7 +29,7 @@ internal sealed class PlaylistsService(AppDbContext dbContext) : IPlaylistsServi
         await dbContext.SaveChangesAsync();
     }
 
-    public async Task<Playlist?> GetPlaylistByIdAsync(string id)
+    public async Task<OfflinePlaylist?> GetPlaylistByIdAsync(string id)
     {
         var playlist = await dbContext.SavedOfflinePlaylists
             .AsNoTracking()
@@ -40,7 +40,7 @@ internal sealed class PlaylistsService(AppDbContext dbContext) : IPlaylistsServi
         return playlist;
     }
 
-    public async Task<List<Playlist>> GetPlaylistsAsync()
+    public async Task<List<OfflinePlaylist>> GetPlaylistsAsync()
     {
         var playlists = await dbContext.SavedOfflinePlaylists
             .AsNoTracking()
@@ -49,7 +49,7 @@ internal sealed class PlaylistsService(AppDbContext dbContext) : IPlaylistsServi
         return playlists;
     }
 
-    public async Task UpdatePlaylistAsync(Playlist playlist)
+    public async Task UpdatePlaylistAsync(OfflinePlaylist playlist)
     {
         if (string.IsNullOrEmpty(playlist.Name))
             throw new InvalidDataException("Playlist Name must not be null");

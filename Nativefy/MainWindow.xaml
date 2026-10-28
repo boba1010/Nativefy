@@ -7,7 +7,7 @@
     xmlns:models="using:Nativefy.Models"
     xmlns:controls="using:Nativefy.Controls"
     Title="Nativefy">
-    
+
     <Window.SystemBackdrop>
         <MicaBackdrop />
     </Window.SystemBackdrop>
@@ -40,7 +40,7 @@
                             <FontIcon Glyph="&#xE80F;"/>
                         </Button.Content>
                     </Button>
-                    
+
                     <AutoSuggestBox 
                         BorderBrush="Transparent"
                         BorderThickness="0" Width="400"
@@ -70,21 +70,12 @@
                     Orientation="Horizontal" 
                     HorizontalAlignment="Right"
                     Spacing="4">
-                    <Button CornerRadius="20" Width="30" Padding="0" Background="Transparent" BorderThickness="0">
-                        <PersonPicture Width="30" Height="30" />
-                    </Button>
-
                     <AppBarButton Width="40">
                         <AppBarButton.Icon>
                             <FontIcon Glyph="&#xEA8F;" />
                         </AppBarButton.Icon>
                     </AppBarButton>
-                    <AppBarButton Width="40">
-                        <AppBarButton.Icon>
-                            <SymbolIcon Symbol="People" />
-                        </AppBarButton.Icon>
-                    </AppBarButton>
-                    
+
                     <AppBarSeparator />
 
                     <AppBarButton Width="40">
@@ -92,7 +83,7 @@
                             <SymbolIcon Symbol="Setting" />
                         </AppBarButton.Icon>
                     </AppBarButton>
-                    
+
                     <AppBarToggleButton Width="40">
                         <AppBarToggleButton.Icon>
                             <FontIcon Glyph="&#xe90d;" />
@@ -115,6 +106,6 @@
             </controls:LibraryNavigationView.InnerContent>
         </controls:LibraryNavigationView>
 
-        <controls:PlaybackControlBar Grid.Row="2"/>
+        <controls:PlaybackControlBar x:Name="PlaybackBar" Visibility="Collapsed" Grid.Row="2"/>
     </Grid>
 </Window>

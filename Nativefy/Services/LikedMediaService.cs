@@ -1,48 +1,45 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nativefy.DbContexts;
 using Nativefy.Engine;
+using Nativefy.Models.Media;
 using System.Threading.Tasks;
 
 namespace Nativefy.Services;
 
 public sealed class LikedMediaService(AppDbContext dbContext) : ILikedMediaService
 {
-    private const string GlobalKey = "Global";
-
-    public async Task AddToLikesAsync(IPlayableItem item)
+    public async Task AddToLikesAsync(MediaItem item)
     {
-        var state = await dbContext.AppStates.FirstOrDefaultAsync(s => s.Id == GlobalKey);
-        if (state == null)
-        {
-            state = new AppStateEntity { Id = GlobalKey };
-            dbContext.AppStates.Add(state);
-        }
+        var playlist = await dbContext.LikedMedia.FirstOrDefaultAsync();
+        if (playlist == null)
+            return;
 
-        if (!state.LikedItems.Exists(x => x.Id == item.Id))
+        if (!playlist.Items.Exists(x => x.Url == item.Url))
         {
-            state.LikedItems.Add(new PlayableItemDto(item));
-            state.UpdatedAt = DateTime.UtcNow;
+            item.Position = playlist.Items.Count + 1;
+            playlist.Items.Add(item);
+            playlist.UpdatedAt = DateTime.UtcNow;
 
             await dbContext.SaveChangesAsync();
         }
     }
 
-    public async Task<List<PlayableItemDto>> GetLikedItemsAsync()
+    public async Task<LikedMediaPlaylist?> GetLikedMediaAsync()
     {
-        var state = await dbContext.AppStates.FirstOrDefaultAsync(s => s.Id == GlobalKey);
-        return state?.LikedItems ?? [];
+        var playlist = await dbContext.LikedMedia.FirstOrDefaultAsync();
+        return playlist;
     }
 
-    public async Task RemoveFromLikesAsync(string id)
+    public async Task RemoveFromLikesAsync(string url)
     {
-        var state = await dbContext.AppStates.FirstOrDefaultAsync(s => s.Id == GlobalKey);
+        var playlist = await dbContext.LikedMedia.FirstOrDefaultAsync();
 
-        if (state != null)
+        if (playlist != null)
         {
-            int removedCount = state.LikedItems.RemoveAll(x => x.Id == id);
+            int removedCount = playlist.Items.RemoveAll(x => x.Url == url);
             if (removedCount > 0)
             {
-                state.UpdatedAt = DateTime.UtcNow;
+                playlist.UpdatedAt = DateTime.UtcNow;
                 await dbContext.SaveChangesAsync();
             }
         }
