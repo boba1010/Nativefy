@@ -25,6 +25,7 @@
             IsBackButtonEnabled="False"
             IsPaneToggleButtonVisible="True"
             PaneToggleRequested="OnPaneToggleRequested"
+            BackRequested="Titlebar_BackRequested"
             x:Name="Titlebar">
 
             <TitleBar.Content>
@@ -106,6 +107,6 @@
             </controls:LibraryNavigationView.InnerContent>
         </controls:LibraryNavigationView>
 
-        <controls:PlaybackControlBar x:Name="PlaybackBar" Visibility="Collapsed" Grid.Row="2"/>
+        <controls:PlaybackControlBar x:Name="PlaybackBar" Grid.Row="2"/>
     </Grid>
 </Window>

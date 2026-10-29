@@ -7,7 +7,7 @@
     xmlns:models="using:Nativefy.Engine"
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
 
-    <Grid Padding="16">
+    <Grid Padding="16" RowSpacing="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -90,7 +90,7 @@
                     ItemInvoked="Result_ItemInvoked"
                     ItemsSource="{x:Bind ViewModel.Results}">
                     <ItemsView.ItemTemplate>
-                        <DataTemplate x:DataType="models:IPlayableItem">
+                        <DataTemplate x:DataType="models:IPlayable">
                             <ItemContainer>
                                 <Grid ColumnSpacing="8" Height="80" Padding="10">
                                     <Grid.ColumnDefinitions>
@@ -102,7 +102,7 @@
                                         <Grid>
                                             <Image Source="{x:Bind ImageUrl}" VerticalAlignment="Center" />
 
-                                            <Border 
+                                            <!-- <Border 
                                                 Padding="2" CornerRadius="8"
                                                 HorizontalAlignment="Right" 
                                                 VerticalAlignment="Bottom"
@@ -111,7 +111,7 @@
                                                     FontSize="12"
                                                     Text="{x:Bind local:SearchPage.FormatDuration(Duration)}" 
                                                     Foreground="{ThemeResource TextFillColorSecondary}"/>
-                                            </Border>
+                                            </Border> -->
                                         </Grid>
                                     </Border>
 

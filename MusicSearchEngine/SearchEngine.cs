@@ -1,5 +1,6 @@
 ﻿using YoutubeExplode;
 using YoutubeExplode.Common;
+using YoutubeExplode.Playlists;
 using YoutubeExplode.Search;
 
 namespace Nativefy.Engine;
@@ -13,24 +14,31 @@ public sealed class SearchEngine : IDisposable
         _youtube.Dispose();
     }
 
-    public async Task<List<IPlayableItem>> GetResultAsync(string query, int maxResults = 25)
+    public async Task<List<IPlayable>> GetResultAsync(string query, int maxResults = 25)
     {
-        if (string.IsNullOrWhiteSpace(query))
+        if (string.IsNullOrWhiteSpace(query) || maxResults <= 0)
             return [];
 
-        var results = new List<IPlayableItem>();
-
+        var results = new List<IPlayable>();
         var uniqueIds = new HashSet<string>();
 
         await foreach (var result in _youtube.Search.GetResultsAsync(query))
         {
+            switch (result)
+            {
+                case VideoSearchResult video:
+                    if (uniqueIds.Add($"video:{video.Id}"))
+                        results.Add(new PlayableMedia(video));
+                    break;
+
+                case PlaylistSearchResult playlist:
+                    if (uniqueIds.Add($"playlist:{playlist.Id}"))
+                        results.Add(new Playlist(playlist));
+                    break;
+            }
+
             if (results.Count >= maxResults)
                 break;
-
-            if (result is VideoSearchResult video && uniqueIds.Add(video.Id))
-                results.Add(new PlayableMedia(video));
-            else if (result is PlaylistSearchResult playlist && uniqueIds.Add(playlist.Id))
-                results.Add(new PlayablePlaylist(playlist));
         }
 
         return results;
@@ -39,26 +47,33 @@ public sealed class SearchEngine : IDisposable
 
 #region Unified UI Models
 
-public interface IPlayableItem
+public interface IPlayable
 {
     string Id { get; }
     string Title { get; }
     string ImageUrl { get; }
     string Author { get; }
     string Url { get; }
-    TimeSpan? Duration { get; }
-    bool IsPlaylist { get; }
 }
 
-public sealed class PlayableMedia : IPlayableItem
+public interface IPlaylist : IPlayable
+{
+    public List<IMedia> Media { get; }
+}
+
+public interface IMedia : IPlayable
+{
+    TimeSpan Duration { get; }
+}
+
+public sealed class PlayableMedia : IMedia
 {
     public string Id { get; }
     public string Title { get; }
     public string ImageUrl { get; }
     public string Url { get; }
     public string Author { get; }
-    public TimeSpan? Duration { get; }
-    public bool IsPlaylist => false;
+    public TimeSpan Duration { get; }
 
     // Constructor for live searches
     public PlayableMedia(VideoSearchResult video)
@@ -68,33 +83,32 @@ public sealed class PlayableMedia : IPlayableItem
         ImageUrl = video.Thumbnails.GetWithHighestResolution().Url;
         Url = video.Url;
         Author = video.Author.ChannelTitle;
-        Duration = video.Duration;
+        if (video.Duration is not null)
+            Duration = video.Duration.Value;
     }
 
-    // Constructor for database restoration
-    public PlayableMedia(PlayableItemDto dto)
+    public PlayableMedia(PlaylistVideo video)
     {
-        Id = dto.Id;
-        Title = dto.Title;
-        ImageUrl = dto.ImageUrl;
-        Url = dto.Url;
-        Author = dto.Author;
-        Duration = dto.Duration;
+        Id = video.Id;
+        Title = video.Title;
+        ImageUrl = video.Thumbnails.TryGetWithHighestResolution()?.Url ?? "image.png";
+        Url = video.Url;
+        Author = video.Author.ChannelTitle;
+        if (video.Duration is not null)
+            Duration = video.Duration.Value;
     }
 }
 
-public sealed class PlayablePlaylist : IPlayableItem
+public sealed class Playlist : IPlaylist
 {
     public string Id { get; }
     public string Title { get; }
     public string ImageUrl { get; }
     public string Url { get; }
     public string Author { get; }
-    public TimeSpan? Duration => null;
-    public bool IsPlaylist => true;
+    public List<IMedia> Media { get; } = [];
 
-    // Constructor for live searches
-    public PlayablePlaylist(PlaylistSearchResult playlist)
+    public Playlist(PlaylistSearchResult playlist)
     {
         Id = playlist.Id;
         Title = playlist.Title;
@@ -110,14 +124,16 @@ public sealed class PlayablePlaylist : IPlayableItem
         }
     }
 
-    // Constructor for database restoration
-    public PlayablePlaylist(PlayableItemDto dto)
+    public Playlist(YoutubeExplode.Playlists.Playlist playlist, List<PlaylistVideo> videos)
     {
-        Id = dto.Id;
-        Title = dto.Title;
-        ImageUrl = dto.ImageUrl;
-        Url = dto.Url;
-        Author = dto.Author;
+        Id = playlist.Id;
+        Title = playlist.Title;
+        Url = playlist.Url;
+        Author = playlist.Author?.ChannelTitle ?? "Unknown Creator";
+        ImageUrl = playlist.Thumbnails.GetWithHighestResolution().Url;
+
+        foreach (var video in videos)
+            Media.Add(new PlayableMedia(video));
     }
 }
 

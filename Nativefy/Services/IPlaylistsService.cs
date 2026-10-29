@@ -5,9 +5,9 @@ namespace Nativefy.Services;
 
 public interface IPlaylistsService
 {
-    public Task<List<OfflinePlaylist>> GetPlaylistsAsync();
-    public Task<OfflinePlaylist?> GetPlaylistByIdAsync(string id);
-    public Task CreatePlaylistAsync(OfflinePlaylist playlist);
+    public Task<List<LocalPlaylist>> GetPlaylistsAsync();
+    public Task<LocalPlaylist?> GetPlaylistByIdAsync(string id);
+    public Task CreatePlaylistAsync(LocalPlaylist playlist);
     public Task DeletePlaylistAsync(string id);
-    public Task UpdatePlaylistAsync(OfflinePlaylist playlist);
+    public Task UpdatePlaylistAsync(LocalPlaylist playlist);
 }

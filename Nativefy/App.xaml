@@ -68,6 +68,53 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            
+            <Style x:Key="InversedHeartHoverButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="Padding" Value="0"/>
+
+                <!-- Define the Template -->
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <!-- Normal State -->
+                                        <VisualState x:Name="Normal" />
+
+                                        <!-- Hover State (Fills the heart) -->
+                                        <VisualState x:Name="PointerOver">
+                                            <VisualState.Setters>
+                                                <Setter Target="HeartIcon.Glyph" Value="&#xEB51;" />
+                                                <Setter Target="HeartIcon.Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+
+                                        <!-- Clicked State (Keeps it filled) -->
+                                        <VisualState x:Name="Pressed">
+                                            <VisualState.Setters>
+                                                <Setter Target="HeartIcon.Glyph" Value="&#xEB51;" />
+                                                <Setter Target="HeartIcon.Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+
+                                        <VisualState x:Name="Disabled" />
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+
+                                <!-- The Icon -->
+                                <FontIcon 
+                                    x:Name="HeartIcon"
+                                    Glyph="&#xEB52;"
+                                    FontSize="20"
+                                    Foreground="{ThemeResource SystemAccentColor}"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
             <Style x:Key="TitleBarBackButtonStyle" TargetType="Button">
                 <Setter Property="Background" Value="{ThemeResource TitleBarBackButtonBackground}" />

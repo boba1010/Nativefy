@@ -33,10 +33,10 @@ public sealed partial class ShellViewModel(IPlaylistsService playlistsService) :
         var response = await WeakReferenceMessenger.Default.Send(new OpenNewPlaylistDialogMessage("New playlist", "Create", "Cancel"));
 
         if (response.Result != DialogResult.Primary || 
-            response.GetData<Playlist>() is not { Name.Length: > 0 } created)
+            response.GetData<LocalPlaylist>() is not { Name.Length: > 0 } created)
             return;
 
-        await playlistsService.CreatePlaylistAsync((OfflinePlaylist)created);
+        await playlistsService.CreatePlaylistAsync(created);
         await LoadPlaylistsAsync();
     }
 }

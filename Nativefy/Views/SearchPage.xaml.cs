@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.Messaging;
+using Nativefy.Engine;
 using Nativefy.Messages;
 using System.Diagnostics;
 
@@ -42,6 +43,12 @@ public sealed partial class SearchPage : Page
     private void Result_ItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs args)
     {
         Debug.WriteLine("RESULT INVOKED");
+
+        if (args.InvokedItem is IPlayable playable)
+        {
+            if (playable is IPlaylist playlist)
+                Frame.Navigate(typeof(OnlinePlaylistPage), playlist.Id);
+        }
     }
 
     private async void Like_Click(object sender, RoutedEventArgs e)

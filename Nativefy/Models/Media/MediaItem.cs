@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Nativefy.Models.Media;
+﻿namespace Nativefy.Models.Media;
 
 public sealed class MediaItem
 {

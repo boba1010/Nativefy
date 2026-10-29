@@ -177,7 +177,7 @@
                                 BorderBrush="Transparent"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                Style="{StaticResource HeartHoverButtonStyle}"
+                                Style="{StaticResource InversedHeartHoverButtonStyle}"
                                 Click="UnlikeItem_Click"
                                 Tag="{x:Bind Url}"/>
 

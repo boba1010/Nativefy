@@ -9,7 +9,7 @@ internal sealed class PlaylistsService(AppDbContext dbContext) : IPlaylistsServi
 {
     private const string FallbackImageUrl = "music.png";
 
-    public async Task CreatePlaylistAsync(OfflinePlaylist playlist)
+    public async Task CreatePlaylistAsync(LocalPlaylist playlist)
     {
         if (string.IsNullOrEmpty(playlist.Name))
             throw new InvalidDataException("Playlist Name must not be null");
@@ -17,21 +17,24 @@ internal sealed class PlaylistsService(AppDbContext dbContext) : IPlaylistsServi
         if (string.IsNullOrEmpty(playlist.ImageUrl))
             playlist.ImageUrl = FallbackImageUrl;
 
-        dbContext.SavedOfflinePlaylists.Add(playlist);
+        if (dbContext.SavedPlaylists.Any(p => p.Id == playlist.Id))
+            return;
+
+        dbContext.SavedPlaylists.Add(playlist);
         await dbContext.SaveChangesAsync();
     }
 
     public async Task DeletePlaylistAsync(string id)
     {
-        var playlist = await dbContext.SavedOfflinePlaylists.FindAsync(id) 
+        var playlist = await dbContext.SavedPlaylists.FindAsync(id) 
             ?? throw new InvalidOperationException($"Playlist with Id {id} not found");
-        dbContext.SavedOfflinePlaylists.Remove(playlist);
+        dbContext.SavedPlaylists.Remove(playlist);
         await dbContext.SaveChangesAsync();
     }
 
-    public async Task<OfflinePlaylist?> GetPlaylistByIdAsync(string id)
+    public async Task<LocalPlaylist?> GetPlaylistByIdAsync(string id)
     {
-        var playlist = await dbContext.SavedOfflinePlaylists
+        var playlist = await dbContext.SavedPlaylists
             .AsNoTracking()
             .FirstOrDefaultAsync(playlist => playlist.Id == id);
         if (playlist is null)
@@ -40,21 +43,21 @@ internal sealed class PlaylistsService(AppDbContext dbContext) : IPlaylistsServi
         return playlist;
     }
 
-    public async Task<List<OfflinePlaylist>> GetPlaylistsAsync()
+    public async Task<List<LocalPlaylist>> GetPlaylistsAsync()
     {
-        var playlists = await dbContext.SavedOfflinePlaylists
+        var playlists = await dbContext.SavedPlaylists
             .AsNoTracking()
             .ToListAsync();
-        
+
         return playlists;
     }
 
-    public async Task UpdatePlaylistAsync(OfflinePlaylist playlist)
+    public async Task UpdatePlaylistAsync(LocalPlaylist playlist)
     {
         if (string.IsNullOrEmpty(playlist.Name))
             throw new InvalidDataException("Playlist Name must not be null");
 
-        var storedPlaylist = await dbContext.SavedOfflinePlaylists.FindAsync(playlist.Id)
+        var storedPlaylist = await dbContext.SavedPlaylists.FindAsync(playlist.Id)
             ?? throw new InvalidOperationException($"Playlist with Id {playlist.Id} not found"); ;
 
         storedPlaylist.Name = playlist.Name;

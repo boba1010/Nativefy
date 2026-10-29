@@ -17,35 +17,6 @@ namespace Nativefy.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.13");
 
-            modelBuilder.Entity("Nativefy.Engine.OnlinePlaylist", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Author")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("SavedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SavedOnlinePlaylists", (string)null);
-                });
-
             modelBuilder.Entity("Nativefy.Engine.SearchResultEntity", b =>
                 {
                     b.Property<string>("Query")
@@ -86,7 +57,7 @@ namespace Nativefy.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Nativefy.Models.Media.OfflinePlaylist", b =>
+            modelBuilder.Entity("Nativefy.Models.Media.LocalPlaylist", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -107,49 +78,7 @@ namespace Nativefy.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SavedOfflinePlaylists", (string)null);
-                });
-
-            modelBuilder.Entity("Nativefy.Engine.SearchResultEntity", b =>
-                {
-                    b.OwnsMany("Nativefy.Engine.PlayableItemDto", "Results", b1 =>
-                        {
-                            b1.Property<string>("SearchResultEntityQuery");
-
-                            b1.Property<int>("__synthesizedOrdinal")
-                                .ValueGeneratedOnAddOrUpdate();
-
-                            b1.Property<string>("Author")
-                                .IsRequired();
-
-                            b1.Property<TimeSpan?>("Duration");
-
-                            b1.Property<string>("Id");
-
-                            b1.Property<string>("ImageUrl")
-                                .IsRequired();
-
-                            b1.Property<bool>("IsPlaylist");
-
-                            b1.Property<string>("Title")
-                                .IsRequired();
-
-                            b1.Property<string>("Url")
-                                .IsRequired();
-
-                            b1.HasKey("SearchResultEntityQuery", "__synthesizedOrdinal");
-
-                            b1.ToTable("SearchCache");
-
-                            b1
-                                .ToJson("Results")
-                                .HasColumnType("TEXT");
-
-                            b1.WithOwner()
-                                .HasForeignKey("SearchResultEntityQuery");
-                        });
-
-                    b.Navigation("Results");
+                    b.ToTable("SavedPlaylists", (string)null);
                 });
 
             modelBuilder.Entity("Nativefy.Models.Media.LikedMediaPlaylist", b =>
@@ -194,11 +123,11 @@ namespace Nativefy.Migrations
                     b.Navigation("Items");
                 });
 
-            modelBuilder.Entity("Nativefy.Models.Media.OfflinePlaylist", b =>
+            modelBuilder.Entity("Nativefy.Models.Media.LocalPlaylist", b =>
                 {
                     b.OwnsMany("Nativefy.Models.Media.MediaItem", "Items", b1 =>
                         {
-                            b1.Property<string>("OfflinePlaylistId");
+                            b1.Property<string>("LocalPlaylistId");
 
                             b1.Property<int>("__synthesizedOrdinal")
                                 .ValueGeneratedOnAddOrUpdate();
@@ -221,16 +150,16 @@ namespace Nativefy.Migrations
                             b1.Property<string>("Url")
                                 .IsRequired();
 
-                            b1.HasKey("OfflinePlaylistId", "__synthesizedOrdinal");
+                            b1.HasKey("LocalPlaylistId", "__synthesizedOrdinal");
 
-                            b1.ToTable("SavedOfflinePlaylists");
+                            b1.ToTable("SavedPlaylists");
 
                             b1
                                 .ToJson("Items")
                                 .HasColumnType("TEXT");
 
                             b1.WithOwner()
-                                .HasForeignKey("OfflinePlaylistId");
+                                .HasForeignKey("LocalPlaylistId");
                         });
 
                     b.Navigation("Items");

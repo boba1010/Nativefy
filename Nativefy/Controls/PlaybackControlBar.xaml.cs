@@ -1,4 +1,3 @@
-using Microsoft.UI.Xaml.Media.Imaging;
 using Nativefy.ViewModels.Shell;
 
 namespace Nativefy.Controls;
@@ -31,10 +30,5 @@ public sealed partial class PlaybackControlBar : UserControl
 
     private void VolumeSlider_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
     {
-    }
-
-    private void AlbumArtImage_ImageFailed(object sender, ExceptionRoutedEventArgs e)
-    {
-        ((Image)sender).Source = new BitmapImage(new Uri("https://picsum.photos/200"));
     }
 }

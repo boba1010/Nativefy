@@ -7,7 +7,7 @@ namespace Nativefy.ViewModels;
 
 public sealed partial class SearchViewModel(NativefyEngine nativefy, ILikedMediaService likedMedia) : BaseViewModel
 {
-    public ObservableCollection<IPlayableItem> Results { get; } = [];
+    public ObservableCollection<IPlayable> Results { get; } = [];
     public ObservableCollection<byte> DummyResults { get; } = new(Enumerable.Repeat(0, 100).Select(x => (byte)x));
 
     public async Task ExecuteSearchAsync(string query)
@@ -31,17 +31,18 @@ public sealed partial class SearchViewModel(NativefyEngine nativefy, ILikedMedia
     {
         var item = Results.FirstOrDefault(r => r.Url == url) ?? throw new InvalidDataException();
 
-        if (item.IsPlaylist || !item.Duration.HasValue)
+        if (item is Playlist)
             return;
 
+        if (item is PlayableMedia media)
         await likedMedia.AddToLikesAsync(new()
         {
-            Url = item.Url,
+            Url = media.Url,
             AddedDate = DateTime.Now,
-            Author = item.Author,
-            Duration = item.Duration.Value,
-            ImageUrl = item.ImageUrl,
-            Title = item.Title,
+            Author = media.Author,
+            Duration = media.Duration,
+            ImageUrl = media.ImageUrl,
+            Title = media.Title,
         });
     }
 }

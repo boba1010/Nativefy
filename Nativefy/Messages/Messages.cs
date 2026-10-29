@@ -20,3 +20,5 @@ public sealed class OpenNewPlaylistDialogMessage(
 }
 
 public sealed record SearchMessage(string Query);
+
+public sealed record RefreshPlaylistsMessage();

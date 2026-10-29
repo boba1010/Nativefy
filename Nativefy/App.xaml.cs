@@ -38,6 +38,7 @@ public partial class App : Application
         services.AddDbContext<AppDbContext>(options => options.UseSqlite($"Data Source={dbPath}"));
 
         services.AddSingleton<IPlaylistsService, PlaylistsService>();
+        services.AddSingleton<IOnlinePlaylistService, OnlinePlaylistService>();
         services.AddSingleton<ILikedMediaService, LikedMediaService>();
         services.AddNativefyEngine();
 
@@ -47,6 +48,7 @@ public partial class App : Application
         services.AddTransient<PlaylistViewModel>();
         services.AddTransient<SearchViewModel>();
         services.AddTransient<LikedMediaViewModel>();
+        services.AddTransient<OnlinePlaylistViewModel>();
     }
 
 

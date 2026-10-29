@@ -7,6 +7,9 @@ namespace Nativefy.ViewModels.Shell;
 public sealed partial class PlayerBarViewModel : BaseViewModel
 {
     [ObservableProperty]
+    public partial bool IsVisible { get; set; } = false;
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PlayPauseGlyph))]
     [NotifyPropertyChangedFor(nameof(PlayPauseTooltip))]
     public partial bool IsPlaying { get; set; }
@@ -34,6 +37,11 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
 
     public string PlayPauseGlyph => IsPlaying ? "\uE769" : "\uE768";
     public string PlayPauseTooltip => IsPlaying ? "Pause" : "Play";
+
+    public PlayerBarViewModel()
+    {
+
+    }
 
     [RelayCommand]
     public async Task ToggleShuffleAsync()

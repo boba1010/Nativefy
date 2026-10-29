@@ -251,9 +251,7 @@
                     Background="{ThemeResource CardBackgroundFillColorDefault}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top">
-                    <Image 
-                        Source="{x:Bind ViewModel.Playlist.ImageUrl}"
-                        Stretch="UniformToFill" />
+                    <Image Source="{x:Bind ViewModel.Playlist.ImageUrl}"/>
                 </Border>
 
                 <StackPanel Grid.Row="1" Spacing="10">
@@ -281,14 +279,8 @@
                             <TextBlock Text="Play" />
                         </StackPanel>
                     </Button>
-                    
+
                     <StackPanel Orientation="Horizontal" Spacing="5">
-                        <Button 
-                            Width="50" 
-                            Style="{StaticResource HeartHoverButtonStyle}" 
-                            CommandParameter="{x:Bind ViewModel.Playlist.Id}"
-                            Command="{x:Bind ViewModel.LikePlaylistCommand}" />
-                        
                         <Button Background="Transparent" BorderBrush="Transparent" Click="SharePlaylist_Click">
                             <SymbolIcon Symbol="Share" Foreground="{ThemeResource TextFillColorSecondary}"/>
                         </Button>

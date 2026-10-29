@@ -15,6 +15,7 @@
     </UserControl.Resources>
 
     <Grid 
+        Visibility="{x:Bind ViewModel.IsVisible, Mode=OneWay}"
         CornerRadius="8"
         Height="60" 
         Padding="5,0" 
@@ -150,36 +151,22 @@
         <StackPanel
             Orientation="Horizontal"
             VerticalAlignment="Center"
-            Grid.Column="3">
+            Grid.Column="3" Spacing="5">
             <Button 
                 ToolTipService.ToolTip="Volume"
                 Background="Transparent" 
                 Foreground="{ThemeResource SystemAccentColorLight1}"
                 BorderThickness="0">
-                
                 <FontIcon Glyph="&#xE767;" FontSize="17" />
-                
-                <Button.Flyout>
-                    <Flyout
-                        ShowMode="Standard">
-                        <StackPanel 
-                            Width="40" 
-                            Height="120" 
-                            Padding="0,10" 
-                            Spacing="8" 
-                            HorizontalAlignment="Center">
-                            <Slider 
-                                Orientation="Vertical"
-                                Minimum="0" 
-                                Maximum="100" 
-                                Value="50" 
-                                Height="100" 
-                                HorizontalAlignment="Center"
-                                PointerCaptureLost="VolumeSlider_PointerCaptureLost"/>
-                        </StackPanel>
-                    </Flyout>
-                </Button.Flyout>
             </Button>
+
+            <Slider 
+                Minimum="0" 
+                Maximum="100" 
+                Value="50"
+                Width="100"
+                HorizontalAlignment="Stretch"
+                PointerCaptureLost="VolumeSlider_PointerCaptureLost"/>
 
             <ToggleButton 
                 ToolTipService.ToolTip="Queue"

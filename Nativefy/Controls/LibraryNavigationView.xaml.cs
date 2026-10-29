@@ -1,7 +1,5 @@
-using Microsoft.UI.Xaml.Documents;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Nativefy.Controls;
 

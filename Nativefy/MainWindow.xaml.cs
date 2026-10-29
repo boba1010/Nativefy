@@ -48,6 +48,7 @@ public sealed partial class MainWindow : Window
         AddCommand = new RelayCommand(AddPlaylist);
 
         WeakReferenceMessenger.Default.Register<OpenNewPlaylistDialogMessage>(this, (r, m) => m.Reply(ShowDialogAsync(m)));
+        WeakReferenceMessenger.Default.Register<RefreshPlaylistsMessage>(this, async (r, m) => await LoadAsync());
     }
 
     private async Task<DialogResponse> ShowDialogAsync(OpenNewPlaylistDialogMessage m)
@@ -188,6 +189,15 @@ public sealed partial class MainWindow : Window
         }
 
         ContentFrame.Navigate(typeof(SearchPage), searchQuery);
+    }
+
+    private void Titlebar_BackRequested(TitleBar sender, object args)
+    {
+        if (ContentFrame.CanGoBack)
+        {
+            ContentFrame.GoBack();
+            ContentFrame.ForwardStack.Clear();
+        }
     }
 }
 

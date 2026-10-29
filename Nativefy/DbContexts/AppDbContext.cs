@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Nativefy.Engine;
 using Nativefy.Models.Media;
 
 namespace Nativefy.DbContexts;
@@ -10,10 +9,9 @@ public sealed partial class AppDbContext(DbContextOptions<AppDbContext> options)
     public const string SingletonLikedMediaId = "LIKED_MEDIA_SINGLETON";
 
     public DbSet<LikedMediaPlaylist> LikedMedia { get; set; }
-    public DbSet<OfflinePlaylist> SavedOfflinePlaylists { get; set; }
+    public DbSet<LocalPlaylist> SavedPlaylists { get; set; }
 
-    public DbSet<SearchResultEntity> SearchCache { get; set; }
-    public DbSet<OnlinePlaylist> SavedOnlinePlaylists { get; set; }
+    public DbSet<Engine.SearchResultEntity> SearchCache { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -29,18 +27,16 @@ public sealed partial class AppDbContext(DbContextOptions<AppDbContext> options)
             entity.OwnsMany(p => p.Items, builder => builder.ToJson());
         });
 
-        modelBuilder.Entity<OfflinePlaylist>(entity =>
+        modelBuilder.Entity<LocalPlaylist>(entity =>
         {
-            entity.ToTable("SavedOfflinePlaylists");
+            entity.ToTable("SavedPlaylists");
             entity.OwnsMany(p => p.Items, builder => builder.ToJson());
         });
 
-        modelBuilder.Entity<OnlinePlaylist>(entity => entity.ToTable("SavedOnlinePlaylists"));
-
-        modelBuilder.Entity<SearchResultEntity>(entity =>
+        modelBuilder.Entity<Engine.SearchResultEntity>(entity =>
         {
             entity.ToTable("SearchCache");
-            entity.OwnsMany(s => s.Results, builder => builder.ToJson());
+            //entity.OwnsMany(s => s.Results, builder => builder.ToJson());
         });
     }
 }

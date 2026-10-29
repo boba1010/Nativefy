@@ -7,6 +7,7 @@ public static class NativefyEngineDI
     public static IServiceCollection AddNativefyEngine(this IServiceCollection services)
     {
         services.AddSingleton<SearchEngine>();
+        services.AddSingleton<PlaylistEngine>();
         services.AddSingleton<NativefyEngine>();
 
         return services;
