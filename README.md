@@ -263,10 +263,4 @@ Open `Nativefy.slnx` in Visual Studio and build the solution.
 
 ---
 
-## License
-
-See the repository for licensing information.
-
----
-
 **Nativefy — Your media, your device, your experience.**
