@@ -34,35 +34,43 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel 
-            Grid.Column="0"
-            Orientation="Horizontal"
-            VerticalAlignment="Center"
-            Spacing="12">
-            <Border 
-                Background="Gray"
-                CornerRadius="4">
-                <Image
-                    Source="{x:Bind ViewModel.ImageUrl, Mode=OneWay}" 
-                    Width="80" Height="60" />
-            </Border>
+        <Button Click="GoToMediaPlayerPage_Click" Background="Transparent" BorderBrush="Transparent">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel 
+                    Grid.Column="0"
+                    Orientation="Horizontal"
+                    VerticalAlignment="Center"
+                    Spacing="12">
+                    <Border 
+                        Background="Gray"
+                        CornerRadius="4">
+                        <Image
+                            Source="{x:Bind ViewModel.ImageUrl, Mode=OneWay}" 
+                            Width="80" Height="60" />
+                    </Border>
 
-            <StackPanel VerticalAlignment="Center" Spacing="2">
-                <TextBlock 
-                    Text="{x:Bind ViewModel.ItemTitle, Mode=OneWay}" 
-                    ToolTipService.ToolTip="{x:Bind ViewModel.ItemTitle, Mode=OneWay}"
-                    FontWeight="SemiBold" 
-                    Foreground="White" 
-                    FontSize="14"
-                    Width="150"
-                    TextTrimming="CharacterEllipsis"/>
-                <TextBlock 
-                    Text="{x:Bind ViewModel.ChannelName, Mode=OneWay}" 
-                    FontSize="11" 
-                    Foreground="#B3B3B3" 
-                    TextTrimming="CharacterEllipsis"/>
-            </StackPanel>
-        </StackPanel>
+                    <StackPanel VerticalAlignment="Center" Spacing="2">
+                        <TextBlock 
+                            Text="{x:Bind ViewModel.ItemTitle, Mode=OneWay}" 
+                            ToolTipService.ToolTip="{x:Bind ViewModel.ItemTitle, Mode=OneWay}"
+                            FontWeight="SemiBold" 
+                            Foreground="White" 
+                            FontSize="14"
+                            Width="150"
+                            TextTrimming="CharacterEllipsis"/>
+                        <TextBlock 
+                            Text="{x:Bind ViewModel.ChannelName, Mode=OneWay}" 
+                            FontSize="11" 
+                            Foreground="#B3B3B3" 
+                            TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+                </StackPanel>                
+            </Grid>
+        </Button>
 
         <StackPanel
             Orientation="Horizontal"

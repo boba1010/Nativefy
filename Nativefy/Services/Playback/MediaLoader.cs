@@ -1,28 +1,26 @@
-﻿
+﻿using Nativefy.Engine;
 using Nativefy.Models.Media;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
+using Playlist = Nativefy.Models.Media.Playlist;
 
-namespace Nativefy.Services;
+namespace Nativefy.Services.Playback;
 
-public sealed class MediaLoader(Engine.NativefyEngine nativefy)
+public sealed class MediaLoader(IStreamingBackend streaming)
 {
-    public async Task<MediaPlaybackItem> CreatePlaybackItemAsync(MediaItem item, CancellationToken cancellationToken = default)
+    public async Task<MediaPlaybackItem> CreatePlaybackItemAsync(
+        MediaItem item,
+        CancellationToken cancellationToken = default,
+        Resolution resolution = Resolution.Standard360p)
     {
         ArgumentNullException.ThrowIfNull(item);
 
-        cancellationToken.ThrowIfCancellationRequested();
-
-        var url = await nativefy.Streaming.StartAudioPlaybackAsync(item.Id);
+        MediaSource source = await streaming.CreateSourceAsync(item, resolution, cancellationToken);
 
         cancellationToken.ThrowIfCancellationRequested();
 
-        if (!Uri.TryCreate(url, UriKind.Absolute, out var streamUrl))
-            throw new InvalidOperationException($"Could not resolve a stream URL for '{item.Title}'.");
-
-        var source = MediaSource.CreateFromUri(streamUrl);
         source.CustomProperties["Metadata"] = item;
 
         return new MediaPlaybackItem(source);
@@ -37,6 +35,7 @@ public sealed class MediaLoader(Engine.NativefyEngine nativefy)
     {
         ArgumentNullException.ThrowIfNull(playlist);
         ArgumentNullException.ThrowIfNull(playbackList);
+        ArgumentNullException.ThrowIfNull(itemAdded);
 
         for (int i = startIndex; i < playlist.Items.Count; i++)
         {

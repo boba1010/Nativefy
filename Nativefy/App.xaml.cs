@@ -3,6 +3,7 @@ using Nativefy.DbContexts;
 using Nativefy.Engine.DI;
 using Nativefy.Models.Media;
 using Nativefy.Services;
+using Nativefy.Services.Playback;
 using Nativefy.ViewModels.Shell;
 using System.Diagnostics;
 
@@ -39,6 +40,7 @@ public partial class App : Application
         services.AddSingleton<IPlaylistsService, PlaylistsService>();
         services.AddSingleton<IOnlinePlaylistService, OnlinePlaylistService>();
         services.AddSingleton<ILikedMediaService, LikedMediaService>();
+        services.AddSingleton<IStreamingBackend, YtDlpBackend>();
         services.AddSingleton<MediaLoader>();
         services.AddSingleton<PlaybackController>();
         services.AddNativefyEngine();

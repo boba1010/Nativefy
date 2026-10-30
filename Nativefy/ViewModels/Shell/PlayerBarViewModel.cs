@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Dispatching;
 using Nativefy.Messages;
-using Nativefy.Services;
+using Nativefy.Services.Playback;
 using System.Threading.Tasks;
 
 namespace Nativefy.ViewModels.Shell;

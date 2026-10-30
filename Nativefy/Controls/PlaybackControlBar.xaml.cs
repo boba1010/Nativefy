@@ -1,5 +1,8 @@
+using CommunityToolkit.Mvvm.Messaging;
 using FluentIcons.Common;
+using Nativefy.Messages;
 using Nativefy.ViewModels.Shell;
+using Nativefy.Views;
 
 namespace Nativefy.Controls;
 
@@ -94,5 +97,10 @@ public sealed partial class PlaybackControlBar : UserControl
             ShuffleIcon.Icon = Icon.ArrowShuffleOff;
             ToolTipService.SetToolTip(ShuffleButton, "Shuffle Off");
         }
+    }
+
+    private void GoToMediaPlayerPage_Click(object sender, RoutedEventArgs e)
+    {
+        WeakReferenceMessenger.Default.Send(new NavigationMessage(typeof(MediaPlayerPage)));
     }
 }

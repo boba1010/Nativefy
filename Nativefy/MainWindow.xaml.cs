@@ -48,6 +48,7 @@ public sealed partial class MainWindow : Window
 
         WeakReferenceMessenger.Default.Register<OpenNewPlaylistDialogMessage>(this, (r, m) => m.Reply(ShowDialogAsync(m)));
         WeakReferenceMessenger.Default.Register<RefreshPlaylistsMessage>(this, (r, m) => _ = LoadAsync());
+        WeakReferenceMessenger.Default.Register<NavigationMessage>(this, (r, m) => ContentFrame.Navigate(m.Page));
     }
 
     private async Task<DialogResponse> ShowDialogAsync(OpenNewPlaylistDialogMessage m)
