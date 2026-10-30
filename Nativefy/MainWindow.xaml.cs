@@ -4,7 +4,6 @@ using Microsoft.UI.Windowing;
 using Nativefy.Controls;
 using Nativefy.Messages;
 using Nativefy.Views;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -48,7 +47,7 @@ public sealed partial class MainWindow : Window
         AddCommand = new RelayCommand(AddPlaylist);
 
         WeakReferenceMessenger.Default.Register<OpenNewPlaylistDialogMessage>(this, (r, m) => m.Reply(ShowDialogAsync(m)));
-        WeakReferenceMessenger.Default.Register<RefreshPlaylistsMessage>(this, async (r, m) => await LoadAsync());
+        WeakReferenceMessenger.Default.Register<RefreshPlaylistsMessage>(this, (r, m) => _ = LoadAsync());
     }
 
     private async Task<DialogResponse> ShowDialogAsync(OpenNewPlaylistDialogMessage m)
@@ -144,15 +143,15 @@ public sealed partial class MainWindow : Window
         MainNavView.IsPaneOpen = !MainNavView.IsPaneOpen;
     }
 
-    private async void ContentFrame_Loading(FrameworkElement sender, object args)
+    private void ContentFrame_Loading(FrameworkElement sender, object args)
     {
-        await LoadAsync();   
+        _ = LoadAsync();   
     }
 
-    public async void AddPlaylist()
+    public void AddPlaylist()
     {
-        await ViewModel.CreatePlaylistAsync();
-        await LoadAsync();
+        _ = ViewModel.CreatePlaylistAsync();
+        _ =LoadAsync();
     }
 
     private async Task LoadAsync()
@@ -169,8 +168,6 @@ public sealed partial class MainWindow : Window
 
     private void Searchbox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
     {
-        Debug.WriteLine("SEARCHING");
-
         var searchQuery = args.QueryText;
 
         if (string.IsNullOrEmpty(searchQuery))

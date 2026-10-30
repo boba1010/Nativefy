@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nativefy.DbContexts;
-using Nativefy.Engine;
 using Nativefy.Engine.DI;
 using Nativefy.Models.Media;
 using Nativefy.Services;
@@ -40,6 +39,8 @@ public partial class App : Application
         services.AddSingleton<IPlaylistsService, PlaylistsService>();
         services.AddSingleton<IOnlinePlaylistService, OnlinePlaylistService>();
         services.AddSingleton<ILikedMediaService, LikedMediaService>();
+        services.AddSingleton<MediaLoader>();
+        services.AddSingleton<PlaybackController>();
         services.AddNativefyEngine();
 
         services.AddTransient<HomeViewModel>();

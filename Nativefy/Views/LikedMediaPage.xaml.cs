@@ -1,6 +1,3 @@
-using CommunityToolkit.Mvvm.ComponentModel;
-using Nativefy.Models.Media;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace Nativefy.Views;
@@ -16,9 +13,9 @@ public sealed partial class LikedMediaPage : Page
         Loading += LikedMediaPage_Loading;
     }
 
-    private async void LikedMediaPage_Loading(FrameworkElement sender, object args)
+    private void LikedMediaPage_Loading(FrameworkElement sender, object args)
     {
-        await ViewModel.LoadLikedMediaPlaylistAsync();
+        _ = ViewModel.LoadLikedMediaPlaylistAsync();
     }
 
     private async void SharePlaylist_Click(object sender, RoutedEventArgs e)

@@ -179,7 +179,7 @@
                                 VerticalAlignment="Center"
                                 Style="{StaticResource InversedHeartHoverButtonStyle}"
                                 Click="UnlikeItem_Click"
-                                Tag="{x:Bind Url}"/>
+                                Tag="{x:Bind Id}"/>
 
                             <!-- Cover + title/artist -->
                             <Grid Grid.Column="2" ColumnSpacing="12" VerticalAlignment="Center">

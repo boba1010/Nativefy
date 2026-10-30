@@ -5,15 +5,8 @@ using YoutubeExplode.Search;
 
 namespace Nativefy.Engine;
 
-public sealed class SearchEngine : IDisposable
+public sealed class SearchEngine(YoutubeClient youtube)
 {
-    private readonly YoutubeClient _youtube = new();
-
-    public void Dispose()
-    {
-        _youtube.Dispose();
-    }
-
     public async Task<List<IPlayable>> GetResultAsync(string query, int maxResults = 25)
     {
         if (string.IsNullOrWhiteSpace(query) || maxResults <= 0)
@@ -22,7 +15,7 @@ public sealed class SearchEngine : IDisposable
         var results = new List<IPlayable>();
         var uniqueIds = new HashSet<string>();
 
-        await foreach (var result in _youtube.Search.GetResultsAsync(query))
+        await foreach (var result in youtube.Search.GetResultsAsync(query))
         {
             switch (result)
             {

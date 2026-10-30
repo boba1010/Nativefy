@@ -71,9 +71,20 @@ public sealed partial class OnlinePlaylistViewModel(IOnlinePlaylistService onlin
     }
 
     [RelayCommand]
-    public async Task PlayPlaylistAsync()
+    public void PlayPlaylist()
     {
+        WeakReferenceMessenger.Default.Send(new PlayPlaylistMessage(new()
+        {
+            Id = Id,
+            Items = [.. Items],
+            ImageUrl = ImageUrl,
+            Name = Name,
+        }));
+    }
 
+    public void PlayItem(MediaItem item)
+    {
+        WeakReferenceMessenger.Default.Send(new PlayItemMessage(item));
     }
 
     [RelayCommand]
@@ -90,9 +101,9 @@ public sealed partial class OnlinePlaylistViewModel(IOnlinePlaylistService onlin
         WeakReferenceMessenger.Default.Send(new RefreshPlaylistsMessage());
     }
 
-    public async Task LikeItemAsync(string url)
+    public async Task LikeItemAsync(string id)
     {
-        var item = Items.FirstOrDefault(i => i.Url == url) ?? throw new InvalidDataException();
+        var item = Items.FirstOrDefault(i => i.Id == id) ?? throw new InvalidDataException();
         await likedMedia.AddToLikesAsync(item);
     }
 }

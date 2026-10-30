@@ -125,7 +125,7 @@
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Center"
                                         Click="Like_Click"
-                                        Tag="{x:Bind Url}"
+                                        Tag="{x:Bind Id}"
                                         Style="{StaticResource HeartHoverButtonStyle}"/>
                                 </Grid>
                             </ItemContainer>

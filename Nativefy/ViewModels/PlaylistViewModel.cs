@@ -1,8 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Nativefy.Messages;
 using Nativefy.Models.Media;
 using Nativefy.Services;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Nativefy.ViewModels;
@@ -17,15 +18,20 @@ public sealed partial class PlaylistViewModel(IPlaylistsService playlistsService
         Playlist = await playlistsService.GetPlaylistByIdAsync(id) ?? new();
     }
 
-    public async Task LikeTrackAsync(string url)
+    public async Task LikeTrackAsync(string id)
     {
-        var item = Playlist.Items.FirstOrDefault(i => i.Url == url) ?? throw new InvalidDataException();
+        var item = Playlist.Items.FirstOrDefault(i => i.Id == id) ?? throw new InvalidDataException();
         await likedMedia.AddToLikesAsync(item);
     }
 
     [RelayCommand]
     public async Task PlayPlaylistAsync(string id)
     {
-        Debug.WriteLine("PLAYING PLAYLIST");
+        WeakReferenceMessenger.Default.Send(new PlayPlaylistMessage(Playlist));
+    }
+
+    public void PlayItem(MediaItem item)
+    {
+        WeakReferenceMessenger.Default.Send(new PlayItemMessage(item));
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nativefy.DbContexts;
-using Nativefy.Engine;
 using Nativefy.Models.Media;
 using System.Threading.Tasks;
 
@@ -14,7 +13,7 @@ public sealed class LikedMediaService(AppDbContext dbContext) : ILikedMediaServi
         if (playlist == null)
             return;
 
-        if (!playlist.Items.Exists(x => x.Url == item.Url))
+        if (!playlist.Items.Exists(x => x.Id == item.Id))
         {
             item.Position = playlist.Items.Count + 1;
             playlist.Items.Add(item);
@@ -30,13 +29,13 @@ public sealed class LikedMediaService(AppDbContext dbContext) : ILikedMediaServi
         return playlist;
     }
 
-    public async Task RemoveFromLikesAsync(string url)
+    public async Task RemoveFromLikesAsync(string id)
     {
         var playlist = await dbContext.LikedMedia.FirstOrDefaultAsync();
 
         if (playlist != null)
         {
-            int removedCount = playlist.Items.RemoveAll(x => x.Url == url);
+            int removedCount = playlist.Items.RemoveAll(x => x.Id == id);
             if (removedCount > 0)
             {
                 playlist.UpdatedAt = DateTime.UtcNow;

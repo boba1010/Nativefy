@@ -36,28 +36,24 @@ public sealed partial class PlaylistPage : Page
         return $"{minutes} min";
     }
 
-    protected override async void OnNavigatedTo(NavigationEventArgs e)
+    protected override void OnNavigatedTo(NavigationEventArgs e)
     {
-        if (e.Parameter is string id)
-            await ViewModel.LoadPlaylistAsync(id);
-
         base.OnNavigatedTo(e);
+
+        if (e.Parameter is string id)
+            _ = ViewModel.LoadPlaylistAsync(id);
     }
 
-    private async void LikeItem_Click(object sender, RoutedEventArgs e)
+    private void LikeItem_Click(object sender, RoutedEventArgs e)
     {
-        Debug.WriteLine("LIKE CLICKED!");
-
         var btn = (Button)sender;
-        await ViewModel.LikeTrackAsync((string)btn.Tag);
+        _ = ViewModel.LikeTrackAsync((string)btn.Tag);
     }
 
     private void Items_ItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs args)
     {
-        if (args.InvokedItem is MediaItem track)
-        {
-            Debug.WriteLine("TRACK CLICKED!");
-        }
+        if (args.InvokedItem is MediaItem item)
+            ViewModel.PlayItem(item);
     }
 
     private void SharePlaylist_Click(object sender, RoutedEventArgs e)

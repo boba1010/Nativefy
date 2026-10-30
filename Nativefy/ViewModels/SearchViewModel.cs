@@ -27,9 +27,9 @@ public sealed partial class SearchViewModel(NativefyEngine nativefy, ILikedMedia
         }
     }
 
-    public async Task LikeMediaAsync(string url)
+    public async Task LikeMediaAsync(string id)
     {
-        var item = Results.FirstOrDefault(r => r.Url == url) ?? throw new InvalidDataException();
+        var item = Results.FirstOrDefault(r => r.Id == id) ?? throw new InvalidDataException();
 
         if (item is Playlist)
             return;
@@ -37,6 +37,7 @@ public sealed partial class SearchViewModel(NativefyEngine nativefy, ILikedMedia
         if (item is PlayableMedia media)
         await likedMedia.AddToLikesAsync(new()
         {
+            Id = media.Id,
             Url = media.Url,
             AddedDate = DateTime.Now,
             Author = media.Author,

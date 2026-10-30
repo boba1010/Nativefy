@@ -152,6 +152,7 @@
                 <DataTemplate x:DataType="models:MediaItem">
                     <ItemContainer Style="{StaticResource TrackRowStyle}">
                         <Grid 
+                            Height="100"
                             Padding="12,6" ColumnSpacing="8" 
                             Background="{x:Bind local:PlaylistPage.StripeBrush(Position)}"
                             AutomationProperties.Name="{x:Bind Title}">
@@ -180,7 +181,7 @@
                                 VerticalAlignment="Center"
                                 Style="{StaticResource HeartHoverButtonStyle}"
                                 Click="LikeItem_Click"
-                                Tag="{x:Bind Url}"/>
+                                Tag="{x:Bind Id}"/>
 
                             <!-- Cover + title/artist -->
                             <Grid Grid.Column="2" ColumnSpacing="12" VerticalAlignment="Center">
@@ -191,10 +192,10 @@
 
                                 <Border 
                                     Grid.Column="0"
-                                    Width="40" Height="40"
+                                    Width="110"
                                     CornerRadius="4"
                                     Background="{ThemeResource ControlFillColorSecondaryBrush}">
-                                    <Image Source="{x:Bind ImageUrl}" Stretch="UniformToFill"/>
+                                    <Image Source="{x:Bind ImageUrl}"/>
                                 </Border>
 
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
@@ -246,7 +247,7 @@
                 </Grid.RowDefinitions>
             
                 <Border
-                    Width="280" Height="280" 
+                    Width="280" Height="160" 
                     CornerRadius="12" 
                     Background="{ThemeResource CardBackgroundFillColorDefault}"
                     HorizontalAlignment="Center"

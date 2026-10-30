@@ -28,6 +28,7 @@ public sealed class OnlinePlaylistService(NativefyEngine nativefy) : IOnlinePlay
 
             videos.Add(new()
             {
+                Id = v.Id,
                 Url = v.Url,
                 Author = v.Author,
                 Duration = v.Duration,

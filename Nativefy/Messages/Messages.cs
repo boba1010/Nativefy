@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
+using Nativefy.Models.Media;
 
 namespace Nativefy.Messages;
 
@@ -22,3 +23,6 @@ public sealed class OpenNewPlaylistDialogMessage(
 public sealed record SearchMessage(string Query);
 
 public sealed record RefreshPlaylistsMessage();
+
+public sealed record PlayPlaylistMessage(Playlist Playlist);
+public sealed record PlayItemMessage(MediaItem Item);

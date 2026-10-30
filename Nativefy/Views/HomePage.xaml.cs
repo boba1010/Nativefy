@@ -10,11 +10,11 @@ public sealed partial class HomePage : Page
         ViewModel = App.Services.GetRequiredService<HomeViewModel>();
     }
 
-    protected override async void OnNavigatedTo(NavigationEventArgs e)
+    protected override void OnNavigatedTo(NavigationEventArgs e)
     {
-        await ViewModel.LoadHomeFeedAsync();
-
         base.OnNavigatedTo(e);
+
+        _ = ViewModel.LoadHomeFeedAsync();
     }
 
     private void OnFilterRadioButtonClick(object sender, RoutedEventArgs e)
