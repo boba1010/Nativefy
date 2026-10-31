@@ -12,20 +12,22 @@
         <MicaBackdrop />
     </Window.SystemBackdrop>
 
-    <Grid>
+    <Grid x:Name="Root">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
+        
         <TitleBar
             Padding="5"
+            VerticalAlignment="Top"
             IsBackButtonVisible="True"
             IsBackButtonEnabled="False"
             IsPaneToggleButtonVisible="True"
             PaneToggleRequested="OnPaneToggleRequested"
             BackRequested="Titlebar_BackRequested"
+            Canvas.ZIndex="999"
             x:Name="Titlebar">
 
             <TitleBar.Content>
@@ -85,9 +87,15 @@
                         </AppBarButton.Icon>
                     </AppBarButton>
 
-                    <AppBarToggleButton Width="40">
+                    <AppBarToggleButton Width="40" Click="HidePlayerbar_Click">
                         <AppBarToggleButton.Icon>
-                            <FontIcon Glyph="&#xe90d;" />
+                            <SymbolIcon Symbol="DockBottom" />
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                    
+                    <AppBarToggleButton Width="40" Click="ToggleFullscreen_Click">
+                        <AppBarToggleButton.Icon>
+                            <SymbolIcon Symbol="FullScreen" />
                         </AppBarToggleButton.Icon>
                     </AppBarToggleButton>
                 </StackPanel>

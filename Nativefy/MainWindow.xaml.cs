@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Nativefy.Controls;
 using Nativefy.Messages;
@@ -12,15 +13,14 @@ namespace Nativefy;
 
 public sealed partial class MainWindow : Window
 {
-    public ShellViewModel ViewModel { get; set; }
-
-    public ICommand AddCommand { get; set; }
-
-    private readonly IntPtr _hwnd;
-    private readonly Win32.SUBCLASSPROC _subclassProc;
-
     private const int MinWidth = 1400;
     private const int MinHeight = 800;
+    private readonly IntPtr _hwnd;
+    private readonly Win32.SUBCLASSPROC _subclassProc;
+    private bool _isFullscreen;
+
+    public ShellViewModel ViewModel { get; set; }
+    public ICommand AddCommand { get; set; }
 
     public MainWindow()
     {
@@ -48,7 +48,11 @@ public sealed partial class MainWindow : Window
 
         WeakReferenceMessenger.Default.Register<OpenNewPlaylistDialogMessage>(this, (r, m) => m.Reply(ShowDialogAsync(m)));
         WeakReferenceMessenger.Default.Register<RefreshPlaylistsMessage>(this, (r, m) => _ = LoadAsync());
-        WeakReferenceMessenger.Default.Register<NavigationMessage>(this, (r, m) => ContentFrame.Navigate(m.Page));
+        WeakReferenceMessenger.Default.Register<NavigationMessage>(this, (r, m) =>
+        {
+            if (ContentFrame.CurrentSourcePageType != m.Page)
+                ContentFrame.Navigate(m.Page);
+        });
     }
 
     private async Task<DialogResponse> ShowDialogAsync(OpenNewPlaylistDialogMessage m)
@@ -146,7 +150,7 @@ public sealed partial class MainWindow : Window
 
     private void ContentFrame_Loading(FrameworkElement sender, object args)
     {
-        _ = LoadAsync();   
+        _ = LoadAsync();
     }
 
     public void AddPlaylist()
@@ -189,12 +193,66 @@ public sealed partial class MainWindow : Window
         ContentFrame.Navigate(typeof(SearchPage), searchQuery);
     }
 
+    private void Root_PointerMoved(object sender, PointerRoutedEventArgs e)
+    {
+        if (!_isFullscreen) return;
+
+        var pointerPosition = e.GetCurrentPoint(Root).Position;
+
+        if (pointerPosition.Y <= 15)
+            Titlebar.Visibility = Visibility.Visible;
+
+        else if (Titlebar.Visibility == Visibility.Visible)
+        {
+            if (pointerPosition.Y > Titlebar.ActualHeight)
+                Titlebar.Visibility = Visibility.Collapsed;
+        }
+    }
+
     private void Titlebar_BackRequested(TitleBar sender, object args)
     {
         if (ContentFrame.CanGoBack)
         {
             ContentFrame.GoBack();
             ContentFrame.ForwardStack.Clear();
+        }
+    }
+
+    private void HidePlayerbar_Click(object sender, RoutedEventArgs e)
+    {
+        var btn = (AppBarToggleButton)sender;
+
+        if (btn.IsChecked.HasValue)
+            PlaybackBar.Visibility = btn.IsChecked.Value ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void ToggleFullscreen_Click(object sender, RoutedEventArgs e)
+    {
+        _isFullscreen = !_isFullscreen;
+
+        if (_isFullscreen)
+        {
+            MainNavView.IsPaneVisible = false;
+            MainNavView.IsPaneOpen = false;
+
+            Grid.SetRowSpan(Titlebar, 2);
+            Titlebar.Visibility = Visibility.Collapsed;
+            Titlebar.Background = new SolidColorBrush(ColorHelper.FromArgb(100, 0, 0, 0));
+
+            Root.PointerMoved += Root_PointerMoved;
+
+            AppWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
+        }
+        else
+        {
+            AppWindow.SetPresenter(AppWindowPresenterKind.Default);
+
+            Root.PointerMoved -= Root_PointerMoved;
+
+            MainNavView.IsPaneVisible = true;
+            Grid.SetRowSpan(Titlebar, 1);
+            Titlebar.Background = null;
+            Titlebar.Visibility = Visibility.Visible;
         }
     }
 }
