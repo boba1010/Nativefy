@@ -1,4 +1,5 @@
-﻿using Nativefy.Models.Home;
+﻿using Nativefy.Engine;
+using Nativefy.Models.Home;
 
 namespace Nativefy;
 
@@ -16,5 +17,19 @@ public partial class ShelfTemplateSelector : DataTemplateSelector
         }
 
         return StandardTemplate;
+    }
+}
+
+public partial class SearchTemplateSelector : DataTemplateSelector
+{
+    public DataTemplate MediaTemplate { get; set; } = null!;
+    public DataTemplate PlaylistTemplate { get; set; } = null!;
+
+    protected override DataTemplate SelectTemplateCore(object item)
+    {
+        if (item is IPlaylist section)
+            return PlaylistTemplate;
+
+        return MediaTemplate;
     }
 }

@@ -14,4 +14,12 @@ public sealed partial class MediaPlayerPage : Page
 
         MediaPlayerElement.SetMediaPlayer(_controller.Player);
     }
+
+    private void MediaPlayerElement_PointerReleased(object sender, PointerRoutedEventArgs e)
+    {
+        if (_controller.IsPlaying)
+            _controller.Pause();
+        else
+            _controller.Play();
+    }
 }

@@ -46,6 +46,17 @@ public sealed partial class SearchPage : Page
         {
             if (playable is IPlaylist playlist)
                 Frame.Navigate(typeof(OnlinePlaylistPage), playlist.Id);
+            else if (playable is IMedia media)
+                WeakReferenceMessenger.Default.Send(new PlayItemMessage(new()
+                {
+                    Id = media.Id,
+                    Url = media.Url,
+                    Author = media.Author,
+                    Duration = media.Duration,
+                    ImageUrl = media.ImageUrl,
+                    Title = media.Title,
+                    Position = 1,
+                }));
         }
     }
 

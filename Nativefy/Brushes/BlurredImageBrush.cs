@@ -3,7 +3,7 @@ using Microsoft.UI.Composition;
 
 namespace Nativefy.Brushes;
 
-public class BlurredImageBrush : XamlCompositionBrushBase
+public partial class BlurredImageBrush : XamlCompositionBrushBase
 {
     public static readonly DependencyProperty ImageUrlProperty =
         DependencyProperty.Register(nameof(ImageUrl), typeof(string), typeof(BlurredImageBrush),

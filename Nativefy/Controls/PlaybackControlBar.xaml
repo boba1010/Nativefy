@@ -7,15 +7,17 @@
     xmlns:local="using:Nativefy"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:brushes="using:Nativefy.Brushes" xmlns:system="using:System" xmlns:ic="using:FluentIcons.WinUI"
-    mc:Ignorable="d">
+    xmlns:brushes="using:Nativefy.Brushes" 
+    xmlns:system="using:System" 
+    xmlns:ic="using:FluentIcons.WinUI"
+    mc:Ignorable="d"
+    Visibility="{x:Bind ViewModel.IsVisible, Mode=OneWay}">
 
     <UserControl.Resources>
         <local:TimeSpanTooltipConverter x:Key="TimeSpanTooltipConverter"/>
     </UserControl.Resources>
 
     <Grid 
-        Visibility="Visible" 
         CornerRadius="8"
         Height="70" 
         Padding="5,0" 

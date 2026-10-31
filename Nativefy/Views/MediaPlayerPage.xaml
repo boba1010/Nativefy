@@ -10,6 +10,7 @@
             x:Name="MediaPlayerElement"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            Stretch="Uniform" />
+            Stretch="Uniform" 
+            PointerReleased="MediaPlayerElement_PointerReleased"/>
     </Grid>
 </Page>

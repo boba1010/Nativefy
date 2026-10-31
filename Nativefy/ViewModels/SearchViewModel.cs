@@ -12,6 +12,7 @@ public sealed partial class SearchViewModel(NativefyEngine nativefy, ILikedMedia
 
     public async Task ExecuteSearchAsync(string query)
     {
+        Results.Clear();
         IsLoading = true;
 
         try
