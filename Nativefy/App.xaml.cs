@@ -97,7 +97,8 @@ public partial class App : Application
             var tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "crash-report.json");
             File.WriteAllText(tempPath, message);
 
-            Process.Start("D:\\My Programs\\Nativefy\\Nativefy\\bin\\CrashReporter.exe");
+            //Process.Start("D:\\My Programs\\Nativefy\\Nativefy\\bin\\CrashReporter.exe");
+            Process.Start("CrashReporter.exe");
         }
         catch (Exception)
         {

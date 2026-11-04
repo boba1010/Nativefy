@@ -11,7 +11,7 @@
   <Identity
     Name="f26d62f1-1c98-4283-8bd0-3a785879c905"
     Publisher="CN=Boba"
-    Version="1.0.0.0" />
+    Version="26.10.1.0" />
 
   <mp:PhoneIdentity PhoneProductId="f26d62f1-1c98-4283-8bd0-3a785879c905" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
