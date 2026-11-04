@@ -12,10 +12,10 @@ public sealed partial class ShellViewModel(IPlaylistsService playlistsService) :
 {
     public ObservableCollection<SidebarMenuItem> MenuItems { get; } = [];
 
-    public async Task LoadPlaylistsAsync()
+    public void LoadPlaylists()
     {
         MenuItems.Clear();
-        var playlists = await playlistsService.GetPlaylistsAsync();
+        var playlists = playlistsService.GetPlaylists();
 
         foreach (var playlist in playlists)
         {
@@ -36,7 +36,7 @@ public sealed partial class ShellViewModel(IPlaylistsService playlistsService) :
             response.GetData<LocalPlaylist>() is not { Name.Length: > 0 } created)
             return;
 
-        await playlistsService.CreatePlaylistAsync(created);
-        await LoadPlaylistsAsync();
+        playlistsService.CreatePlaylist(created);
+        LoadPlaylists();
     }
 }

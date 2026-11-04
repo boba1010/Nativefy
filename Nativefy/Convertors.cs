@@ -2,7 +2,7 @@
 
 namespace Nativefy;
 
-public class InverseNullToVisibilityConverter : IValueConverter
+public partial class InverseNullToVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {
@@ -19,7 +19,7 @@ public class InverseNullToVisibilityConverter : IValueConverter
     }
 }
 
-public class NullToVisibilityConverter : IValueConverter
+public partial class NullToVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {
@@ -35,7 +35,7 @@ public class NullToVisibilityConverter : IValueConverter
     }
 }
 
-public class SecondsToMinutesConverter : IValueConverter
+public partial class SecondsToMinutesConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {
@@ -53,7 +53,7 @@ public class SecondsToMinutesConverter : IValueConverter
     public object ConvertBack(object value, Type targetType, object parameter, string language) => throw new NotImplementedException();
 }
 
-public class ImageSourceFallbackConverter : IValueConverter
+public partial class ImageSourceFallbackConverter : IValueConverter
 {
     private static readonly BitmapImage DefaultArt = new BitmapImage(new Uri("ms-appx:///Assets/DefaultAlbumArt.png"));
 
@@ -77,7 +77,7 @@ public class ImageSourceFallbackConverter : IValueConverter
         => throw new NotImplementedException();
 }
 
-public sealed class TimeSpanTooltipConverter : IValueConverter
+public sealed partial class TimeSpanTooltipConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {

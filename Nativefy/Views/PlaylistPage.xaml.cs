@@ -41,13 +41,13 @@ public sealed partial class PlaylistPage : Page
         base.OnNavigatedTo(e);
 
         if (e.Parameter is string id)
-            _ = ViewModel.LoadPlaylistAsync(id);
+            ViewModel.LoadPlaylist(id);
     }
 
     private void LikeItem_Click(object sender, RoutedEventArgs e)
     {
         var btn = (Button)sender;
-        _ = ViewModel.LikeTrackAsync((string)btn.Tag);
+        ViewModel.LikeTrack((string)btn.Tag);
     }
 
     private void Items_ItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs args)

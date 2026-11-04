@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Nativefy.DbContexts;
-using Nativefy.Engine.DI;
-using Nativefy.Models.Media;
+﻿using Nativefy.Engine.DI;
 using Nativefy.Services;
 using Nativefy.Services.Playback;
 using Nativefy.ViewModels.Shell;
@@ -30,13 +27,6 @@ public partial class App : Application
 
     private static void ConfigureServices(ServiceCollection services)
     {
-        string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        string appFolder = System.IO.Path.Combine(localAppData, "Nativefy");
-        System.IO.Directory.CreateDirectory(appFolder);
-        string dbPath = System.IO.Path.Combine(appFolder, "nativefy.db");
-
-        services.AddDbContext<AppDbContext>(options => options.UseSqlite($"Data Source={dbPath}"));
-
         services.AddSingleton<IPlaylistsService, PlaylistsService>();
         services.AddSingleton<IOnlinePlaylistService, OnlinePlaylistService>();
         services.AddSingleton<ILikedMediaService, LikedMediaService>();
@@ -54,34 +44,12 @@ public partial class App : Application
         services.AddTransient<OnlinePlaylistViewModel>();
     }
 
-
     /// <summary>
     /// Invoked when the application is launched.
     /// </summary>
     /// <param name="args">Details about the launch request and process.</param>
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
-        using (var scope = Services.CreateScope())
-        {
-            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            db.Database.Migrate();
-
-            if (!db.LikedMedia.Any(m => m.Id == AppDbContext.SingletonLikedMediaId))
-            {
-                db.LikedMedia.Add(new LikedMediaPlaylist
-                {
-                    Id = AppDbContext.SingletonLikedMediaId,
-                    Name = "Liked Media",
-                    ImageUrl = "default_liked_cover.png",
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
-                    Items = []
-                });
-
-                db.SaveChanges();
-            }
-        }
-
         _window = new MainWindow();
         _window.Activate();
     }

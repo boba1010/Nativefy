@@ -48,7 +48,7 @@ public sealed partial class MainWindow : Window
         AddCommand = new RelayCommand(AddPlaylist);
 
         WeakReferenceMessenger.Default.Register<OpenNewPlaylistDialogMessage>(this, (r, m) => m.Reply(ShowDialogAsync(m)));
-        WeakReferenceMessenger.Default.Register<RefreshPlaylistsMessage>(this, (r, m) => _ = LoadAsync());
+        WeakReferenceMessenger.Default.Register<RefreshPlaylistsMessage>(this, (r, m) => Load());
         WeakReferenceMessenger.Default.Register<NavigationMessage>(this, (r, m) =>
         {
             if (ContentFrame.CurrentSourcePageType != m.Page)
@@ -151,25 +151,23 @@ public sealed partial class MainWindow : Window
 
     private void ContentFrame_Loading(FrameworkElement sender, object args)
     {
-        _ = LoadAsync();
+        Load();
     }
 
     public void AddPlaylist()
     {
         _ = ViewModel.CreatePlaylistAsync();
-        _ =LoadAsync();
+        Load();
     }
 
-    private async Task LoadAsync()
+    private void Load()
     {
-        await ViewModel.LoadPlaylistsAsync();
+        ViewModel.LoadPlaylists();
 
         MainNavView.ClearGroupItems("PlaylistGroup");
 
         foreach (var item in ViewModel.MenuItems)
-        {
             MainNavView.AddItemToGroup("PlaylistGroup", item.Tag, item.Text, imageUrl: item.ImageUrl!);
-        }
     }
 
     private void Searchbox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
@@ -233,12 +231,13 @@ public sealed partial class MainWindow : Window
 
         if (_isFullscreen)
         {
-            MainNavView.IsPaneVisible = false;
             MainNavView.IsPaneOpen = false;
+            MainNavView.IsPaneVisible = false;
 
             Grid.SetRowSpan(Titlebar, 2);
             Titlebar.Visibility = Visibility.Collapsed;
             Titlebar.Background = new SolidColorBrush(ColorHelper.FromArgb(100, 0, 0, 0));
+            Titlebar.IsPaneToggleButtonVisible = false;
 
             Root.PointerMoved += Root_PointerMoved;
 
@@ -254,6 +253,7 @@ public sealed partial class MainWindow : Window
             Grid.SetRowSpan(Titlebar, 1);
             Titlebar.Background = null;
             Titlebar.Visibility = Visibility.Visible;
+            Titlebar.IsPaneToggleButtonVisible = true;
         }
     }
 }

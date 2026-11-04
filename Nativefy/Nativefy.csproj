@@ -8,16 +8,13 @@
         <Platforms>x86;x64;ARM64</Platforms>
         <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
         <PublishProfile>win-$(Platform).pubxml</PublishProfile>
+	  
         <UseWinUI>true</UseWinUI>
         <WinUISDKReferences>true</WinUISDKReferences>
-	  
         <WindowsPackageType>MSIX</WindowsPackageType>
         <EnableMsixTooling>true</EnableMsixTooling>
-        
-        <SelfContained>false</SelfContained>
-        <WindowsAppBootstrapInitialize>false</WindowsAppBootstrapInitialize>
-        <WindowsAppSDKSelfContained>false</WindowsAppSDKSelfContained>
-        
+
+		<PublishAot>true</PublishAot>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Nullable>enable</Nullable>
 
@@ -73,12 +70,6 @@
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.3.260402-preview2" />
         <PackageReference Include="FluentIcons.WinUI" Version="2.2.344" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.13" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.13" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.13">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.13" />
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.4.0" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2270" />
@@ -184,11 +175,9 @@
 
 	<!-- Publish Properties -->
 	<PropertyGroup>
-		<PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
-		<PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
+		<PublishReadyToRun>False</PublishReadyToRun>
 		<PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
 		<PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
-		<TrimMode>partial</TrimMode>
 		<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
 		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
 		<PackageCertificateThumbprint>ABA5CB737D13A74BE6DE05331D6789018DEB5E1E</PackageCertificateThumbprint>
@@ -197,5 +186,6 @@
 		<GenerateTestArtifacts>False</GenerateTestArtifacts>
 		<AppxBundle>Never</AppxBundle>
 		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+		<AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
 	</PropertyGroup>
 </Project>

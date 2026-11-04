@@ -5,7 +5,7 @@ namespace Nativefy.Services;
 
 public interface ILikedMediaService
 {
-    public Task<LikedMediaPlaylist?> GetLikedMediaAsync();
-    public Task AddToLikesAsync(MediaItem item);
-    public Task RemoveFromLikesAsync(string id);
+    public LikedMediaPlaylist? GetLikedMedia();
+    public void AddToLikes(MediaItem item);
+    public void RemoveFromLikes(string id);
 }

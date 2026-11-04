@@ -64,7 +64,7 @@ public sealed partial class SearchPage : Page
     {
         var btn = (Button)sender;
 
-        _ = ViewModel.LikeMediaAsync((string)btn.Tag);
+        ViewModel.LikeMedia((string)btn.Tag);
     }
 
     private void Filter_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)

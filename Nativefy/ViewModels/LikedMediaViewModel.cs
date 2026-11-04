@@ -22,7 +22,7 @@ public sealed partial class LikedMediaViewModel(ILikedMediaService likedMedia) :
 
     public async Task LoadLikedMediaPlaylistAsync()
     {
-        Playlist = await likedMedia.GetLikedMediaAsync() ?? new();
+        Playlist = likedMedia.GetLikedMedia() ?? new();
 
         foreach (var item in Playlist.Items)
             Items.Add(item);

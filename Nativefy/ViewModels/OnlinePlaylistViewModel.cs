@@ -90,7 +90,7 @@ public sealed partial class OnlinePlaylistViewModel(IOnlinePlaylistService onlin
     [RelayCommand]
     public async Task LikePlaylistAsync()
     {
-        await playlists.CreatePlaylistAsync(new()
+        playlists.CreatePlaylist(new()
         {
             Id = Id,
             Name = Name,
@@ -104,6 +104,6 @@ public sealed partial class OnlinePlaylistViewModel(IOnlinePlaylistService onlin
     public async Task LikeItemAsync(string id)
     {
         var item = Items.FirstOrDefault(i => i.Id == id) ?? throw new InvalidDataException();
-        await likedMedia.AddToLikesAsync(item);
+        likedMedia.AddToLikes(item);
     }
 }

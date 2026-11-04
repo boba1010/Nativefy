@@ -1,15 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Nativefy.DbContexts;
+﻿using Nativefy.DbContexts;
 using Nativefy.Models.Media;
-using System.Threading.Tasks;
 
 namespace Nativefy.Services;
 
-public sealed class LikedMediaService(AppDbContext dbContext) : ILikedMediaService
+public sealed class LikedMediaService : ILikedMediaService
 {
-    public async Task AddToLikesAsync(MediaItem item)
+    public void AddToLikes(MediaItem item)
     {
-        var playlist = await dbContext.LikedMedia.FirstOrDefaultAsync();
+        var playlist = NativefyDatabaseProvider.LikedMedia;
         if (playlist == null)
             return;
 
@@ -19,19 +17,19 @@ public sealed class LikedMediaService(AppDbContext dbContext) : ILikedMediaServi
             playlist.Items.Add(item);
             playlist.UpdatedAt = DateTime.UtcNow;
 
-            await dbContext.SaveChangesAsync();
+            NativefyDatabaseProvider.SaveChanges();
         }
     }
 
-    public async Task<LikedMediaPlaylist?> GetLikedMediaAsync()
+    public LikedMediaPlaylist? GetLikedMedia()
     {
-        var playlist = await dbContext.LikedMedia.FirstOrDefaultAsync();
+        var playlist = NativefyDatabaseProvider.LikedMedia;
         return playlist;
     }
 
-    public async Task RemoveFromLikesAsync(string id)
+    public void RemoveFromLikes(string id)
     {
-        var playlist = await dbContext.LikedMedia.FirstOrDefaultAsync();
+        var playlist = NativefyDatabaseProvider.LikedMedia;
 
         if (playlist != null)
         {
@@ -39,7 +37,7 @@ public sealed class LikedMediaService(AppDbContext dbContext) : ILikedMediaServi
             if (removedCount > 0)
             {
                 playlist.UpdatedAt = DateTime.UtcNow;
-                await dbContext.SaveChangesAsync();
+                NativefyDatabaseProvider.SaveChanges();
             }
         }
     }

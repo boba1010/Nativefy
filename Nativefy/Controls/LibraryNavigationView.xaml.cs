@@ -24,7 +24,7 @@ public sealed partial class LibraryNavigationView : UserControl
     }
 
     public static readonly DependencyProperty IsPaneVisibleProperty =
-        DependencyProperty.Register(nameof(IsPaneVisible), typeof(bool), typeof(LibraryNavigationView), new PropertyMetadata(true, null));
+        DependencyProperty.Register(nameof(IsPaneVisible), typeof(bool), typeof(LibraryNavigationView), new PropertyMetadata(true, OnPaneVisiblityChanged));
 
     public bool IsPaneVisible
     {
@@ -78,6 +78,12 @@ public sealed partial class LibraryNavigationView : UserControl
     {
         if (d is LibraryNavigationView control && e.NewValue is double newWidth && control.IsPaneOpen)
             control.SidebarColumn.MaxWidth = newWidth;
+    }
+
+    private static void OnPaneVisiblityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is LibraryNavigationView control && e.NewValue is bool isVisible)
+            control.SidebarColumn.Width = isVisible ? control.IsPaneOpen ? new(300) : new(60) : new(0);
     }
 
     private void InitializeDefaultStructure()
@@ -147,7 +153,7 @@ public sealed partial class LibraryNavigationView : UserControl
         var separatorVisibility = isOpen ? Visibility.Collapsed : Visibility.Visible;
         var alignment = isOpen ? HorizontalAlignment.Left : HorizontalAlignment.Center;
 
-        //SidebarColumn.Width = isOpen ? new GridLength(OpenPaneLength) : new GridLength(60);
+        SidebarColumn.Width = isOpen ? new GridLength(OpenPaneLength) : new GridLength(60);
 
         for (int i = 0; i < NavigationGroups.Count; i++)
         {
