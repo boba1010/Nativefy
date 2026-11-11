@@ -3,14 +3,16 @@
     x:Class="Nativefy.Views.MediaPlayerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Nativefy.Views">
+    xmlns:local="using:Nativefy.Views" 
+    xmlns:vlc="using:LibVLCSharp.Platforms.Windows">
 
     <Grid>
-        <MediaPlayerElement
-            x:Name="MediaPlayerElement"
+        <vlc:VideoView
+            x:Name="VideoView"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            Stretch="Uniform" 
-            PointerReleased="MediaPlayerElement_PointerReleased"/>
+            Initialized="VideoView_Initialized" />
+
+        <Grid Background="Transparent" PointerReleased="Surface_PointerReleased" />
     </Grid>
 </Page>

@@ -1,4 +1,5 @@
-﻿using Nativefy.DbContexts;
+﻿using LibVLCSharp.Shared;
+using Nativefy.DbContexts;
 using Nativefy.Engine.DI;
 using Nativefy.Services;
 using Nativefy.Services.Feed;
@@ -18,6 +19,8 @@ public partial class App : Application
     {
         InitializeComponent();
 
+        Core.Initialize();
+
         var services = new ServiceCollection();
 
         ConfigureServices(services);
@@ -35,12 +38,12 @@ public partial class App : Application
         services.AddSingleton<IPlaylistsService, PlaylistsService>();
         services.AddSingleton<IOnlinePlaylistService, OnlinePlaylistService>();
         services.AddSingleton<ILikedMediaService, LikedMediaService>();
-        services.AddSingleton<IStreamingBackend, YtDlpBackend>();
+        services.AddSingleton<IStreamingBackend, StreamingBackend>();
         services.AddSingleton<IFeedService, HomeFeedService>();
         services.AddSingleton<IHistoryService, HistoryService>();
         services.AddSingleton<ISearchQueriesService, SearchQueriesService>();
-        services.AddSingleton<MediaLoader>();
         services.AddSingleton<PlaybackController>();
+        services.AddSingleton<VideoCache>();
         services.AddNativefyEngine();
 
         services.AddSingleton<ShellViewModel>();

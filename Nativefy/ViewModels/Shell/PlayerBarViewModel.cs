@@ -2,8 +2,10 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Dispatching;
+using Nativefy.Engine;
 using Nativefy.Messages;
 using Nativefy.Services.Playback;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace Nativefy.ViewModels.Shell;
@@ -45,6 +47,8 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsForwardEnabled))]
     public partial uint QueueCount { get; set; }
+
+    public ObservableCollection<Resolution> AvailableResolutions { get; } = [];
 
     public bool IsForwardEnabled => QueueCount > 0 && CurrentIndex < QueueCount - 1;
     public bool IsBackwardEnabled => QueueCount > 0 && CurrentIndex > 0;
@@ -119,6 +123,18 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
         PlaybackController.StateChanged += Player_StateChanged;
         PlaybackController.PositionChanged += Player_PositionChanged;
         PlaybackController.SeekCompleted += Player_SeekCompleted;
+        PlaybackController.AvailableResolutionsChanged += PlaybackController_AvailableResolutionsChanged;
+    }
+
+    private void PlaybackController_AvailableResolutionsChanged(Resolution[] resolutions)
+    {
+        _dispatcherQueue.TryEnqueue(() =>
+        {
+            AvailableResolutions.Clear();
+
+            foreach (var res in resolutions)
+                AvailableResolutions.Add(res);
+        });
     }
 
     private void Player_SeekCompleted() => IsUserScrubbing = false;

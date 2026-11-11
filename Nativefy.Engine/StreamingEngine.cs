@@ -34,9 +34,6 @@ public enum Resolution
     [Description("1080p60")]
     FullHd1080p60,
 
-    [Description("1080p Premium")]
-    FullHd1080pPremium,
-
     // Ultra HD / 2K
     [Description("1440p")]
     Qhd1440p,
@@ -50,32 +47,17 @@ public enum Resolution
 
     [Description("2160p60")]
     Uh4k2160p60,
-
-    // 8K / 4320p
-    [Description("4320p")]
-    Uh8k4320p,
-
-    [Description("4320p60")]
-    Uh8k4320p60
 }
 
 
 public sealed class StreamingEngine(YoutubeClient youtube)
 {
-    public async Task<(string? Url, string? AudioUrl, bool IsMuxed)> StartPlaybackAsync(string videoId, Resolution resolution)
+    public async Task<(string? Url, string? AudioUrl)> GetPlaybackUrlsAsync(string videoId, Resolution resolution)
     {
         try
         {
             var streamManifest = await youtube.Videos.Streams.GetManifestAsync(videoId);
             var label = resolution.GetLabel();
-
-            // Check for exact Muxed stream match (720p or lower)
-            var muxedStreams = streamManifest.GetMuxedStreams().ToList();
-            var exactMuxed = muxedStreams
-                .FirstOrDefault(s => s.VideoQuality.Label.Equals(label, StringComparison.OrdinalIgnoreCase));
-
-            if (exactMuxed != null)
-                return (exactMuxed.Url, null, IsMuxed: true);
 
             // Check for exact Adaptive Video match (1080p, 4K, etc.)
             var videoOnlyStreams = streamManifest.GetVideoOnlyStreams().ToList();
@@ -85,29 +67,43 @@ public sealed class StreamingEngine(YoutubeClient youtube)
             var highestAudio = streamManifest.GetAudioStreams().GetWithHighestBitrate();
 
             if (exactAdaptiveVideo != null && highestAudio != null)
-                return (exactAdaptiveVideo.Url, highestAudio.Url, IsMuxed: false);
-
-            // Fallback: Get the highest available Muxed stream if exact matching failed entirely
-            var anyMuxedStream = muxedStreams.GetWithHighestVideoQuality();
-            if (anyMuxedStream != null)
-                return (anyMuxedStream.Url, null, IsMuxed: true);
+                return (exactAdaptiveVideo.Url, highestAudio.Url);
 
             // Fallback 2: return highest adaptive video + audio if no muxed exist at all
             var highestAdaptiveVideo = videoOnlyStreams.GetWithHighestVideoQuality();
             if (highestAdaptiveVideo != null && highestAudio != null)
-                return (highestAdaptiveVideo.Url, highestAudio.Url, IsMuxed: false);
+                return (highestAdaptiveVideo.Url, highestAudio.Url);
 
             // Fallback for Audio-Only YouTube items (e.g. YouTube Music tracks)
             if (highestAudio != null)
-                return (null, highestAudio.Url, IsMuxed: false);
+                return (null, highestAudio.Url);
 
-            return (null, null, false);
+            return (null, null);
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Failed to stream YouTube Video: {ex.Message}");
-            return (null, null, false);
+            Debug.WriteLine($"Failed to stream YouTube Video: {ex.Message}");
+            return (null, null);
         }
+    }
+
+    public async Task<Resolution[]> GetResolutionsAsync(string id, CancellationToken cancellationToken = default)
+    {
+        var streamManifest = await youtube.Videos.Streams.GetManifestAsync(id, cancellationToken);
+
+        var streams = streamManifest.GetVideoOnlyStreams().ToList();
+
+        List<Resolution> resolutions = [];
+
+        foreach (var resolution in Enum.GetValues<Resolution>())
+        {
+            var label = resolution.GetLabel();
+
+            if (streams.Any(s => s.VideoQuality.Label == label))
+                resolutions.Add(resolution);
+        }
+
+        return [.. resolutions];
     }
 }
 

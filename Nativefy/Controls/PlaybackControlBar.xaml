@@ -160,10 +160,9 @@
                 Foreground="Gray"/>
         </Grid>
         
-        <Grid
-            VerticalAlignment="Center"
-            Grid.Column="3" ColumnSpacing="5">
+        <Grid VerticalAlignment="Center" Grid.Column="3" ColumnSpacing="5">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -197,6 +196,8 @@
                 Command="{x:Bind ViewModel.ToggleDetailsPanelCommand}">
                 <FontIcon Glyph="&#xE946;" FontSize="17" />
             </ToggleButton>
+
+            <ComboBox Grid.Column="3" Width="100" ItemsSource="{x:Bind ViewModel.AvailableResolutions, Mode=OneWay}"/>
         </Grid>
     </Grid>
 </UserControl>

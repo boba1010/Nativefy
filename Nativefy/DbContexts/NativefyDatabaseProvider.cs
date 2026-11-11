@@ -12,10 +12,10 @@ public static class NativefyDatabaseProvider
     private const string SearchQueriesHeader = "SEARCHQUERIES";
     private const int SchemaVersion = 1;
 
-    private static string _playlistsPath;
-    private static string _likedMediaPath;
-    private static string _historyPath;
-    private static string _searchQueriesPath;
+    private static string _playlistsPath = null!;
+    private static string _likedMediaPath = null!;
+    private static string _historyPath = null!;
+    private static string _searchQueriesPath = null!;
 
     public static List<LocalPlaylist> Playlists { get; private set; } = [];
     
