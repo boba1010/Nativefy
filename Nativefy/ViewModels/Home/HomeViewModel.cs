@@ -1,5 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Nativefy.Engine;
+using Nativefy.Messages;
 using Nativefy.Services.Feed;
 using Nativefy.ViewModels.Home;
 using System.Collections.ObjectModel;
@@ -9,6 +12,8 @@ namespace Nativefy.ViewModels;
 
 public sealed partial class HomeViewModel(IFeedService feedService) : BaseViewModel
 {
+    private List<FeedResult> _feed = [];
+
     public ObservableCollection<FeedResult> Feed { get; } = [];
     
     [ObservableProperty]
@@ -35,16 +40,18 @@ public sealed partial class HomeViewModel(IFeedService feedService) : BaseViewMo
                 return;
             }
 
+            _feed = feed;
+
             for (int i = 0; i < 5; i++)
             {
                 var item = feed[i];
-                HeroAdapter.HeroSlides.Add(new(item.Title, item.Author, "Play", new(item.ImageUrl)));
+                HeroAdapter.HeroSlides.Add(new(item.Title, item.Author, "Play", new(item.ImageUrl), PlayCommand, item.Id));
             }
             
             for (int i = 5; i < 8; i++)
             {
                 var card = feed[i];
-                HeroAdapter.Cards.Add(new(card.Url, card.ImageUrl, "You might like this instead", card.Title, card.Author));
+                HeroAdapter.Cards.Add(new(card.Id, card.ImageUrl, "You might like this instead", card.Title, card.Author));
             }
 
             for (int i = 8; i < feed.Count; i++)
@@ -57,5 +64,23 @@ public sealed partial class HomeViewModel(IFeedService feedService) : BaseViewMo
         {
             IsLoading = false;
         }
+    }
+
+    [RelayCommand]
+    public void Play(string id)
+    {
+        var selectedItem = _feed.FirstOrDefault(f => f.Id == id) ?? throw new InvalidDataException();
+
+        WeakReferenceMessenger.Default.Send(new PlayItemMessage(new()
+        {
+            Id = id,
+            Author = selectedItem.Author,
+            ImageUrl = selectedItem.ImageUrl,
+            Title = selectedItem.Title,
+            Url = selectedItem.Url,
+            Position = 0,
+            Duration = selectedItem.Duration,
+            AddedDate = DateTime.Now,
+        }));
     }
 }

@@ -20,17 +20,12 @@ public sealed partial class HomePage : Page
 
     private void OnFilterRadioButtonClick(object sender, RoutedEventArgs e)
     {
+        // TODO
     }
 
-    private void OnBannerSelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void Play_Clicked(object sender, RoutedEventArgs e)
     {
-    }
-
-    private void OnCardClick(object sender, RoutedEventArgs e)
-    {
-    }
-
-    private void OnPlayClick(object sender, RoutedEventArgs e)
-    {
+        var button = (Button)sender;
+        ViewModel.Play((string)button.Tag);
     }
 }

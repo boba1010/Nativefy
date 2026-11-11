@@ -73,8 +73,7 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch" 
                         ItemsSource="{x:Bind ViewModel.HeroAdapter.HeroSlides, Mode=OneWay}"
-                        ImagesCount="{x:Bind ViewModel.HeroAdapter.HeroSlides.Count, Mode=OneWay}"
-                        FlipViewSelectionChanged="OnBannerSelectionChanged" />
+                        ImagesCount="{x:Bind ViewModel.HeroAdapter.HeroSlides.Count, Mode=OneWay}" />
 
                     <!-- Shortcuts Side pane -->
                     <controls:HeroSidePane 
@@ -83,7 +82,8 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         ItemsSource="{x:Bind ViewModel.HeroAdapter.Cards, Mode=OneWay}"
-                        IsLoading="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
+                        IsLoading="{x:Bind ViewModel.IsLoading, Mode=OneWay}" 
+                        ItemInvoked="Play_Clicked"/>
                 </Grid>
 
                 <Grid Grid.Row="3" HorizontalAlignment="Center">
@@ -98,7 +98,7 @@
                         </ItemsRepeater.Layout>
 
                         <DataTemplate x:DataType="models:FeedResult">
-                            <Button Padding="10">
+                            <Button Padding="10" Click="Play_Clicked" Tag="{x:Bind Id}">
                                 <Grid RowSpacing="10">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
@@ -112,7 +112,7 @@
                                             HorizontalAlignment="Left" 
                                             Background="Black"
                                             Margin="5"
-                                            Padding="2" CornerRadius="2">
+                                            Padding="2, 0" CornerRadius="4">
                                             <TextBlock Text="{x:Bind helpers:DurationHelper.FormatDuration(Duration)}" />
                                         </Border>
                                     </Grid>

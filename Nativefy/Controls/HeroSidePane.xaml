@@ -39,10 +39,10 @@
                             HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Stretch"
                             VerticalContentAlignment="Stretch"
-                            Tag="{x:Bind Url}"
+                            Tag="{x:Bind Id}"
                             Click="OnButtonCLick">
                             <Grid>
-                                <local:ImageView ImageUrl="{x:Bind ImageUrl, Mode=OneWay}" Grid.RowSpan="2" />
+                                <local:ImageView ImageUrl="{x:Bind ImageUrl}" Grid.RowSpan="2" />
 
                                 <Grid Padding="10">
                                     <Grid.RowDefinitions>
@@ -67,14 +67,14 @@
                                     <TextBlock 
                                         Grid.Row="1" FontSize="20"
                                         VerticalAlignment="Bottom"
-                                        Text="{x:Bind Title, Mode=OneWay}"
+                                        Text="{x:Bind Title}"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="NoWrap"/>
                                     
                                     <TextBlock 
                                         Grid.Row="2" FontSize="14"
                                         VerticalAlignment="Bottom"
-                                        Text="{x:Bind Author, Mode=OneWay}"
+                                        Text="{x:Bind Author}"
                                         TextTrimming="CharacterEllipsis" 
                                         TextWrapping="NoWrap" />
                                 </Grid>
