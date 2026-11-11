@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Nativefy.Views"
-    xmlns:models="using:Nativefy.Models.Media">
+    xmlns:models="using:Nativefy.Models.Media"
+    xmlns:helpers="using:Nativefy.Helpers">
 
     <Page.Resources>
         <GridLength x:Key="NumberColumnWidth">30</GridLength>
@@ -218,7 +219,7 @@
                             <!-- Duration -->
                             <TextBlock 
                                 Grid.Column="4"
-                                Text="{x:Bind local:PlaylistPage.FormatDuration(Duration)}"
+                                Text="{x:Bind helpers:DurationHelper.FormatDuration(Duration)}"
                                 HorizontalAlignment="Center"
                                 Style="{StaticResource SecondaryText}"/>
 
@@ -262,7 +263,7 @@
                         <Run Text="{x:Bind ViewModel.Playlist.Items.Count}" />
                         <Run Text="items" />
                         <Run Text="•" />
-                        <Run Text="{x:Bind local:PlaylistPage.FormatTotalDuration(ViewModel.Playlist.Items)}" />
+                        <Run Text="{x:Bind helpers:DurationHelper.FormatTotalDuration(ViewModel.Playlist.Items)}" />
                     </TextBlock>
 
                     <Button 

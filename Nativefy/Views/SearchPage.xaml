@@ -4,12 +4,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Nativefy.Views"
-    xmlns:models="using:Nativefy.Engine"
+    xmlns:models="using:Nativefy.Engine.Playable"
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
-    xmlns:root="using:Nativefy">
+    xmlns:root="using:Nativefy"
+    xmlns:helpers="using:Nativefy.Helpers">
 
     <Page.Resources>
-
         <DataTemplate x:Key="MediaTemplate" x:DataType="models:IMedia">
             <ItemContainer>
                 <Grid ColumnSpacing="8" Height="80" Padding="10">
@@ -23,13 +23,13 @@
                             <Image Source="{x:Bind ImageUrl}" VerticalAlignment="Center" />
 
                             <Border 
-                                Padding="2" CornerRadius="8"
+                                Padding="2" CornerRadius="2"
                                 HorizontalAlignment="Right" 
                                 VerticalAlignment="Bottom"
-                                Background="#801A1A1A">
+                                Background="Black">
                                 <TextBlock 
                                     FontSize="12"
-                                    Text="{x:Bind local:SearchPage.FormatDuration(Duration)}" 
+                                    Text="{x:Bind helpers:DurationHelper.FormatDuration(Duration)}" 
                                     Foreground="{ThemeResource TextFillColorSecondary}"/>
                             </Border>
                         </Grid>

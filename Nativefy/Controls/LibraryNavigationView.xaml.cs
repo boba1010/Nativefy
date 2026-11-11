@@ -90,8 +90,8 @@ public sealed partial class LibraryNavigationView : UserControl
     {
         var libraryGroup = new SidebarGroup { HeaderText = "Library", GroupTag = "LibraryGroup" };
         libraryGroup.Items.Add(new() { Tag = "LikedMedia", Text = "Liked Media", Glyph = "\uEB51" }); // Heart Icon
-        libraryGroup.Items.Add(new() { Tag = "WatchLater", Text = "Watch Later", Glyph = "\uE917" }); // Clock Icon
         libraryGroup.Items.Add(new() { Tag = "LikedAuthors", Text = "Liked Authors", Glyph = "\uE716" }); // People Icon
+        libraryGroup.Items.Add(new() { Tag = "History", Text = "History", Glyph = "\uE917" }); // Clock Icon
         NavigationGroups.Add(libraryGroup);
 
         var playlistGroup = new SidebarGroup 

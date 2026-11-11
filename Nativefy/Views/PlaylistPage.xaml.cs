@@ -17,25 +17,7 @@ public sealed partial class PlaylistPage : Page
     private static readonly SolidColorBrush StripeBrushEven = new(Microsoft.UI.Colors.Transparent);
     public static Brush StripeBrush(int position) => position % 2 == 0 ? StripeBrushOdd : StripeBrushEven;
     public static string FormatDate(DateTimeOffset d) => d.ToString("MMM d");
-    public static string FormatDuration(TimeSpan t) => t.TotalHours >= 1 ? t.ToString(@"h\:mm\:ss") : t.ToString(@"m\:ss");
-
-    public static string FormatTotalDuration(List<MediaItem> items)
-    {
-        var hours = 0;
-        var minutes = 0;
-
-        foreach (var item in items)
-        {
-            hours += item.Duration.Hours;
-            minutes += item.Duration.Minutes;
-        }
-
-        if (hours >= 1)
-            return $"{hours} hr {minutes} min";
-
-        return $"{minutes} min";
-    }
-
+    
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);

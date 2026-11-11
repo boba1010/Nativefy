@@ -5,7 +5,7 @@ namespace Nativefy.Engine;
 
 public sealed class PlaylistEngine(YoutubeClient youtube)
 {
-    public async Task<Playlist> GetAsync(string id)
+    public async Task<Playable.PlayablePlaylist> GetAsync(string id)
     {
         var ytPlaylist = await youtube.Playlists.GetAsync(new(id));
 

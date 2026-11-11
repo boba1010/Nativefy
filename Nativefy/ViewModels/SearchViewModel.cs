@@ -1,11 +1,12 @@
 ﻿using Nativefy.Engine;
+using Nativefy.Engine.Playable;
 using Nativefy.Services;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace Nativefy.ViewModels;
 
-public sealed partial class SearchViewModel(NativefyEngine nativefy, ILikedMediaService likedMedia) : BaseViewModel
+public sealed partial class SearchViewModel(NativefyEngine nativefy, ILikedMediaService likedMedia, ISearchQueriesService search) : BaseViewModel
 {
     public ObservableCollection<IPlayable> Results { get; } = [];
     public ObservableCollection<byte> DummyResults { get; } = new(Enumerable.Repeat(0, 100).Select(x => (byte)x));
@@ -17,10 +18,19 @@ public sealed partial class SearchViewModel(NativefyEngine nativefy, ILikedMedia
 
         try
         {
+            search.SaveQuery(query);
+            
             var results = await nativefy.Search.GetResultAsync(query, 100);
 
             foreach (var result in results)
-                Results.Add(result);
+            {
+                Results.Add(result switch
+                {
+                    Engine.Search.Video video => new PlayableMedia(video),
+                    Engine.Search.Playlist playlist => new PlayablePlaylist(playlist),
+                    _ => throw new NotSupportedException()
+                });
+            }
         }
         finally
         {
@@ -32,19 +42,21 @@ public sealed partial class SearchViewModel(NativefyEngine nativefy, ILikedMedia
     {
         var item = Results.FirstOrDefault(r => r.Id == id) ?? throw new InvalidDataException();
 
-        if (item is Playlist)
+        if (item is PlayablePlaylist)
             return;
 
         if (item is PlayableMedia media)
-        likedMedia.AddToLikes(new()
         {
-            Id = media.Id,
-            Url = media.Url,
-            AddedDate = DateTime.Now,
-            Author = media.Author,
-            Duration = media.Duration,
-            ImageUrl = media.ImageUrl,
-            Title = media.Title,
-        });
+            likedMedia.AddToLikes(new()
+            {
+                Id = media.Id,
+                Url = media.Url,
+                AddedDate = DateTime.Now,
+                Author = media.Author,
+                Duration = media.Duration,
+                ImageUrl = media.ImageUrl,
+                Title = media.Title,
+            });
+        }
     }
 }

@@ -125,7 +125,8 @@ public sealed partial class MainWindow : Window
             case "LikedAuthors":
                 break;
 
-            case "WatchLater":
+            case "History":
+                ContentFrame.Navigate(typeof(HistoryPage));
                 break;
 
             /* SHOULD NOT BE REMOVED OR WILL CAUSE UNDEFINED BEHAVIOR */

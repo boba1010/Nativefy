@@ -7,132 +7,126 @@
     xmlns:local="using:Nativefy"
     xmlns:controls="using:Nativefy.Controls"
     xmlns:toolkitcontrols="using:CommunityToolkit.WinUI.Controls"
-    xmlns:homemodels="using:Nativefy.Models.Home"
-    x:Name="rootPage">
+    xmlns:models="using:Nativefy.Engine"
+    xmlns:helpers="using:Nativefy.Helpers">
 
-    <Page.Resources>
-        <DataTemplate 
-            x:DataType="homemodels:HomeSection"
-            x:Key="StandardShelfTemplate">
-            <controls:MediaShelf
-                MediaSource="{x:Bind Items}"
-                ShelfTitle="{x:Bind Title}"
-                Tag="{x:Bind SectionUri}"
-                CardClick="OnCardClick"
-                PlayClick="OnPlayClick"
-                IsLoading="{Binding ElementName=rootPage, Path=ViewModel.IsLoading, Mode=OneWay}" />
-        </DataTemplate>
+    <Grid>
+        <TextBlock 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center"
+            Text="Please search for something to enable the home feed" 
+            FontSize="20" 
+            Visibility="{x:Bind ViewModel.IsFeedEmpty, Mode=OneWay}"/>
 
-        <DataTemplate 
-            x:DataType="homemodels:HomeSection"
-            x:Key="HeroPromptShelfTemplate">
-            <controls:FeaturedShelf
-                MediaSource="{x:Bind Items}"
-                Tag="{x:Bind SectionUri}"
-                CardClick="OnCardClick"
-                PlayClick="OnPlayClick"
-                IsLoading="{Binding ElementName=rootPage, Path=ViewModel.IsLoading, Mode=OneWay}" />
-        </DataTemplate>
-
-        <local:ShelfTemplateSelector 
-            x:Key="ShelfSelector"
-            StandardTemplate="{StaticResource StandardShelfTemplate}"
-            HeroPromptTemplate="{StaticResource HeroPromptShelfTemplate}"/>
-    </Page.Resources>
-
-    <ScrollViewer>
-        <Grid
-            Padding="25"
-            RowSpacing="20">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <!-- User greeting section -->
-            <controls:HomeHeader
-                IsLoading="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
-                PersonPicture="B"
-                FilterChecked="OnFilterRadioButtonClick" />
-
-            <!-- Hero Section -->
-            <Grid 
-                Grid.Row="2"
-                Grid.ColumnSpan="2"
-                HorizontalAlignment="Stretch" 
-                VerticalAlignment="Stretch"
-                RowSpacing="10"
-                ColumnSpacing="20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="7*" />
-                    <ColumnDefinition Width="3*" />
-                </Grid.ColumnDefinitions>
-
+        <ScrollViewer Visibility="{x:Bind ViewModel.IsFeedNotEmpty, Mode=OneWay}">
+            <Grid Padding="25" RowSpacing="20">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="5"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <toolkitcontrols:Shimmer 
-                    Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
-                    Height="3"
-                    HorizontalAlignment="Left"
-                    CornerRadius="2" 
-                    Width="200" />
-
-                <Border 
-                    Visibility="{x:Bind ViewModel.IsNotLoading, Mode=OneWay}"
-                    BorderThickness="2" 
-                    BorderBrush="{ThemeResource SystemAccentColor}" 
-                    Width="200" 
-                    CornerRadius="2" 
-                    HorizontalAlignment="Left" />
-
-                <!-- Banner Slide show -->
-                <controls:AmbientImageViewer 
+                <!-- User greeting section -->
+                <controls:HomeHeader
                     IsLoading="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
-                    Grid.Row="1"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch" 
-                    ItemsSource="{x:Bind ViewModel.HeroAdapter.HeroSlides, Mode=OneWay}"
-                    ImagesCount="{x:Bind ViewModel.HeroAdapter.HeroSlides.Count, Mode=OneWay}"
-                    FlipViewSelectionChanged="OnBannerSelectionChanged" />
+                    FilterChecked="OnFilterRadioButtonClick" />
 
-                <!-- Shortcuts Side pane -->
-                <controls:HeroSidePane 
-                    Grid.Column="1" 
-                    Grid.Row="1" 
-                    HorizontalAlignment="Stretch"
+                <!-- Hero Section -->
+                <Grid 
+                    Grid.Row="2"
+                    Grid.ColumnSpan="2"
+                    HorizontalAlignment="Stretch" 
                     VerticalAlignment="Stretch"
-                    Card0="{x:Bind ViewModel.HeroAdapter.Card0, Mode=OneWay}"
-                    Card1="{x:Bind ViewModel.HeroAdapter.Card1, Mode=OneWay}"
-                    Card2="{x:Bind ViewModel.HeroAdapter.Card2, Mode=OneWay}"
-                    IsLoading="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
-            </Grid>
+                    RowSpacing="10"
+                    ColumnSpacing="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
 
-            <!-- Shelves Section -->
-            <Grid Grid.Row="3">
-                <ItemsControl 
-                    x:Name="DynamicShelfOrganizer" 
-                    ItemsSource="{x:Bind ViewModel.Sections, Mode=OneWay}"
-                    ItemTemplateSelector="{StaticResource ShelfSelector}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Vertical" Spacing="32"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-            <!-- Browse all section -->
-            <controls:FilterCollections 
-                Grid.Row="4"
-                IsLoading="{x:Bind ViewModel.IsLoading, Mode=OneWay}" 
-                FilterCollectionsSource="{x:Bind ViewModel.HeroAdapter.BrowseGroups, Mode=OneWay}"
-                FilterClicked="OnBrowseAllFilterButtonClick" />
-        </Grid>
-    </ScrollViewer>
+                    <toolkitcontrols:Shimmer 
+                        Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                        Height="3"
+                        HorizontalAlignment="Left"
+                        CornerRadius="2" 
+                        Width="200" />
+
+                    <Border 
+                        Visibility="{x:Bind ViewModel.IsNotLoading, Mode=OneWay}"
+                        BorderThickness="2" 
+                        BorderBrush="{ThemeResource SystemAccentColor}" 
+                        Width="200" 
+                        CornerRadius="2" 
+                        HorizontalAlignment="Left" />
+
+                    <!-- Banner Slide show -->
+                    <controls:AmbientImageViewer 
+                        IsLoading="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                        Grid.Row="1"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch" 
+                        ItemsSource="{x:Bind ViewModel.HeroAdapter.HeroSlides, Mode=OneWay}"
+                        ImagesCount="{x:Bind ViewModel.HeroAdapter.HeroSlides.Count, Mode=OneWay}"
+                        FlipViewSelectionChanged="OnBannerSelectionChanged" />
+
+                    <!-- Shortcuts Side pane -->
+                    <controls:HeroSidePane 
+                        Grid.Column="1" 
+                        Grid.Row="1" 
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        ItemsSource="{x:Bind ViewModel.HeroAdapter.Cards, Mode=OneWay}"
+                        IsLoading="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
+                </Grid>
+
+                <Grid Grid.Row="3" HorizontalAlignment="Center">
+                    <ItemsRepeater ItemsSource="{x:Bind ViewModel.Feed, Mode=OneWay}">
+                        <ItemsRepeater.Layout>
+                            <UniformGridLayout
+                                Orientation="Horizontal"
+                                MinItemWidth="350"
+                                MinItemHeight="300"
+                                MinColumnSpacing="5"
+                                MinRowSpacing="5" />
+                        </ItemsRepeater.Layout>
+
+                        <DataTemplate x:DataType="models:FeedResult">
+                            <Button Padding="10">
+                                <Grid RowSpacing="10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid>
+                                        <Image Source="{x:Bind ImageUrl}" />
+                                        <Border 
+                                            VerticalAlignment="Bottom" 
+                                            HorizontalAlignment="Left" 
+                                            Background="Black"
+                                            Margin="5"
+                                            Padding="2" CornerRadius="2">
+                                            <TextBlock Text="{x:Bind helpers:DurationHelper.FormatDuration(Duration)}" />
+                                        </Border>
+                                    </Grid>
+
+                                    <StackPanel Grid.Row="1" Spacing="2">
+                                        <TextBlock Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" FontSize="16" />
+                                        <TextBlock Text="{x:Bind Author}" FontSize="14" />
+                                    </StackPanel>
+                                </Grid>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsRepeater>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
 </Page>

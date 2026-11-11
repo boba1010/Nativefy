@@ -24,14 +24,12 @@
     <ItemGroup>
         <None Remove="Controls\AmbientGlowBackdrop.xaml" />
         <None Remove="Controls\AmbientImageViewer.xaml" />
-        <None Remove="Controls\FeaturedShelf.xaml" />
-        <None Remove="Controls\FilterCollections.xaml" />
         <None Remove="Controls\HeroSidePane.xaml" />
         <None Remove="Controls\HomeHeader.xaml" />
-        <None Remove="Controls\MediaShelf.xaml" />
         <None Remove="Controls\NewPlaylistDialog.xaml" />
         <None Remove="Controls\PlaybackControlBar.xaml" />
         <None Remove="CrashReporter.exe" />
+        <None Remove="Views\HistoryPage.xaml" />
         <None Remove="Views\HomePage.xaml" />
         <None Remove="Views\LikedMediaPage.xaml" />
         <None Remove="Views\MediaPlayerPage.xaml" />
@@ -79,6 +77,11 @@
         <ProjectReference Include="..\Nativefy.Engine\Nativefy.Engine.csproj" />
     </ItemGroup>
     <ItemGroup>
+      <Page Update="Views\HistoryPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+    <ItemGroup>
         <Page Update="Views\MediaPlayerPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
@@ -100,21 +103,6 @@
     </ItemGroup>
     <ItemGroup>
         <Page Update="Controls\PlaybackControlBar.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-    </ItemGroup>
-    <ItemGroup>
-        <Page Update="Controls\FilterCollections.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-    </ItemGroup>
-    <ItemGroup>
-        <Page Update="Controls\FeaturedShelf.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
-    </ItemGroup>
-    <ItemGroup>
-        <Page Update="Controls\MediaShelf.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
     </ItemGroup>

@@ -55,6 +55,8 @@ internal sealed class PlaylistsService : IPlaylistsService
 
         storedPlaylist.Name = playlist.Name;
         storedPlaylist.ImageUrl = playlist.ImageUrl;
+        storedPlaylist.Author = playlist.Author;
+        storedPlaylist.Url = playlist.Url;
         storedPlaylist.UpdatedAt = DateTime.UtcNow;
 
         storedPlaylist.Items.Clear();

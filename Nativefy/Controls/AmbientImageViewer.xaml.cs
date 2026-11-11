@@ -119,18 +119,6 @@ public sealed partial class AmbientImageViewer : UserControl
             new PropertyMetadata(null));
 
     public event EventHandler<object, SelectionChangedEventArgs>? FlipViewSelectionChanged;
-    public event EventHandler<object, RoutedEventArgs>? PlayButtonClick;
-    public event EventHandler<object, RoutedEventArgs>? OpenButtonClick;
-
-    public void OnPlayButtonClick(object sender, RoutedEventArgs e)
-    {
-        PlayButtonClick?.Invoke(sender, e);
-    }
-
-    public void OnOpenButtonClick(object sender, RoutedEventArgs e)
-    {
-        OpenButtonClick?.Invoke(sender, e);
-    }
 
     private void OnImageFlipViewLoaded(object sender, RoutedEventArgs e)
     {

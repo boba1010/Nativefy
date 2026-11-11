@@ -11,4 +11,8 @@
     <PackageReference Include="YoutubeExplode" Version="6.6.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Nativefy.Engine\Nativefy.Engine.csproj" />
+  </ItemGroup>
+
 </Project>

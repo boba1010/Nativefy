@@ -10,6 +10,7 @@ public sealed class NativefyEngine : IDisposable
     public SearchEngine Search { get; }
     public PlaylistEngine Playlist { get; }
     public StreamingEngine Streaming { get; }
+    public FeedEngine Feed { get; }
 
     public NativefyEngine()
     {
@@ -28,6 +29,7 @@ public sealed class NativefyEngine : IDisposable
         Search = new(_youtube);
         Playlist = new(_youtube);
         Streaming = new(_youtube);
+        Feed = new(Search);
     }
 
     public void Dispose()

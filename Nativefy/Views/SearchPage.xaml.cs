@@ -1,5 +1,5 @@
 using CommunityToolkit.Mvvm.Messaging;
-using Nativefy.Engine;
+using Nativefy.Engine.Playable;
 using Nativefy.Messages;
 using System.Diagnostics;
 
@@ -21,13 +21,6 @@ public sealed partial class SearchPage : Page
             _ = ViewModel.ExecuteSearchAsync(m.Query);
         });
     }
-
-    public static string FormatDuration(TimeSpan? duration)
-    {
-        if (!duration.HasValue)
-            return "";
-        return duration.Value.Hours >= 1 ? duration.Value.ToString(@"hh\:mm\:ss") : duration.Value.ToString(@"mm\:ss");
-    } 
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {

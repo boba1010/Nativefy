@@ -1,10 +1,10 @@
 ﻿namespace Nativefy.Models.Home;
 
-public sealed class SideCardItem
+public sealed class SideCardItem(string url, string imageUrl, string eyebrow, string title, string author)
 {
-    public string Accent { get; set; } = null!;
-    public string NavigationUri { get; set; } = null!;
-    public string ImageUri { get; set; } = null!;
-    public string Eyebrow { get; set; } = null!;
-    public string Label { get; set; } = null!;
+    public string Url { get; set; } = url;
+    public string ImageUrl { get; set; } = imageUrl;
+    public string Eyebrow { get; set; } = eyebrow;
+    public string Title { get; set; } = title;
+    public string Author { get; set; } = author;
 }

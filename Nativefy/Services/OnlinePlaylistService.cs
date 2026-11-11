@@ -1,4 +1,5 @@
 ﻿using Nativefy.Engine;
+using Nativefy.Engine.Playable;
 using System.Threading.Tasks;
 
 namespace Nativefy.Services;
@@ -14,11 +15,13 @@ public sealed class OnlinePlaylistService(NativefyEngine nativefy) : IOnlinePlay
             Id = playlist.Id,
             Name = playlist.Title,
             ImageUrl = playlist.ImageUrl,
+            Url = playlist.Url,
+            Author = playlist.Author,
             Items = MapVideos(playlist)
         };
     }
 
-    private static List<Models.Media.MediaItem> MapVideos(Playlist playlist)
+    private static List<Models.Media.MediaItem> MapVideos(PlayablePlaylist playlist)
     {
         var videos = new List<Models.Media.MediaItem>(playlist.Media.Count);
 

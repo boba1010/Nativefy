@@ -1,5 +1,7 @@
-﻿using Nativefy.Engine.DI;
+﻿using Nativefy.DbContexts;
+using Nativefy.Engine.DI;
 using Nativefy.Services;
+using Nativefy.Services.Feed;
 using Nativefy.Services.Playback;
 using Nativefy.ViewModels.Shell;
 using System.Diagnostics;
@@ -22,6 +24,9 @@ public partial class App : Application
 
         Services = services.BuildServiceProvider();
 
+        NativefyDatabaseProvider.InitializeDatabase();
+        NativefyDatabaseProvider.LoadDatabases();
+
         UnhandledException += Application_UnhandledException;
     }
 
@@ -31,13 +36,16 @@ public partial class App : Application
         services.AddSingleton<IOnlinePlaylistService, OnlinePlaylistService>();
         services.AddSingleton<ILikedMediaService, LikedMediaService>();
         services.AddSingleton<IStreamingBackend, YtDlpBackend>();
+        services.AddSingleton<IFeedService, HomeFeedService>();
+        services.AddSingleton<IHistoryService, HistoryService>();
+        services.AddSingleton<ISearchQueriesService, SearchQueriesService>();
         services.AddSingleton<MediaLoader>();
         services.AddSingleton<PlaybackController>();
         services.AddNativefyEngine();
 
-        services.AddTransient<HomeViewModel>();
         services.AddSingleton<ShellViewModel>();
         services.AddSingleton<PlayerBarViewModel>();
+        services.AddTransient<HomeViewModel>();
         services.AddTransient<PlaylistViewModel>();
         services.AddTransient<SearchViewModel>();
         services.AddTransient<LikedMediaViewModel>();

@@ -5,7 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Nativefy.Views" 
     xmlns:models="using:Nativefy.Models.Media"
-    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
+    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
+    xmlns:helpers="using:Nativefy.Helpers">
 
     <Page.Resources>
         <GridLength x:Key="NumberColumnWidth">30</GridLength>
@@ -314,7 +315,7 @@
                                 <!-- Duration -->
                                 <TextBlock 
                                     Grid.Column="4"
-                                    Text="{x:Bind local:PlaylistPage.FormatDuration(Duration)}"
+                                    Text="{x:Bind helpers:DurationHelper.FormatDuration(Duration)}"
                                     HorizontalAlignment="Center"
                                     Style="{StaticResource SecondaryText}"/>
                             </Grid>

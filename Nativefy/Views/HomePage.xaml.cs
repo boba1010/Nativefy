@@ -3,6 +3,7 @@ namespace Nativefy.Views;
 public sealed partial class HomePage : Page
 {
     public HomeViewModel ViewModel { get; set; }
+
     public HomePage()
     {
         InitializeComponent();
@@ -30,10 +31,6 @@ public sealed partial class HomePage : Page
     }
 
     private void OnPlayClick(object sender, RoutedEventArgs e)
-    {
-    }
-
-    private void OnBrowseAllFilterButtonClick(object sender, RoutedEventArgs e)
     {
     }
 }
