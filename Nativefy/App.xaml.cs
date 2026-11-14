@@ -1,6 +1,7 @@
 ﻿using Nativefy.DbContexts;
 using Nativefy.Engine.DI;
 using Nativefy.Services;
+using Nativefy.Services.Cache;
 using Nativefy.Services.Feed;
 using Nativefy.Services.Playback;
 using Nativefy.ViewModels.Shell;
@@ -35,11 +36,12 @@ public partial class App : Application
         services.AddSingleton<IPlaylistsService, PlaylistsService>();
         services.AddSingleton<IOnlinePlaylistService, OnlinePlaylistService>();
         services.AddSingleton<ILikedMediaService, LikedMediaService>();
-        services.AddSingleton<IStreamingBackend, YtDlpBackend>();
+        services.AddSingleton<IStreamingBackend, StreamingBackend>();
         services.AddSingleton<IFeedService, HomeFeedService>();
         services.AddSingleton<IHistoryService, HistoryService>();
         services.AddSingleton<ISearchQueriesService, SearchQueriesService>();
         services.AddSingleton<MediaLoader>();
+        services.AddSingleton<MediaCache>();
         services.AddSingleton<PlaybackController>();
         services.AddNativefyEngine();
 

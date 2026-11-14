@@ -103,12 +103,19 @@
             </Button>
             
             <Button 
+                Visibility="{x:Bind ViewModel.IsNotDownloading, Mode=OneWay}"
                 ToolTipService.ToolTip="{x:Bind ViewModel.PlayPauseTooltip, Mode=OneWay}" 
                 Background="Transparent" 
                 BorderBrush="Transparent" 
                 Command="{x:Bind ViewModel.PlayPauseCommand, Mode=OneWay}">
                 <FontIcon Glyph="{x:Bind ViewModel.PlayPauseGlyph, Mode=OneWay}"  FontSize="20" />
             </Button>
+
+            <ProgressRing 
+                Visibility="{x:Bind ViewModel.IsDownloading, Mode=OneWay}"
+                IsIndeterminate="False"
+                Value="{x:Bind ViewModel.DownloadProgress, Mode=OneWay}"/>
+
             <Button
                 IsEnabled="{x:Bind ViewModel.IsForwardEnabled, Mode=OneWay}"
                 ToolTipService.ToolTip="Forward"

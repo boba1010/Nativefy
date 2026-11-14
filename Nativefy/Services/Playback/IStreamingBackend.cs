@@ -8,5 +8,16 @@ namespace Nativefy.Services.Playback;
 
 public interface IStreamingBackend
 {
-    Task<MediaSource> CreateSourceAsync(MediaItem item, Resolution resolution, CancellationToken cancellationToken = default);
+    Task<MediaSource> CreateSourceAsync(
+        MediaItem item,
+        Resolution resolution,
+        IProgress<DownloadProgress>? progress = null,
+        CancellationToken cancellationToken = default);
 }
+
+public readonly record struct DownloadProgress(
+    double Percentage,
+    long DownloadedBytes,
+    long? TotalBytes,
+    double? BytesPerSecond,
+    TimeSpan? EstimatedRemaining);

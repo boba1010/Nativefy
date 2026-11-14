@@ -55,7 +55,22 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
 
     public PlaybackController PlaybackController { get; }
     public bool IsUserScrubbing { get; set; }
-    
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsNotDownloading))]
+    public partial bool IsDownloading { get; set; }
+
+    public bool IsNotDownloading => !IsDownloading;
+
+    [ObservableProperty]
+    public partial double DownloadProgress { get; set; }
+
+    [ObservableProperty]
+    public partial string DownloadSpeed { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string DownloadEta { get; set; } = string.Empty;
+
     public PlayerBarViewModel(PlaybackController controller)
     {
         PlaybackController = controller;
@@ -96,6 +111,51 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
 
             await PlaybackController.PlayItemAsync(item);
         });
+
+        WeakReferenceMessenger.Default.Register<MediaReportMessage>(
+            this,
+            (r, m) =>
+            {
+                _dispatcherQueue.TryEnqueue(() =>
+                {
+                    switch (m.Stage)
+                    {
+                        case MediaReportStage.Downloading:
+                            IsDownloading = true;
+                            DownloadProgress = 0;
+                            break;
+
+                        case MediaReportStage.DownloadProgress:
+                            if (m.Progress is not { } progress)
+                                break;
+
+                            DownloadProgress = progress.Percentage;
+
+                            DownloadSpeed = progress.BytesPerSecond is { } speed
+                                ? $"{speed / 1024 / 1024:F2} MB/s"
+                                : string.Empty;
+
+                            DownloadEta = progress.EstimatedRemaining is { } eta
+                                ? eta.ToString(@"mm\:ss")
+                                : string.Empty;
+                            break;
+
+                        case MediaReportStage.Downloaded:
+                            IsDownloading = false;
+                            DownloadProgress = 100;
+                            DownloadSpeed = string.Empty;
+                            DownloadEta = string.Empty;
+                            break;
+
+                        case MediaReportStage.Cancelled:
+                        case MediaReportStage.Failed:
+                            IsDownloading = false;
+                            DownloadSpeed = string.Empty;
+                            DownloadEta = string.Empty;
+                            break;
+                    }
+                });
+            });
 
         PlaybackController.CurrentItemChanged += item =>
         {
