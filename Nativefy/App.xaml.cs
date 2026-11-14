@@ -3,6 +3,8 @@ using Nativefy.Engine.DI;
 using Nativefy.Services;
 using Nativefy.Services.Cache;
 using Nativefy.Services.Feed;
+using Nativefy.Services.LocalMetadata;
+using Nativefy.Services.OnlineMetadata;
 using Nativefy.Services.Playback;
 using Nativefy.ViewModels.Shell;
 using System.Diagnostics;
@@ -52,6 +54,7 @@ public partial class App : Application
         services.AddTransient<SearchViewModel>();
         services.AddTransient<LikedMediaViewModel>();
         services.AddTransient<OnlinePlaylistViewModel>();
+        services.AddTransient<HistoryViewModel>();
     }
 
     /// <summary>

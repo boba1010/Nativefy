@@ -3,6 +3,8 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Dispatching;
 using Nativefy.Messages;
+using Nativefy.Models.Media;
+using Nativefy.Services.LocalMetadata;
 using Nativefy.Services.Playback;
 using System.Threading.Tasks;
 
@@ -11,6 +13,7 @@ namespace Nativefy.ViewModels.Shell;
 public sealed partial class PlayerBarViewModel : BaseViewModel
 {
     private readonly DispatcherQueue _dispatcherQueue;
+    private readonly IHistoryService _history;
 
     [ObservableProperty]
     public partial bool IsVisible { get; set; } = false;
@@ -71,10 +74,11 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
     [ObservableProperty]
     public partial string DownloadEta { get; set; } = string.Empty;
 
-    public PlayerBarViewModel(PlaybackController controller)
+    public PlayerBarViewModel(PlaybackController controller, IHistoryService history)
     {
         PlaybackController = controller;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        _history = history;
 
         WeakReferenceMessenger.Default.Register<PlayPlaylistMessage>(this, async (r, m) => 
         {
@@ -93,6 +97,16 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
             Position = 0;
             IsVisible = true;
 
+            _history.UpdateOrAdd(new HistoryPlaylist()
+            {
+                Id = playlist.Id,
+                Title = playlist.Name,
+                Author = playlist.Author,
+                ImageUrl = playlist.ImageUrl,
+                Url = playlist.Url,
+                Items = [.. playlist.Items.Select(i => new HistoryMediaItem(i.Id, i.Url, i.ImageUrl, i.Title, i.Author, i.Duration, i.Position))]
+            });
+
             await PlaybackController.PlayPlaylistAsync(playlist);
         });
 
@@ -108,6 +122,8 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
             Duration = item.Duration.TotalMilliseconds;
             Position = 0;
             IsVisible = true;
+
+            _history.UpdateOrAdd(new HistoryMediaItem(item.Id, item.Url, item.ImageUrl, item.Title, item.Author, item.Duration, -1));
 
             await PlaybackController.PlayItemAsync(item);
         });

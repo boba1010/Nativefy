@@ -2,7 +2,7 @@
 using Nativefy.Engine.Playable;
 using System.Threading.Tasks;
 
-namespace Nativefy.Services;
+namespace Nativefy.Services.OnlineMetadata;
 
 public sealed class OnlinePlaylistService(NativefyEngine nativefy) : IOnlinePlaylistService
 {

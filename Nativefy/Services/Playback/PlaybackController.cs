@@ -1,10 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using Nativefy.Controls;
 using Nativefy.Models.Media;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Media.Playback;
-using Nativefy.Controls;
 
 namespace Nativefy.Services.Playback;
 
@@ -21,6 +21,11 @@ public sealed partial class PlaybackController
     private CancellationTokenSource? _loadCts;
     private MediaItem? _currentItem;
 
+    private Playlist? _activePlaylist;
+    private int _playlistIndex = -1;
+
+    private static readonly Random Random = new();
+
     public MediaPlayer Player { get; } = new();
     public MediaPlaybackList Queue { get; } = new();
 
@@ -31,8 +36,9 @@ public sealed partial class PlaybackController
     public TimeSpan Duration { get; private set; }
     public TimeSpan Position { get; private set; }
 
-    public uint QueueCount => (uint)Queue.Items.Count;
-    public uint CurrentIndex => Queue.CurrentItemIndex;
+    public uint QueueCount => (uint)(_activePlaylist?.Items.Count ?? (Queue.Items.Count > 0 ? 1 : 0));
+
+    public uint CurrentIndex => _activePlaylist is null ? 0 : (uint)Math.Max(0, _playlistIndex);
 
     public event Action<PlayerState>? StateChanged;
     public event Action<RepeatState>? RepeatStateChanged;
@@ -55,6 +61,7 @@ public sealed partial class PlaybackController
 
         Player.MediaOpened += Player_MediaOpened;
         Player.MediaFailed += Player_MediaFailed;
+        Player.MediaEnded += Player_MediaEnded;
 
         Queue.CurrentItemChanged += Queue_CurrentItemChanged;
     }
@@ -66,12 +73,19 @@ public sealed partial class PlaybackController
 
         _loadCts = current;
 
-        previous?.Cancel();
+        try
+        {
+            previous?.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+            // The previous operation completed concurrently.
+        }
 
         return current;
     }
 
-    private bool OwnsQueue(CancellationTokenSource cts)
+    private bool OwnsLoad(CancellationTokenSource cts)
     {
         return ReferenceEquals(_loadCts, cts) && !cts.IsCancellationRequested;
     }
@@ -91,6 +105,7 @@ public sealed partial class PlaybackController
         Queue.Items.Clear();
 
         _currentItem = null;
+
         Position = TimeSpan.Zero;
         Duration = TimeSpan.Zero;
 
@@ -103,110 +118,55 @@ public sealed partial class PlaybackController
     {
         ArgumentNullException.ThrowIfNull(playlist);
 
-        var cts = BeginLoad();
-        ResetQueue();
+        _activePlaylist = playlist;
+        _playlistIndex = 0;
 
         if (playlist.Items.Count == 0)
         {
-            CompleteLoad(cts);
+            ClearQueue();
             return;
         }
 
-        bool handedOff = false;
-
-        try
-        {
-            var firstItem = playlist.Items[0];
-
-            var playbackItem = await LoadItemAsync(firstItem, cts.Token);
-
-            if (!OwnsQueue(cts))
-                return;
-
-            Queue.Items.Add(playbackItem);
-            QueueChanged?.Invoke();
-
-            Play();
-
-            handedOff = true;
-
-            _ = LoadRemainingAsync(playlist, 1, cts);
-        }
-        catch (OperationCanceledException)
-        {
-            Report(playlist.Items[0], MediaReportStage.Cancelled);
-        }
-        catch (Exception ex)
-        {
-            Report(playlist.Items[0], MediaReportStage.Failed, exception: ex);
-            throw;
-        }
-        finally
-        {
-            if (!handedOff)
-                CompleteLoad(cts);
-        }
-    }
-
-    private async Task LoadRemainingAsync(Playlist playlist, int startIndex, CancellationTokenSource cts)
-    {
-        try
-        {
-            for (int i = startIndex; i < playlist.Items.Count; i++)
-            {
-                cts.Token.ThrowIfCancellationRequested();
-
-                if (!OwnsQueue(cts))
-                    return;
-
-                var item = playlist.Items[i];
-
-                try
-                {
-                    var playbackItem = await LoadItemAsync(item, cts.Token);
-
-                    if (!OwnsQueue(cts))
-                        return;
-
-                    Queue.Items.Add(playbackItem);
-                    QueueChanged?.Invoke();
-                }
-                catch (OperationCanceledException)
-                {
-                    throw;
-                }
-                catch (Exception ex)
-                {
-                    Report(item, MediaReportStage.Failed, exception: ex);
-                    Debug.WriteLine(ex);
-                }
-            }
-        }
-        catch (OperationCanceledException)
-        {
-            // Expected when another playback operation takes ownership.
-        }
-        finally
-        {
-            CompleteLoad(cts);
-        }
+        await SelectPlaylistItemAsync(0);
     }
 
     public async Task PlayItemAsync(MediaItem item)
     {
         ArgumentNullException.ThrowIfNull(item);
 
+        _activePlaylist = null;
+        _playlistIndex = -1;
+
+        await LoadAndPlayAsync(item);
+    }
+
+    private async Task SelectPlaylistItemAsync(int index)
+    {
+        var playlist = _activePlaylist;
+
+        if (playlist is null || index < 0 || index >= playlist.Items.Count)
+            return;
+
+        _playlistIndex = index;
+
+        await LoadAndPlayAsync(playlist.Items[index]);
+    }
+
+    private async Task LoadAndPlayAsync(MediaItem item)
+    {
         var cts = BeginLoad();
+
         ResetQueue();
 
         try
         {
             var playbackItem = await LoadItemAsync(item, cts.Token);
 
-            if (!OwnsQueue(cts))
+            if (!OwnsLoad(cts))
                 return;
 
             Queue.Items.Add(playbackItem);
+
             QueueChanged?.Invoke();
 
             Play();
@@ -296,6 +256,20 @@ public sealed partial class PlaybackController
             Report(_currentItem, MediaReportStage.Failed, exception: args.ExtendedErrorCode);
     }
 
+    private async void Player_MediaEnded(MediaPlayer sender, object args)
+    {
+        if (_activePlaylist is null)
+            return;
+
+        if (RepeatState == RepeatState.RepeatOne)
+        {
+            await SelectPlaylistItemAsync(_playlistIndex);
+            return;
+        }
+
+        await SkipNextAsync();
+    }
+
     private void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
     {
         SetPlaying(sender.PlaybackState == MediaPlaybackState.Playing);
@@ -332,7 +306,16 @@ public sealed partial class PlaybackController
         var cts = _loadCts;
         _loadCts = null;
 
-        cts?.Cancel();
+        try
+        {
+            cts?.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+        }
+
+        _activePlaylist = null;
+        _playlistIndex = -1;
 
         ResetQueue();
     }
@@ -349,7 +332,7 @@ public sealed partial class PlaybackController
             _ => RepeatState.Off
         };
 
-        Queue.AutoRepeatEnabled = RepeatState == RepeatState.RepeatAll;
+        Queue.AutoRepeatEnabled = false;
 
         if (previousState != RepeatState)
             RepeatStateChanged?.Invoke(RepeatState);
@@ -358,7 +341,9 @@ public sealed partial class PlaybackController
     public void ToggleShuffle()
     {
         IsShuffleOn = !IsShuffleOn;
-        Queue.ShuffleEnabled = IsShuffleOn;
+
+        // Navigation is handled by the controller.
+        Queue.ShuffleEnabled = false;
     }
 
     public void Play() => Player.Play();
@@ -378,9 +363,68 @@ public sealed partial class PlaybackController
         Player.Position = position;
     }
 
-    public void SkipNext() => Queue.MoveNext();
+    public void SkipNext()
+    {
+        _ = SkipNextAsync();
+    }
 
-    public void SkipPrevious() => Queue.MovePrevious();
+    public async Task SkipNextAsync()
+    {
+        var playlist = _activePlaylist;
+
+        if (playlist is null || playlist.Items.Count == 0)
+            return;
+
+        int nextIndex;
+
+        if (IsShuffleOn && playlist.Items.Count > 1)
+        {
+            do
+            {
+                nextIndex = Random.Next(playlist.Items.Count);
+            }
+            while (nextIndex == _playlistIndex);
+        }
+        else
+        {
+            nextIndex = _playlistIndex + 1;
+        }
+
+        if (nextIndex >= playlist.Items.Count)
+        {
+            if (RepeatState != RepeatState.RepeatAll)
+                return;
+
+            nextIndex = 0;
+        }
+
+        await SelectPlaylistItemAsync(nextIndex);
+    }
+
+    public void SkipPrevious()
+    {
+        _ = SkipPreviousAsync();
+    }
+
+    public async Task SkipPreviousAsync()
+    {
+        var playlist = _activePlaylist;
+
+        if (playlist is null || playlist.Items.Count == 0)
+            return;
+
+        int previousIndex = _playlistIndex - 1;
+
+        if (previousIndex < 0)
+        {
+            if (RepeatState != RepeatState.RepeatAll)
+                return;
+
+            previousIndex = playlist.Items.Count - 1;
+        }
+
+        await SelectPlaylistItemAsync(previousIndex);
+    }
 
     public void SetVolume(double volume)
     {

@@ -1,12 +1,14 @@
 ﻿using Nativefy.Engine;
 using Nativefy.Engine.Playable;
+using Nativefy.Models.Media;
 using Nativefy.Services;
+using Nativefy.Services.LocalMetadata;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace Nativefy.ViewModels;
 
-public sealed partial class SearchViewModel(NativefyEngine nativefy, ILikedMediaService likedMedia, ISearchQueriesService search) : BaseViewModel
+public sealed partial class SearchViewModel(NativefyEngine nativefy, ILikedMediaService likedMedia, ISearchQueriesService search, IHistoryService history) : BaseViewModel
 {
     public ObservableCollection<IPlayable> Results { get; } = [];
     public ObservableCollection<byte> DummyResults { get; } = new(Enumerable.Repeat(0, 100).Select(x => (byte)x));
@@ -19,6 +21,11 @@ public sealed partial class SearchViewModel(NativefyEngine nativefy, ILikedMedia
         try
         {
             search.SaveQuery(query);
+            history.UpdateOrAdd(new SearchHistory
+            {
+                Id = query,
+                Query = query,
+            });
             
             var results = await nativefy.Search.GetResultAsync(query, 100);
 
