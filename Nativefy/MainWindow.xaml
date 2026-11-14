@@ -31,9 +31,7 @@
             x:Name="Titlebar">
 
             <TitleBar.Content>
-                <StackPanel
-                    Orientation="Horizontal" 
-                    Spacing="10">
+                <StackPanel Orientation="Horizontal" Spacing="10">
                     <Button
                         VerticalAlignment="Stretch"
                         BorderThickness="0"
@@ -69,10 +67,7 @@
             </TitleBar.Content>
 
             <TitleBar.RightHeader>
-                <StackPanel 
-                    Orientation="Horizontal" 
-                    HorizontalAlignment="Right"
-                    Spacing="4">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="4">
                     <AppBarButton Width="40">
                         <AppBarButton.Icon>
                             <FontIcon Glyph="&#xEA8F;" />
@@ -81,13 +76,15 @@
 
                     <AppBarSeparator />
 
-                    <AppBarButton Width="40">
+                    <AppBarButton Width="40" Click="Settings_Click">
                         <AppBarButton.Icon>
                             <SymbolIcon Symbol="Setting" />
                         </AppBarButton.Icon>
                     </AppBarButton>
 
-                    <AppBarToggleButton Width="40" Click="HidePlayerbar_Click">
+                    <AppBarToggleButton 
+                        Width="40" 
+                        IsChecked="{x:Bind ViewModel.IsPlayerbarVisible, Mode=TwoWay}">
                         <AppBarToggleButton.Icon>
                             <SymbolIcon Symbol="DockBottom" />
                         </AppBarToggleButton.Icon>
@@ -115,6 +112,6 @@
             </controls:LibraryNavigationView.InnerContent>
         </controls:LibraryNavigationView>
 
-        <controls:PlaybackControlBar x:Name="PlaybackBar" Grid.Row="2"/>
+        <controls:PlaybackControlBar Visibility="{x:Bind ViewModel.IsPlayerbarVisible, Mode=OneWay}" x:Name="PlaybackBar" Grid.Row="2"/>
     </Grid>
 </Window>

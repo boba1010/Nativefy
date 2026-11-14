@@ -8,9 +8,21 @@ using System.Threading.Tasks;
 
 namespace Nativefy.ViewModels;
 
-public sealed partial class ShellViewModel(IPlaylistsService playlistsService) : ObservableObject
+public sealed partial class ShellViewModel : ObservableObject
 {
+    private readonly IPlaylistsService playlistsService;
+
     public ObservableCollection<SidebarMenuItem> MenuItems { get; } = [];
+
+    [ObservableProperty]
+    public partial bool IsPlayerbarVisible { get; set; } = false;
+
+    public ShellViewModel(IPlaylistsService playlistsService)
+    {
+        this.playlistsService = playlistsService;
+
+        WeakReferenceMessenger.Default.Register<PlayerBarVisiblityChangedMessage>(this, (r, m) => IsPlayerbarVisible = m.IsVisible);
+    }
 
     public void LoadPlaylists()
     {

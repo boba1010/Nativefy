@@ -5,13 +5,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Nativefy.Controls"
     xmlns:local="using:Nativefy"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:brushes="using:Nativefy.Brushes" 
     xmlns:system="using:System" 
-    xmlns:ic="using:FluentIcons.WinUI"
-    mc:Ignorable="d"
-    Visibility="{x:Bind ViewModel.IsVisible, Mode=OneWay}">
+    xmlns:ic="using:FluentIcons.WinUI">
 
     <UserControl.Resources>
         <local:TimeSpanTooltipConverter x:Key="TimeSpanTooltipConverter"/>

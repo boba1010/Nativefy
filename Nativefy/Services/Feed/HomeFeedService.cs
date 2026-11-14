@@ -1,4 +1,5 @@
 ﻿using Nativefy.Engine;
+using Nativefy.Services.LocalMetadata;
 using System.Threading.Tasks;
 
 namespace Nativefy.Services.Feed;

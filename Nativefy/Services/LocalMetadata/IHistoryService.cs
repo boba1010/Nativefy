@@ -7,4 +7,7 @@ public interface IHistoryService
     void UpdateOrAdd(HistoryItem item);
     List<HistoryItem> GetItems();
     HistoryItem? GetById(string id);
+    void ClearAll();
+    void ClearSearch();
+    void ClearWatched();
 }

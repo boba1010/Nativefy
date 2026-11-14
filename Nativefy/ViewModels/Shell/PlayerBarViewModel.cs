@@ -16,9 +16,6 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
     private readonly IHistoryService _history;
 
     [ObservableProperty]
-    public partial bool IsVisible { get; set; } = false;
-
-    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PlayPauseGlyph))]
     [NotifyPropertyChangedFor(nameof(PlayPauseTooltip))]
     public partial bool IsPlaying { get; set; }
@@ -95,7 +92,7 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
             ChannelName = firstItem.Author;
             Duration = firstItem.Duration.TotalMilliseconds;
             Position = 0;
-            IsVisible = true;
+            Show();
 
             _history.UpdateOrAdd(new HistoryPlaylist()
             {
@@ -121,7 +118,7 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
             ChannelName = item.Author;
             Duration = item.Duration.TotalMilliseconds;
             Position = 0;
-            IsVisible = true;
+            Show();
 
             _history.UpdateOrAdd(new HistoryMediaItem(item.Id, item.Url, item.ImageUrl, item.Title, item.Author, item.Duration, -1));
 
@@ -197,6 +194,11 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
         PlaybackController.SeekCompleted += Player_SeekCompleted;
     }
 
+    private void Show()
+    {
+        WeakReferenceMessenger.Default.Send<PlayerBarVisiblityChangedMessage>(new(true));
+    }
+    
     private void Player_SeekCompleted() => IsUserScrubbing = false;
     
     private void Player_PositionChanged(TimeSpan position)

@@ -218,14 +218,6 @@ public sealed partial class MainWindow : Window
         }
     }
 
-    private void HidePlayerbar_Click(object sender, RoutedEventArgs e)
-    {
-        var btn = (AppBarToggleButton)sender;
-
-        if (btn.IsChecked.HasValue)
-            PlaybackBar.Visibility = btn.IsChecked.Value ? Visibility.Visible : Visibility.Collapsed;
-    }
-
     private void ToggleFullscreen_Click(object sender, RoutedEventArgs e)
     {
         _isFullscreen = !_isFullscreen;
@@ -256,6 +248,11 @@ public sealed partial class MainWindow : Window
             Titlebar.Visibility = Visibility.Visible;
             Titlebar.IsPaneToggleButtonVisible = true;
         }
+    }
+
+    private void Settings_Click(object sender, RoutedEventArgs e)
+    {
+        ContentFrame.Navigate(typeof(SettingsPage));
     }
 }
 

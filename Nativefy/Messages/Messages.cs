@@ -27,3 +27,5 @@ public sealed record RefreshPlaylistsMessage();
 public sealed record PlayPlaylistMessage(Playlist Playlist);
 public sealed record PlayItemMessage(MediaItem Item);
 public sealed record NavigationMessage(Type Page);
+
+public sealed record PlayerBarVisiblityChangedMessage(bool IsVisible);

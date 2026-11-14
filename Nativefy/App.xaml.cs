@@ -7,7 +7,7 @@ using Nativefy.Services.LocalMetadata;
 using Nativefy.Services.OnlineMetadata;
 using Nativefy.Services.Playback;
 using Nativefy.ViewModels.Shell;
-using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Nativefy;
 
@@ -49,6 +49,7 @@ public partial class App : Application
 
         services.AddSingleton<ShellViewModel>();
         services.AddSingleton<PlayerBarViewModel>();
+        services.AddSingleton<SettingsViewModel>();
         services.AddTransient<HomeViewModel>();
         services.AddTransient<PlaylistViewModel>();
         services.AddTransient<SearchViewModel>();
@@ -67,23 +68,15 @@ public partial class App : Application
         _window.Activate();
     }
 
+    [LibraryImport("user32.dll", EntryPoint = "MessageBoxW", StringMarshalling = StringMarshalling.Utf16)]
+    private static partial int MessageBoxW(nint hWnd, string text, string caption, uint type);
+
     private void Application_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
     {
         e.Handled = true;
 
-        try
-        {
-            string message = e.Message;
+        MessageBoxW(0, e.Exception.ToString(), "Nativefy - Unexpected Error", 0x10 | 0x0);
 
-            var tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "crash-report.json");
-            File.WriteAllText(tempPath, message);
-
-            //Process.Start("D:\\My Programs\\Nativefy\\Nativefy\\bin\\CrashReporter.exe");
-            Process.Start("CrashReporter.exe");
-        }
-        catch (Exception)
-        {
-            Current.Exit();
-        }
+        Current.Exit();
     }
 }

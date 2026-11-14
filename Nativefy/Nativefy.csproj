@@ -16,8 +16,6 @@
 		<PublishAot>true</PublishAot>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Nullable>enable</Nullable>
-
-		<ApplicationIcon>Assets\Nativefy.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
@@ -27,7 +25,6 @@
         <None Remove="Controls\HomeHeader.xaml" />
         <None Remove="Controls\NewPlaylistDialog.xaml" />
         <None Remove="Controls\PlaybackControlBar.xaml" />
-        <None Remove="CrashReporter.exe" />
         <None Remove="Views\HistoryPage.xaml" />
         <None Remove="Views\HomePage.xaml" />
         <None Remove="Views\LikedMediaPage.xaml" />
@@ -35,6 +32,8 @@
         <None Remove="Views\OnlinePlaylistPage.xaml" />
         <None Remove="Views\PlaylistPage.xaml" />
         <None Remove="Views\SearchPage.xaml" />
+        <None Remove="Views\SettingsPage.xaml" />
+        <None Remove="yt-dlp.exe" />
     </ItemGroup>
 
     <ItemGroup>
@@ -45,7 +44,7 @@
         <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
         <Content Include="Assets\StoreLogo.png" />
         <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-        <Content Include="CrashReporter.exe">
+        <Content Include="yt-dlp.exe">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
@@ -66,6 +65,7 @@
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Controls.Shimmer" Version="0.1.251217-build.2433" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.3.260402-preview2" />
+        <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.251219" />
         <PackageReference Include="FluentIcons.WinUI" Version="2.2.344" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.13" />
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.4.0" />
@@ -74,6 +74,11 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Nativefy.Engine\Nativefy.Engine.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Page Update="Views\SettingsPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
     </ItemGroup>
     <ItemGroup>
       <Page Update="Views\HistoryPage.xaml">

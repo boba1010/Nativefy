@@ -1,9 +1,15 @@
 ﻿using Nativefy.DbContexts;
 
-namespace Nativefy.Services;
+namespace Nativefy.Services.LocalMetadata;
 
 public sealed class SearchQueriesService : ISearchQueriesService
 {
+    public void Clear()
+    {
+        NativefyDatabaseProvider.SearchQueries.Clear();
+        NativefyDatabaseProvider.SaveSearchQueries();
+    }
+
     public string[] GetQueries()
     {
         return [.. NativefyDatabaseProvider.SearchQueries];

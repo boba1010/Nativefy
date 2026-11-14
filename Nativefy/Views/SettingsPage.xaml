@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Nativefy.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Nativefy.Views"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:settings="using:Nativefy.Settings">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="24" Padding="32">
+
+            <!-- Header -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="Settings" FontSize="32" FontWeight="SemiBold"/>
+
+                <TextBlock Text="Customize your Nativefy experience." Opacity="0.65"/>
+            </StackPanel>
+
+            <TextBlock Text="Playback" FontSize="20" FontWeight="SemiBold"/>
+
+            <controls:SettingsExpander
+                HorizontalAlignment="Stretch"
+                Header="Playback"
+                Description="Video and audio playback preferences"
+                IsExpanded="False"
+                IsEnabled="False">
+
+                <!-- Optional: Add an icon to the main header -->
+                <controls:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xE768;" />
+                </controls:SettingsExpander.HeaderIcon>
+
+                <!-- Collapsible Drop-Down Items -->
+                <controls:SettingsExpander.Items>
+                    <controls:SettingsCard
+                        Header="Default video quality"
+                        Description="Preferred resolution for video playback.">
+
+                        <ComboBox Width="200" SelectedIndex="2">
+                            <ComboBoxItem Content="144p"/>
+                            <ComboBoxItem Content="240p"/>
+                            <ComboBoxItem Content="360p"/>
+                            <ComboBoxItem Content="480p"/>
+                            <ComboBoxItem Content="720p"/>
+                            <ComboBoxItem Content="1080p"/>
+                            <ComboBoxItem Content="1440p"/>
+                        </ComboBox>
+
+                    </controls:SettingsCard>
+                </controls:SettingsExpander.Items>
+
+            </controls:SettingsExpander>
+
+            <TextBlock Text="Storage" FontSize="20" FontWeight="SemiBold"/>
+
+            <controls:SettingsExpander
+                HorizontalAlignment="Stretch"
+                Header="Media cache"
+                Description="Manage how much disk space Nativefy can use."
+                IsExpanded="False">
+
+                <controls:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xEDA2;" />
+                </controls:SettingsExpander.HeaderIcon>
+
+                <controls:SettingsExpander.Items>
+                    <controls:SettingsCard
+                        Header="Cache size"
+                        Description="Maximum disk space reserved for cached media.">
+
+                        <StackPanel Padding="10" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <!-- Displays live slider value -->
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                MinWidth="60"
+                                TextAlignment="Right"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                                <Run Text="{x:Bind CacheSlider.Value, Mode=OneWay}" />
+                                <Run Text="GB" />
+                            </TextBlock>
+
+                            <Slider
+                                x:Name="CacheSlider"
+                                Width="200"
+                                Minimum="{x:Bind ViewModel.MinMediaCacheSize}"
+                                Maximum="{x:Bind ViewModel.MaxMediaCacheSize}"
+                                StepFrequency="1"
+                                Value="{x:Bind ViewModel.MediaCacheSize, Mode=TwoWay}" />
+
+                            <Button Content="Save" Command="{x:Bind ViewModel.SaveCacheConfigCommand}" />
+                        </StackPanel>
+                    </controls:SettingsCard>
+                </controls:SettingsExpander.Items>
+
+            </controls:SettingsExpander>
+
+            <TextBlock Text="History &amp; Privacy" FontSize="20" FontWeight="SemiBold"/>
+
+            <StackPanel>
+                <!-- History section -->
+                <controls:SettingsExpander
+                HorizontalAlignment="Stretch"
+                Header="History"
+                Description="Manage your watch and search history."
+                IsExpanded="False">
+
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE81C;"/>
+                    </controls:SettingsExpander.HeaderIcon>
+
+                    <controls:SettingsExpander.Items>
+
+                        <controls:SettingsCard
+                        Header="Watch history"
+                        Description="Clear your recently watched videos and playlists.">
+
+                            <Button
+                            Content="Clear"
+                            Command="{x:Bind ViewModel.ClearWatchedHistoryCommand}"
+                            VerticalAlignment="Center"/>
+
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard
+                        Header="Search history"
+                        Description="Clear your previously entered search queries.">
+
+                            <Button
+                            Content="Clear"
+                            Command="{x:Bind ViewModel.ClearSearchHistoryCommand}"
+                            VerticalAlignment="Center"/>
+
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard
+                        Header="Clear all history"
+                        Description="Permanently clear all your watch and search history.">
+
+                            <Button
+                            Content="Clear all"
+                            Command="{x:Bind ViewModel.ClearHistoryCommand}"
+                            VerticalAlignment="Center"/>
+
+                        </controls:SettingsCard>
+
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+
+                <!-- Privacy section -->
+                <controls:SettingsExpander
+                    HorizontalAlignment="Stretch"
+                    Header="Privacy"
+                    Description="Your data and privacy on Nativefy."
+                    IsExpanded="False">
+
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE72E;"/>
+                    </controls:SettingsExpander.HeaderIcon>
+
+                    <controls:SettingsExpander.Items>
+
+                        <controls:SettingsCard
+                            Header="Local data storage"
+                            Description="Your history, playlists, and personal data are stored locally on your device.">
+
+                            <FontIcon
+                                Glyph="&#xE8D7;"
+                                FontSize="20"
+                                Foreground="{ThemeResource SystemFillColorSuccessBrush}"
+                                VerticalAlignment="Center"/>
+
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard
+                            Header="No Nativefy account"
+                            Description="Nativefy does not require an account or store your personal data on Nativefy servers."/>
+
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+            </StackPanel>
+
+            <TextBlock Text="Feed" FontSize="20" FontWeight="SemiBold"/>
+
+            <controls:SettingsExpander
+                HorizontalAlignment="Stretch"
+                Header="Feed"
+                Description="Manage the search history used to personalize your discovery feed."
+                IsExpanded="False">
+
+                <controls:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xE80F;"/>
+                </controls:SettingsExpander.HeaderIcon>
+
+                <controls:SettingsExpander.Items>
+                    <controls:SettingsCard
+                        Header="Search history"
+                        Description="Clear your previously entered search queries.">
+
+                        <Button
+                            Content="Clear"
+                            Command="{x:Bind ViewModel.ClearSearchCommand}"
+                            VerticalAlignment="Center"/>
+
+                    </controls:SettingsCard>
+                </controls:SettingsExpander.Items>
+            </controls:SettingsExpander>
+
+            <TextBlock Text="About" FontSize="20" FontWeight="SemiBold"/>
+
+            <controls:SettingsExpander
+                HorizontalAlignment="Stretch"
+                Header="Nativefy"
+                Description="YouTube, without signing in."
+                IsExpanded="True">
+
+                <controls:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xE946;" />
+                </controls:SettingsExpander.HeaderIcon>
+
+                <TextBlock
+                    Text="26.11.1.0-EA"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    VerticalAlignment="Center" />
+
+                <controls:SettingsExpander.Items>
+                    
+                    <controls:SettingsCard Header="Version">
+                        <TextBlock
+                            Text="26.11.1.0-EA"
+                            IsTextSelectionEnabled="True"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </controls:SettingsCard>
+
+                    <controls:SettingsCard
+                        Header="Source code &amp; releases"
+                        Description="View updates, report issues, or contribute on GitHub."
+                        IsClickEnabled="True"
+                        Click="OnGitHubClick">
+                        <controls:SettingsCard.ActionIcon>
+                            <FontIcon Glyph="&#xE8A7;" />
+                        </controls:SettingsCard.ActionIcon>
+                    </controls:SettingsCard>
+                    
+                </controls:SettingsExpander.Items>
+            </controls:SettingsExpander>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

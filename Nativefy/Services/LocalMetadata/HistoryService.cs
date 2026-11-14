@@ -33,4 +33,22 @@ public sealed class HistoryService : IHistoryService
     {
         return NativefyDatabaseProvider.History.FirstOrDefault(i => i.Id == id);
     }
+
+    public void ClearAll()
+    {
+        NativefyDatabaseProvider.History.Clear();
+        NativefyDatabaseProvider.SaveHistoryChanges();
+    }
+
+    public void ClearSearch()
+    {
+        NativefyDatabaseProvider.History.RemoveAll(h => h is SearchHistory);
+        NativefyDatabaseProvider.SaveHistoryChanges();
+    }
+
+    public void ClearWatched()
+    {
+        NativefyDatabaseProvider.History.RemoveAll(h => h is HistoryPlayable);
+        NativefyDatabaseProvider.SaveHistoryChanges();
+    }
 }
