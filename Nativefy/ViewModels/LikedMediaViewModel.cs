@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Nativefy.Messages;
 using Nativefy.Models.Media;
 using Nativefy.Services;
 using System.Collections.ObjectModel;
@@ -51,6 +53,16 @@ public sealed partial class LikedMediaViewModel(ILikedMediaService likedMedia) :
     [RelayCommand]
     public async Task PlayPlaylistAsync()
     {
-
+        WeakReferenceMessenger.Default.Send(new PlayPlaylistMessage(new()
+        {
+            Id = Playlist.Id,
+            Author = Playlist.Author,
+            CreatedAt = Playlist.CreatedAt,
+            ImageUrl = Playlist.ImageUrl,
+            Items = Playlist.Items,
+            Name = Playlist.Name,
+            UpdatedAt = Playlist.UpdatedAt,
+            Url = Playlist.Url
+        }));
     }
 }

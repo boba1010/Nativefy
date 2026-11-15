@@ -50,7 +50,7 @@ public static class NativefyDatabaseProvider
     {
         using var fs = File.Create(_likedMediaPath);
 
-        JsonSerializer.Serialize(fs, LikedMedia, NativefyJsonContext.Default.ListMediaItem);
+        JsonSerializer.Serialize(fs, LikedMedia, NativefyJsonContext.Default.LikedMediaPlaylist);
     }
     
     public static void SaveHistoryChanges()

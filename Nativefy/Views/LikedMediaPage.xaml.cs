@@ -1,3 +1,6 @@
+using CommunityToolkit.Mvvm.Messaging;
+using Nativefy.Messages;
+using Nativefy.Models.Media;
 using System.Diagnostics;
 
 namespace Nativefy.Views;
@@ -18,18 +21,31 @@ public sealed partial class LikedMediaPage : Page
         _ = ViewModel.LoadLikedMediaPlaylistAsync();
     }
 
-    private async void SharePlaylist_Click(object sender, RoutedEventArgs e)
+    private void SharePlaylist_Click(object sender, RoutedEventArgs e)
     {
         Debug.WriteLine("SHARE CLICKED");
     }
 
-    private async void UnlikeItem_Click(object sender, RoutedEventArgs e)
+    private void UnlikeItem_Click(object sender, RoutedEventArgs e)
     {
         Debug.WriteLine("UNLIKE CLICKED");
     }
 
     private void Items_ItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs args)
     {
-        Debug.WriteLine("ITEM INVOKED");
+        if (args.InvokedItem is MediaItem media)
+        {
+            WeakReferenceMessenger.Default.Send(new PlayItemMessage(new()
+            {
+                Id = media.Id,
+                Url = media.Url,
+                Author = media.Author,
+                Duration = media.Duration,
+                ImageUrl = media.ImageUrl,
+                Title = media.Title,
+                Position = media.Position,
+                AddedDate = media.AddedDate,
+            }));
+        }
     }
 }

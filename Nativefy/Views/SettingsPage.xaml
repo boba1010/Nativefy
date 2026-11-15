@@ -100,10 +100,10 @@
             <StackPanel>
                 <!-- History section -->
                 <controls:SettingsExpander
-                HorizontalAlignment="Stretch"
-                Header="History"
-                Description="Manage your watch and search history."
-                IsExpanded="False">
+                    HorizontalAlignment="Stretch"
+                    Header="History"
+                    Description="Manage your watch and search history."
+                    IsExpanded="False">
 
                     <controls:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE81C;"/>
@@ -241,7 +241,6 @@
                             <FontIcon Glyph="&#xE8A7;" />
                         </controls:SettingsCard.ActionIcon>
                     </controls:SettingsCard>
-                    
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
         </StackPanel>

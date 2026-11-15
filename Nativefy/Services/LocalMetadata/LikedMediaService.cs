@@ -17,7 +17,7 @@ public sealed class LikedMediaService : ILikedMediaService
             playlist.Items.Add(item);
             playlist.UpdatedAt = DateTime.UtcNow;
 
-            NativefyDatabaseProvider.SaveChanges();
+            NativefyDatabaseProvider.SaveLikedMediaChanges();
         }
     }
 
