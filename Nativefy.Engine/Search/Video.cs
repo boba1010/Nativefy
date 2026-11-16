@@ -3,7 +3,7 @@ using YoutubeExplode.Search;
 
 namespace Nativefy.Engine.Search;
 
-public sealed class Video : ISearchResult
+public sealed class Video : IPlayableSearchResult
 {
     public string Id { get; }
     

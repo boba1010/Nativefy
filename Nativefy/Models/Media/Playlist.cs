@@ -3,7 +3,7 @@
 public class Playlist
 {
     public string Id { get; set; } = Guid.NewGuid().ToString();
-    public string Name { get; set; } = null!;
+    public string Title { get; set; } = null!;
     public string ImageUrl { get; set; } = null!;
     public string Url { get; set; } = null!;
     public string Author { get; set; } = null!;

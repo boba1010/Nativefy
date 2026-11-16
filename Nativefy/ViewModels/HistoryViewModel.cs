@@ -52,7 +52,7 @@ public sealed partial class HistoryViewModel(IHistoryService history, ILikedMedi
 
     public void LoadHistory()
     {
-        var items = history.GetItems();
+        var items = history.GetItems().OrderByDescending(i => i.UpdatedAt).ToArray();
         foreach (var item in items)
         {
             _history.Add(item);

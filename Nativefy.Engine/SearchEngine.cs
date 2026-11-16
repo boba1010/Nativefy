@@ -1,4 +1,5 @@
-﻿using YoutubeExplode;
+﻿using Nativefy.Engine.Search;
+using YoutubeExplode;
 using YoutubeExplode.Search;
 
 namespace Nativefy.Engine;
@@ -25,6 +26,11 @@ public sealed class SearchEngine(YoutubeClient youtube)
                 case PlaylistSearchResult playlist:
                     if (uniqueIds.Add($"playlist:{playlist.Id}"))
                         results.Add(new Search.Playlist(playlist));
+                    break;
+
+                case ChannelSearchResult channel:
+                    if (uniqueIds.Add($"channel:{channel.Id}"))
+                        results.Add(new Channel(channel));
                     break;
             }
 

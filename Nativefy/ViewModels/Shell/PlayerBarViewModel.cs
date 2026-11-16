@@ -97,7 +97,7 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
             _history.UpdateOrAdd(new HistoryPlaylist()
             {
                 Id = playlist.Id,
-                Title = playlist.Name,
+                Title = playlist.Title,
                 Author = playlist.Author,
                 ImageUrl = playlist.ImageUrl,
                 Url = playlist.Url,

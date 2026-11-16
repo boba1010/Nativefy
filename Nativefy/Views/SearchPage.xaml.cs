@@ -1,5 +1,5 @@
 using CommunityToolkit.Mvvm.Messaging;
-using Nativefy.Engine.Playable;
+using Nativefy.Engine.Search;
 using Nativefy.Messages;
 using System.Diagnostics;
 
@@ -35,21 +35,23 @@ public sealed partial class SearchPage : Page
 
     private void Result_ItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs args)
     {
-        if (args.InvokedItem is IPlayable playable)
+        if (args.InvokedItem is IPlayableSearchResult playable)
         {
-            if (playable is IPlaylist playlist)
+            if (playable is Playlist playlist)
                 Frame.Navigate(typeof(OnlinePlaylistPage), playlist.Id);
-            else if (playable is IMedia media)
+            else if (playable is Video video)
+            {
                 WeakReferenceMessenger.Default.Send(new PlayItemMessage(new()
                 {
-                    Id = media.Id,
-                    Url = media.Url,
-                    Author = media.Author,
-                    Duration = media.Duration,
-                    ImageUrl = media.ImageUrl,
-                    Title = media.Title,
+                    Id = video.Id,
+                    Url = video.Url,
+                    Author = video.Author,
+                    Duration = video.Duration,
+                    ImageUrl = video.ImageUrl,
+                    Title = video.Title,
                     Position = 1,
                 }));
+            }
         }
     }
 
@@ -57,7 +59,7 @@ public sealed partial class SearchPage : Page
     {
         var btn = (Button)sender;
 
-        ViewModel.LikeMedia((string)btn.Tag);
+        _ = ViewModel.LikeMediaAsync((string)btn.Tag);
     }
 
     private void Filter_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)

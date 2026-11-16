@@ -6,7 +6,7 @@ public sealed partial class NewPlaylistDialog : ContentDialog
 {
     public LocalPlaylist? Playlist { get; } = new()
     {
-        Name = "MINEEEEEEEEEEEE"
+        Title = "MINEEEEEEEEEEEE"
     };
 
     public NewPlaylistDialog()

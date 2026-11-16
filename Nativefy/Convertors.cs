@@ -55,7 +55,7 @@ public partial class SecondsToMinutesConverter : IValueConverter
 
 public partial class ImageSourceFallbackConverter : IValueConverter
 {
-    private static readonly BitmapImage DefaultArt = new BitmapImage(new Uri("ms-appx:///Assets/DefaultAlbumArt.png"));
+    private static readonly BitmapImage DefaultArt = new(new Uri("ms-appx:///Assets/DefaultAlbumArt.png"));
 
     public object Convert(object value, Type targetType, object parameter, string language)
     {

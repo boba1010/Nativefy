@@ -21,7 +21,7 @@ public static class NativefyDatabaseProvider
         CreatedAt = DateTime.Now,
         Id = "LikedMedia",
         ImageUrl = "playlist.png",
-        Name = "Liked Media",
+        Title = "Liked Media",
         UpdatedAt = DateTime.Now,
     };
 
@@ -95,7 +95,7 @@ public static class NativefyDatabaseProvider
             CreatedAt = DateTime.Now,
             Id = "LikedMedia",
             ImageUrl = "playlist.png",
-            Name = "Liked Media",
+            Title = "Liked Media",
             UpdatedAt = DateTime.Now,
         };
     }

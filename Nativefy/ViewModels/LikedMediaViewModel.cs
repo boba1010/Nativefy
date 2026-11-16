@@ -5,7 +5,6 @@ using Nativefy.Messages;
 using Nativefy.Models.Media;
 using Nativefy.Services;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 
 namespace Nativefy.ViewModels;
 
@@ -22,7 +21,7 @@ public sealed partial class LikedMediaViewModel(ILikedMediaService likedMedia) :
 
     public ObservableCollection<MediaItem> Items { get; } = [];
 
-    public async Task LoadLikedMediaPlaylistAsync()
+    public void LoadLikedMediaPlaylist()
     {
         Playlist = likedMedia.GetLikedMedia() ?? new();
 
@@ -50,8 +49,16 @@ public sealed partial class LikedMediaViewModel(ILikedMediaService likedMedia) :
         return $"{minutes} min";
     }
 
+    public void UnlikeMedia(string id)
+    {
+        likedMedia.RemoveFromLiked(id);
+        var item = Items.FirstOrDefault(i => i.Id == id);
+        if (item is not null)
+            Items.Remove(item);
+    }
+
     [RelayCommand]
-    public async Task PlayPlaylistAsync()
+    public void PlayPlaylist()
     {
         WeakReferenceMessenger.Default.Send(new PlayPlaylistMessage(new()
         {
@@ -60,7 +67,7 @@ public sealed partial class LikedMediaViewModel(ILikedMediaService likedMedia) :
             CreatedAt = Playlist.CreatedAt,
             ImageUrl = Playlist.ImageUrl,
             Items = Playlist.Items,
-            Name = Playlist.Name,
+            Title = Playlist.Title,
             UpdatedAt = Playlist.UpdatedAt,
             Url = Playlist.Url
         }));

@@ -344,7 +344,7 @@
                     </Border>
 
                     <StackPanel Grid.Row="1" Spacing="10">
-                        <TextBlock Text="{x:Bind ViewModel.Name, Mode=OneWay}" FontSize="32"/>
+                        <TextBlock Text="{x:Bind ViewModel.Title, Mode=OneWay}" FontSize="32"/>
 
                         <TextBlock FontSize="14" Foreground="LightGray">
                             <Run Text="{x:Bind ViewModel.ItemsCount, Mode=OneWay}" />

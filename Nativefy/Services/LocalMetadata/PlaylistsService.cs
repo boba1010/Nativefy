@@ -9,7 +9,7 @@ internal sealed class PlaylistsService : IPlaylistsService
 
     public void CreatePlaylist(LocalPlaylist playlist)
     {
-        if (string.IsNullOrEmpty(playlist.Name))
+        if (string.IsNullOrEmpty(playlist.Title))
             throw new InvalidDataException("Playlist Name must not be null");
 
         if (string.IsNullOrEmpty(playlist.ImageUrl))
@@ -30,6 +30,11 @@ internal sealed class PlaylistsService : IPlaylistsService
         NativefyDatabaseProvider.SaveChanges();
     }
 
+    public bool Exists(string id)
+    {
+        return NativefyDatabaseProvider.Playlists.FirstOrDefault(p => p.Id == id) != null;
+    }
+
     public LocalPlaylist? GetPlaylistById(string id)
     {
         var playlist = NativefyDatabaseProvider.Playlists.FirstOrDefault(playlist => playlist.Id == id);
@@ -47,13 +52,13 @@ internal sealed class PlaylistsService : IPlaylistsService
 
     public void UpdatePlaylist(LocalPlaylist playlist)
     {
-        if (string.IsNullOrEmpty(playlist.Name))
+        if (string.IsNullOrEmpty(playlist.Title))
             throw new InvalidDataException("Playlist Name must not be null");
 
         var storedPlaylist = NativefyDatabaseProvider.Playlists.FirstOrDefault(p => p.Id == playlist.Id)
             ?? throw new InvalidOperationException($"Playlist with Id {playlist.Id} not found");
 
-        storedPlaylist.Name = playlist.Name;
+        storedPlaylist.Title = playlist.Title;
         storedPlaylist.ImageUrl = playlist.ImageUrl;
         storedPlaylist.Author = playlist.Author;
         storedPlaylist.Url = playlist.Url;

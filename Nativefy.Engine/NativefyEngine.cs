@@ -11,6 +11,7 @@ public sealed class NativefyEngine : IDisposable
     public PlaylistEngine Playlist { get; }
     public StreamingEngine Streaming { get; }
     public FeedEngine Feed { get; }
+    public ChannelEngine Channel { get; }
 
     public NativefyEngine()
     {
@@ -30,6 +31,7 @@ public sealed class NativefyEngine : IDisposable
         Playlist = new(_youtube);
         Streaming = new(_youtube);
         Feed = new(Search);
+        Channel = new(_youtube);
     }
 
     public void Dispose()

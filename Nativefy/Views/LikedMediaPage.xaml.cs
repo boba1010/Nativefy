@@ -18,7 +18,7 @@ public sealed partial class LikedMediaPage : Page
 
     private void LikedMediaPage_Loading(FrameworkElement sender, object args)
     {
-        _ = ViewModel.LoadLikedMediaPlaylistAsync();
+        ViewModel.LoadLikedMediaPlaylist();
     }
 
     private void SharePlaylist_Click(object sender, RoutedEventArgs e)
@@ -28,7 +28,9 @@ public sealed partial class LikedMediaPage : Page
 
     private void UnlikeItem_Click(object sender, RoutedEventArgs e)
     {
-        Debug.WriteLine("UNLIKE CLICKED");
+        var btn = (Button)sender;
+        var id = (string)btn.Tag;
+        ViewModel.UnlikeMedia(id);
     }
 
     private void Items_ItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs args)

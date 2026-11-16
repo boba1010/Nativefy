@@ -27,7 +27,7 @@ public sealed class LikedMediaService : ILikedMediaService
         return playlist;
     }
 
-    public void RemoveFromLikes(string id)
+    public void RemoveFromLiked(string id)
     {
         var playlist = NativefyDatabaseProvider.LikedMedia;
 

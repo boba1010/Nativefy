@@ -7,5 +7,5 @@ public interface ILikedMediaService
 {
     public LikedMediaPlaylist? GetLikedMedia();
     public void AddToLikes(MediaItem item);
-    public void RemoveFromLikes(string id);
+    public void RemoveFromLiked(string id);
 }

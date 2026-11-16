@@ -16,7 +16,7 @@ public sealed partial class OnlinePlaylistViewModel(IOnlinePlaylistService onlin
     public partial string Id { get; set; } = null!;
 
     [ObservableProperty]
-    public partial string Name { get; set; } = null!;
+    public partial string Title { get; set; } = null!;
 
     [ObservableProperty]
     public partial string ImageUrl { get; set; } = "image.png";
@@ -26,6 +26,10 @@ public sealed partial class OnlinePlaylistViewModel(IOnlinePlaylistService onlin
 
     [ObservableProperty]
     public partial string FormattedDuration { get; set; }
+
+    public string Url { get; set; } = null!;
+
+    public string Author { get; set; } = null!;
 
     public ObservableCollection<MediaItem> Items { get; } = [];
     public ObservableCollection<byte> DummyItems { get; } = [.. Enumerable.Repeat((byte)0, 100)];
@@ -39,7 +43,7 @@ public sealed partial class OnlinePlaylistViewModel(IOnlinePlaylistService onlin
             var playlist = await onlinePlaylist.GetPlaylistAsync(id);
 
             Id = playlist.Id;
-            Name = playlist.Name;
+            Title = playlist.Title;
             ImageUrl = playlist.ImageUrl;
 
             foreach (var item in playlist.Items)
@@ -79,7 +83,7 @@ public sealed partial class OnlinePlaylistViewModel(IOnlinePlaylistService onlin
             Id = Id,
             Items = [.. Items],
             ImageUrl = ImageUrl,
-            Name = Name,
+            Title = Title,
         }));
     }
 
@@ -94,8 +98,10 @@ public sealed partial class OnlinePlaylistViewModel(IOnlinePlaylistService onlin
         playlists.CreatePlaylist(new()
         {
             Id = Id,
-            Name = Name,
+            Title = Title,
             ImageUrl = ImageUrl,
+            Author = Author,
+            Url = Url,
             Items = [.. Items],
         });
 

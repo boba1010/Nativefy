@@ -9,6 +9,4 @@ public interface IPlayable
     string Url { get; }
     List<string> Keywords { get; }
     string? Description { get; }
-
-    string GetSearchableText();
 }

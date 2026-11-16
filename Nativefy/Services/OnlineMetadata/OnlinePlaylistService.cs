@@ -13,7 +13,7 @@ public sealed class OnlinePlaylistService(NativefyEngine nativefy) : IOnlinePlay
         return new()
         {
             Id = playlist.Id,
-            Name = playlist.Title,
+            Title = playlist.Title,
             ImageUrl = playlist.ImageUrl,
             Url = playlist.Url,
             Author = playlist.Author,

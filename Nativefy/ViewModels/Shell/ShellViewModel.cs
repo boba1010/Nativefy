@@ -33,7 +33,7 @@ public sealed partial class ShellViewModel : ObservableObject
         {
             MenuItems.Add(new()
             {
-                Text = playlist.Name,
+                Text = playlist.Title,
                 ImageUrl = playlist.ImageUrl,
                 Tag = playlist.Id,
             });
@@ -45,7 +45,7 @@ public sealed partial class ShellViewModel : ObservableObject
         var response = await WeakReferenceMessenger.Default.Send(new OpenNewPlaylistDialogMessage("New playlist", "Create", "Cancel"));
 
         if (response.Result != DialogResult.Primary || 
-            response.GetData<LocalPlaylist>() is not { Name.Length: > 0 } created)
+            response.GetData<LocalPlaylist>() is not { Title.Length: > 0 } created)
             return;
 
         playlistsService.CreatePlaylist(created);

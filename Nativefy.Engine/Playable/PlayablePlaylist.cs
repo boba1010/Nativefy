@@ -44,10 +44,4 @@ public sealed class PlayablePlaylist : IPlaylist
         Author = author;
         ImageUrl = imageUrl;
     }
-
-    public string GetSearchableText()
-    {
-        string keywordString = string.Join(" ", Keywords);
-        return $"{Title} {keywordString}".ToLower();
-    }
 }

@@ -26,7 +26,7 @@ public sealed partial class PlaylistViewModel(IPlaylistsService playlistsService
                     Id = playlist.Id,
                     Author = playlist.Author,
                     ImageUrl = playlist.ImageUrl,
-                    Name = playlist.Title,
+                    Title = playlist.Title,
                     Url = playlist.Url,
                     Items = [.. playlist.Items.Select(i => new MediaItem()
                     {

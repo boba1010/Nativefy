@@ -9,4 +9,5 @@ public interface IPlaylistsService
     public void CreatePlaylist(LocalPlaylist playlist);
     public void DeletePlaylist(string id);
     public void UpdatePlaylist(LocalPlaylist playlist);
+    public bool Exists(string id);
 }

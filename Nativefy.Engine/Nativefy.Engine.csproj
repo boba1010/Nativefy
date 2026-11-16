@@ -13,8 +13,4 @@
     <PackageReference Include="YoutubeExplode" Version="6.6.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Feed\" />
-  </ItemGroup>
-
 </Project>
