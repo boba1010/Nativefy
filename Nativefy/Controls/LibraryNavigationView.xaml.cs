@@ -64,8 +64,11 @@ public sealed partial class LibraryNavigationView : UserControl
     private static void OnAddCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is LibraryNavigationView control)
-            foreach (var group in control.NavigationGroups.Where(g => g.GroupTag == "PlaylistGroup"))
-                group.CompactCommand = e.NewValue as ICommand;
+        {
+            var group = control.NavigationGroups.Where(g => g.GroupTag == "PlaylistGroup").FirstOrDefault();
+            group?.CompactCommand = e.NewValue as ICommand;
+            group?.ActionCommand = e.NewValue as ICommand;
+        }
     }
 
     private static void OnIsPaneOpenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -90,15 +93,16 @@ public sealed partial class LibraryNavigationView : UserControl
     {
         var libraryGroup = new SidebarGroup { HeaderText = "Library", GroupTag = "LibraryGroup" };
         libraryGroup.Items.Add(new() { Tag = "LikedMedia", Text = "Liked Media", Glyph = "\uEB51" }); // Heart Icon
-        libraryGroup.Items.Add(new() { Tag = "LikedAuthors", Text = "Liked Authors", Glyph = "\uE716" }); // People Icon
+        libraryGroup.Items.Add(new() { Tag = "LikedChannels", Text = "Liked Channels", Glyph = "\uE716" }); // People Icon
         libraryGroup.Items.Add(new() { Tag = "History", Text = "History", Glyph = "\uE917" }); // Clock Icon
         NavigationGroups.Add(libraryGroup);
 
-        var playlistGroup = new SidebarGroup 
+        var playlistGroup = new SidebarGroup
         { 
             HeaderText = "My Playlists", 
             GroupTag = "PlaylistGroup", 
             CompactGlyph = "\uE710",
+            ActionGlyph = "\uE710",
         };
         NavigationGroups.Add(playlistGroup);
     }
@@ -109,10 +113,26 @@ public sealed partial class LibraryNavigationView : UserControl
         SyncLayoutState(IsPaneOpen);
     }
 
-    public void AddItemToGroup(string groupTag, string itemTag, string text, string glyph = null!, string imageUrl = null!)
+    public void AddItemToGroup(string groupTag, string itemTag, string text, string? glyph = null, string? imageUrl = null, 
+        ICommand? renameCommand = null, ICommand? deleteCommand = null)
     {
         var group = NavigationGroups.FirstOrDefault(g => g.GroupTag == groupTag);
-        group?.Items.Add(new SidebarMenuItem { Tag = itemTag, Text = text, Glyph = glyph, ImageUrl = imageUrl });
+        group?.Items.Add(new SidebarMenuItem 
+        { 
+            Tag = itemTag, 
+            Text = text, 
+            Glyph = glyph, 
+            ImageUrl = imageUrl, 
+            RenameCommand = renameCommand, 
+            DeleteCommand = deleteCommand,
+        });
+        SyncLayoutState(IsPaneOpen);
+    }
+
+    public void AddItemToGroup(SidebarMenuItem item, string groupTag)
+    {
+        var group = NavigationGroups.FirstOrDefault(g => g.GroupTag == groupTag);
+        group?.Items.Add(item);
         SyncLayoutState(IsPaneOpen);
     }
 
@@ -181,6 +201,12 @@ public sealed partial class LibraryNavigationView : UserControl
             if (FindVisualChildByName(groupContainer, "HeaderCompactContent") is StackPanel compactView)
                 compactView.Visibility = showCompact ? Visibility.Visible : Visibility.Collapsed;
 
+            if (FindVisualChildByName(groupContainer, "ActionButton") is Button action)
+            {
+                var showAction = group.HasAction && isOpen;
+                action.Visibility = showAction ? Visibility.Visible : Visibility.Collapsed;
+            }
+
             if (FindVisualChildByName(groupContainer, "GroupItemsControl") is ItemsControl childItemsControl)
             {
                 childItemsControl.Visibility = (isOpen && !group.IsExpanded) ? Visibility.Collapsed : Visibility.Visible;
@@ -223,7 +249,7 @@ public sealed partial class LibraryNavigationView : UserControl
         return null;
     }
 
-    private FrameworkElement? FindVisualChildByName(DependencyObject obj, string name)
+    private static FrameworkElement? FindVisualChildByName(DependencyObject obj, string name)
     {
         for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
         {

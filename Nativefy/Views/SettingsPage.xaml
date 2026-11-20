@@ -69,7 +69,7 @@
                         Header="Cache size"
                         Description="Maximum disk space reserved for cached media.">
 
-                        <StackPanel Padding="10" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                        <StackPanel Padding="5" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
                             <!-- Displays live slider value -->
                             <TextBlock
                                 VerticalAlignment="Center"
@@ -87,9 +87,16 @@
                                 Maximum="{x:Bind ViewModel.MaxMediaCacheSize}"
                                 StepFrequency="1"
                                 Value="{x:Bind ViewModel.MediaCacheSize, Mode=TwoWay}" />
-
-                            <Button Content="Save" Command="{x:Bind ViewModel.SaveCacheConfigCommand}" />
                         </StackPanel>
+                    </controls:SettingsCard>
+                    
+                    <controls:SettingsCard
+                        Header="Delete duplicate videos with different resolutions"
+                        Description="Automatically remove older cached copies when you watch the same video in a different quality to save disk space.">
+
+                        <Border Padding="5">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.DeleteDuplicateVideosWithDifferentResolutions, Mode=TwoWay}"/>
+                        </Border>
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
 
@@ -227,7 +234,7 @@
                     
                     <controls:SettingsCard Header="Version">
                         <TextBlock
-                            Text="26.11.1.0-EA"
+                            Text="26.11.5.0-EA"
                             IsTextSelectionEnabled="True"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     </controls:SettingsCard>
@@ -243,6 +250,8 @@
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
+
+            <Button HorizontalAlignment="Stretch" Content="Save settings" Command="{x:Bind ViewModel.SaveConfigCommand}" />
         </StackPanel>
     </ScrollViewer>
 </Page>

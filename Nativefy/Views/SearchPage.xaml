@@ -101,7 +101,7 @@
                     <Border Width="180">
                         <PersonPicture Width="60" Height="60">
                             <PersonPicture.ProfilePicture>
-                                <BitmapImage UriSource="{x:Bind ImageUrl, Mode=OneWay}" DecodePixelWidth="128" />
+                                <BitmapImage UriSource="{x:Bind ImageUrl}" DecodePixelWidth="128" />
                             </PersonPicture.ProfilePicture>
                         </PersonPicture>                        
                     </Border>

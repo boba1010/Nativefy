@@ -1,4 +1,6 @@
-﻿namespace Nativefy.Models;
+﻿using System.Windows.Input;
+
+namespace Nativefy.Models;
 
 public sealed class SidebarMenuItem
 {
@@ -9,4 +11,7 @@ public sealed class SidebarMenuItem
 
     public bool HasImage => !string.IsNullOrWhiteSpace(ImageUrl);
     public bool HasGlyph => !HasImage && !string.IsNullOrEmpty(Glyph);
+
+    public ICommand? RenameCommand { get; set; }
+    public ICommand? DeleteCommand { get; set; }
 }

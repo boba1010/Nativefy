@@ -20,6 +20,7 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
+        UnhandledException += Application_UnhandledException;
 
         var services = new ServiceCollection();
 
@@ -29,8 +30,6 @@ public partial class App : Application
 
         NativefyDatabaseProvider.InitializeDatabase();
         NativefyDatabaseProvider.LoadDatabases();
-
-        UnhandledException += Application_UnhandledException;
     }
 
     private static void ConfigureServices(ServiceCollection services)
@@ -42,6 +41,7 @@ public partial class App : Application
         services.AddSingleton<IFeedService, HomeFeedService>();
         services.AddSingleton<IHistoryService, HistoryService>();
         services.AddSingleton<ISearchQueriesService, SearchQueriesService>();
+        services.AddSingleton<ILikedChannelsService, LikedChannelsService>();
         services.AddSingleton<MediaLoader>();
         services.AddSingleton<MediaCache>();
         services.AddSingleton<PlaybackController>();
@@ -56,6 +56,8 @@ public partial class App : Application
         services.AddTransient<LikedMediaViewModel>();
         services.AddTransient<OnlinePlaylistViewModel>();
         services.AddTransient<HistoryViewModel>();
+        services.AddTransient<ChannelViewModel>();
+        services.AddTransient<LikedChannelsViewModel>();
     }
 
     /// <summary>

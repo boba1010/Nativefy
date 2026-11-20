@@ -1,4 +1,6 @@
-﻿namespace Nativefy.Models.Media;
+﻿using Nativefy.Engine.Playable;
+
+namespace Nativefy.Models.Media;
 
 public sealed class MediaItem
 {
@@ -10,4 +12,18 @@ public sealed class MediaItem
     public string Author { get; set; } = null!;
     public DateTime AddedDate { get; set; } = DateTime.Now;
     public TimeSpan Duration { get; set; }
+
+    public MediaItem()
+    {
+    }
+
+    public MediaItem(PlayableMedia media)
+    {
+        Id = media.Id;
+        Url = media.Url;
+        ImageUrl = media.ImageUrl;
+        Title = media.Title;
+        Author = media.Author;
+        Duration = media.Duration;
+    }
 }

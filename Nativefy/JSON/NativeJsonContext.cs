@@ -12,6 +12,7 @@ namespace Nativefy.JSON;
 [JsonSerializable(typeof(List<MediaItem>))]
 [JsonSerializable(typeof(List<HistoryItem>))]
 [JsonSerializable(typeof(List<string>))]
+[JsonSerializable(typeof(List<Channel>))]
 public sealed partial class NativefyJsonContext : JsonSerializerContext
 {
 }

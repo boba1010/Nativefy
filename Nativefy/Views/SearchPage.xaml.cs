@@ -53,6 +53,8 @@ public sealed partial class SearchPage : Page
                 }));
             }
         }
+        else if (args.InvokedItem is Channel channel)
+            Frame.Navigate(typeof(ChannelPage), channel.Id);
     }
 
     private void Like_Click(object sender, RoutedEventArgs e)

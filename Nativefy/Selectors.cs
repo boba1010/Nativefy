@@ -1,6 +1,4 @@
-﻿using Nativefy.Engine.Playable;
-using Nativefy.Engine.Search;
-using Nativefy.Models.Media;
+﻿using Nativefy.Models.Media;
 
 namespace Nativefy;
 
@@ -14,7 +12,7 @@ public partial class SearchTemplateSelector : DataTemplateSelector
     {
         if (item is Engine.Search.Playlist)
             return PlaylistTemplate;
-        else if (item is Channel)
+        else if (item is Engine.Search.Channel)
             return ChannelTemplate;
 
         return MediaTemplate;

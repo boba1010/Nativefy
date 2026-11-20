@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Nativefy.Messages;
 using Nativefy.Models.Media;
-using Nativefy.Services;
+using Nativefy.Services.LocalMetadata;
 using System.Collections.ObjectModel;
 
 namespace Nativefy.ViewModels;

@@ -18,13 +18,24 @@
             <Setter Property="HorizontalContentAlignment" Value="Center" />
         </Style>
 
+        <Style x:Key="ItemStyle" TargetType="Grid">
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="ColumnSpacing" Value="8" />
+            <Setter Property="Height" Value="80" />
+            <Setter Property="Padding" Value="10" />
+        </Style>
+
         <DataTemplate x:Key="MediaTemplate" x:DataType="models:HistoryMediaItem">
-            <ItemContainer>
-                <Grid ColumnSpacing="8" Height="80" Padding="10">
+            <ItemContainer Tapped="ItemContainer_Tapped" Tag="{x:Bind}">
+                <Grid Style="{StaticResource ItemStyle}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
+
+                    <Grid.BackgroundTransition>
+                        <BrushTransition Duration="0:0:0.1" />
+                    </Grid.BackgroundTransition>
 
                     <Border Width="120" CornerRadius="6">
                         <Grid>
@@ -37,6 +48,7 @@
                                 Background="Black">
                                 <TextBlock 
                                     FontSize="12"
+                                    TextTrimming="CharacterEllipsis"
                                     Text="{x:Bind helpers:DurationHelper.FormatDuration(Duration)}" 
                                     Foreground="{ThemeResource TextFillColorSecondary}"/>
                             </Border>
@@ -44,7 +56,7 @@
                     </Border>
 
                     <StackPanel Grid.Column="1">
-                        <TextBlock Text="{x:Bind Title}" FontSize="18" />
+                        <TextBlock TextTrimming="CharacterEllipsis" Text="{x:Bind Title}" FontSize="18" />
                         <TextBlock Text="{x:Bind Author}" Foreground="{ThemeResource TextFillColorSecondary}"/>
                     </StackPanel>
 
@@ -55,17 +67,21 @@
                         Click="Like_Click"
                         Tag="{x:Bind Id}"
                         Style="{StaticResource HeartHoverButtonStyle}"/>
-                </Grid>
+                </Grid>                
             </ItemContainer>
         </DataTemplate>
 
         <DataTemplate x:Key="PlaylistTemplate" x:DataType="models:HistoryPlaylist">
-            <ItemContainer>
-                <Grid ColumnSpacing="8" Height="80" Padding="10">
+            <ItemContainer Tapped="ItemContainer_Tapped" Tag="{x:Bind}">
+                <Grid Style="{StaticResource ItemStyle}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
+
+                    <Grid.BackgroundTransition>
+                        <BrushTransition Duration="0:0:0.1" />
+                    </Grid.BackgroundTransition>
 
                     <Border Width="120" CornerRadius="6">
                         <Grid>
@@ -83,7 +99,7 @@
                     </Border>
 
                     <StackPanel Grid.Column="1">
-                        <TextBlock Text="{x:Bind Title}" FontSize="18" />
+                        <TextBlock TextTrimming="CharacterEllipsis" Text="{x:Bind Title}" FontSize="18" />
                         <TextBlock Text="{x:Bind Author}" Foreground="{ThemeResource TextFillColorSecondary}"/>
                     </StackPanel>
 
@@ -97,15 +113,15 @@
                 </Grid>
             </ItemContainer>
         </DataTemplate>
-        
+
         <DataTemplate x:Key="SearchTemplate" x:DataType="models:SearchHistory">
-            <ItemContainer>
-                <Grid ColumnSpacing="8" Height="80" Padding="10">
+            <ItemContainer Tapped="ItemContainer_Tapped" Tag="{x:Bind}">
+                <Grid Style="{StaticResource ItemStyle}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-
+                    
                     <Border Width="120" CornerRadius="6">
                         <SymbolIcon Symbol="Find" />
                     </Border>
@@ -113,10 +129,10 @@
                     <StackPanel Grid.Column="1">
                         <TextBlock Text="{x:Bind Query}" FontSize="18" />
                         <TextBlock 
-                            Text="{x:Bind helpers:DatetimeHelper.FormatToEnglish(UpdatedAt)}" 
-                            Foreground="{ThemeResource TextFillColorSecondary}"/>
+                        Text="{x:Bind helpers:DatetimeHelper.FormatToEnglish(UpdatedAt)}" 
+                        Foreground="{ThemeResource TextFillColorSecondary}"/>
                     </StackPanel>
-                </Grid>
+                </Grid>                
             </ItemContainer>
         </DataTemplate>
 
@@ -165,12 +181,13 @@
         </StackPanel>
 
         <ScrollViewer Padding="8" Grid.Row="2">
-            <ItemsView 
-                SelectionMode="None"
-                IsItemInvokedEnabled="True"
-                ItemInvoked="History_ItemInvoked"
+            <ItemsRepeater 
                 ItemsSource="{x:Bind ViewModel.FilteredHistory, Mode=OneWay}"
-                ItemTemplate="{StaticResource HistoryTemplateSelector}" />
+                ItemTemplate="{StaticResource HistoryTemplateSelector}">
+                <ItemsRepeater.Layout>
+                    <StackLayout Spacing="10" />
+                </ItemsRepeater.Layout>
+            </ItemsRepeater>
         </ScrollViewer>
     </Grid>
 </Page>

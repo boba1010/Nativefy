@@ -7,7 +7,7 @@ public sealed class SearchQueriesService : ISearchQueriesService
     public void Clear()
     {
         NativefyDatabaseProvider.SearchQueries.Clear();
-        NativefyDatabaseProvider.SaveSearchQueries();
+        NativefyDatabaseProvider.SaveSearchQueriesChanges();
     }
 
     public string[] GetQueries()
@@ -25,6 +25,6 @@ public sealed class SearchQueriesService : ISearchQueriesService
             return;
 
         NativefyDatabaseProvider.SearchQueries.Add(query);
-        NativefyDatabaseProvider.SaveSearchQueries();
+        NativefyDatabaseProvider.SaveSearchQueriesChanges();
     }
 }

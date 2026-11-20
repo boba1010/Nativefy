@@ -3,9 +3,13 @@
     x:Class="Nativefy.Controls.NewPlaylistDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Nativefy.Controls">
+    xmlns:local="using:Nativefy.Controls"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
-    <Grid>
-
-    </Grid>
+    <StackPanel Spacing="10">
+        <TextBox x:Name="PlaylistNameBox" PlaceholderText="Enter playlist name" />
+        <TextBox x:Name="PlaylistCoverUrlBox" PlaceholderText="Enter playlist cover image url (optional)" />
+    </StackPanel>
 </ContentDialog>

@@ -1,7 +1,6 @@
 ﻿using Nativefy.Models.Media;
-using System.Threading.Tasks;
 
-namespace Nativefy.Services;
+namespace Nativefy.Services.LocalMetadata;
 
 public interface ILikedMediaService
 {

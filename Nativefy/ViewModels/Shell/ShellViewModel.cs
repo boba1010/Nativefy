@@ -4,7 +4,6 @@ using Nativefy.Messages;
 using Nativefy.Models.Media;
 using Nativefy.Services;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 
 namespace Nativefy.ViewModels;
 
@@ -40,15 +39,29 @@ public sealed partial class ShellViewModel : ObservableObject
         }
     }
 
-    public async Task CreatePlaylistAsync()
+    public void CreatePlaylist(LocalPlaylist playlist)
     {
-        var response = await WeakReferenceMessenger.Default.Send(new OpenNewPlaylistDialogMessage("New playlist", "Create", "Cancel"));
+        playlistsService.CreatePlaylist(playlist);
+    }
 
-        if (response.Result != DialogResult.Primary || 
-            response.GetData<LocalPlaylist>() is not { Title.Length: > 0 } created)
+    public void DeletePlaylist(string id)
+    {
+        playlistsService.DeletePlaylist(id);
+    }
+
+    public void RenamePlaylist(string id, string newTitle)
+    {
+        newTitle = newTitle.Trim();
+
+        if (string.IsNullOrEmpty(newTitle))
             return;
 
-        playlistsService.CreatePlaylist(created);
-        LoadPlaylists();
+        var playlist = playlistsService.GetPlaylistById(id);
+        if (playlist is null)
+            return;
+
+        playlist.Title = newTitle;
+
+        playlistsService.UpdatePlaylist(playlist);
     }
 }

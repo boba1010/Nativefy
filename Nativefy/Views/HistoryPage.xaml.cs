@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Nativefy.Messages;
 using Nativefy.Models.Media;
-using System.Diagnostics;
+using Windows.UI;
 
 namespace Nativefy.Views;
 
@@ -29,9 +29,26 @@ public sealed partial class HistoryPage : Page
         ViewModel?.Filter((string)btn.Tag);
     }
 
-    private void History_ItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs args)
+    private void Like_Click(object sender, RoutedEventArgs e)
     {
-        if (args.InvokedItem is HistoryItem historyItem)
+        var btn = (Button)sender;
+
+        ViewModel.LikeMedia((string)btn.Tag);
+    }
+
+    private void ItemContainer_Tapped(object sender, TappedRoutedEventArgs e)
+    {
+        DependencyObject? source = e.OriginalSource as DependencyObject;
+        while (source != null && source != sender)
+        {
+            if (source is ButtonBase)
+                return;
+            source = VisualTreeHelper.GetParent(source);
+        }
+
+        var tag = (sender as ItemContainer)?.Tag;
+
+        if (tag is HistoryItem historyItem)
         {
             if (historyItem is HistoryPlaylist playlist)
                 Frame.Navigate(typeof(PlaylistPage), playlist.Id);
@@ -49,12 +66,5 @@ public sealed partial class HistoryPage : Page
                 }));
             }
         }
-    }
-
-    private void Like_Click(object sender, RoutedEventArgs e)
-    {
-        var btn = (Button)sender;
-
-        ViewModel.LikeMedia((string)btn.Tag);
     }
 }

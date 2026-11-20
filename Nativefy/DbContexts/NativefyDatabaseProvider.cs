@@ -5,12 +5,13 @@ using Path = System.IO.Path;
 
 namespace Nativefy.DbContexts;
 
-public static class NativefyDatabaseProvider
+internal static class NativefyDatabaseProvider
 {
     private static string _playlistsPath = null!;
     private static string _likedMediaPath = null!;
     private static string _historyPath = null!;
     private static string _searchQueriesPath = null!;
+    private static string _likedChannelsPath = null!;
 
     public static List<LocalPlaylist> Playlists { get; private set; } = [];
     
@@ -27,6 +28,8 @@ public static class NativefyDatabaseProvider
 
     public static List<string> SearchQueries { get; private set; } = [];
 
+    public static List<Channel> LikedChannels { get; private set; } = [];
+
     // --------------- Saving ---------------
     public static void SaveChanges()
     {
@@ -36,7 +39,9 @@ public static class NativefyDatabaseProvider
 
         SaveHistoryChanges();
 
-        SaveSearchQueries();
+        SaveSearchQueriesChanges();
+
+        SaveLikedChannelsChanges();
     }
 
     public static void SaveSavedPlaylistsChanges()
@@ -60,11 +65,18 @@ public static class NativefyDatabaseProvider
         JsonSerializer.Serialize(fs, History, NativefyJsonContext.Default.ListHistoryItem);
     }
 
-    public static void SaveSearchQueries()
+    public static void SaveSearchQueriesChanges()
     {
         using var fs = File.Create(_searchQueriesPath);
 
         JsonSerializer.Serialize(fs, SearchQueries, NativefyJsonContext.Default.ListString);
+    }
+
+    public static void SaveLikedChannelsChanges()
+    {
+        using var fs = File.Create(_likedChannelsPath);
+
+        JsonSerializer.Serialize(fs, LikedChannels, NativefyJsonContext.Default.ListChannel);
     }
 
     // --------------- Loading ---------------
@@ -77,6 +89,8 @@ public static class NativefyDatabaseProvider
         LoadHistory();
 
         LoadSearchQueries();
+
+        LoadLikedChannelsChanges();
     }
 
     private static void LoadSavedPlaylists()
@@ -114,6 +128,13 @@ public static class NativefyDatabaseProvider
         SearchQueries = JsonSerializer.Deserialize(fs, NativefyJsonContext.Default.ListString) ?? [];
     }
 
+    private static void LoadLikedChannelsChanges()
+    {
+        using var fs = File.OpenRead(_likedChannelsPath);
+
+        LikedChannels = JsonSerializer.Deserialize(fs, NativefyJsonContext.Default.ListChannel) ?? [];
+    }
+
     // ---------- Initialization ----------
     public static void InitializeDatabase()
     {
@@ -125,6 +146,7 @@ public static class NativefyDatabaseProvider
         _likedMediaPath = Path.Combine(appFolder, "nativefy.userlikedmedia");
         _historyPath = Path.Combine(appFolder, "nativefy.userhistory");
         _searchQueriesPath = Path.Combine(appFolder, "nativefy.searchqueries");
+        _likedChannelsPath = Path.Combine(appFolder, "nativefy.userlikedchannels");
 
         InitializeSavedPlaylists();
 
@@ -133,6 +155,8 @@ public static class NativefyDatabaseProvider
         InitializeHistory();
 
         InitializeSearchQueries();
+
+        InitializeLikedChannels();
     }
 
     private static void InitializeSavedPlaylists()
@@ -172,6 +196,16 @@ public static class NativefyDatabaseProvider
             using var fs = File.Create(_searchQueriesPath);
 
             JsonSerializer.Serialize(fs, SearchQueries, NativefyJsonContext.Default.ListString);
+        }
+    }
+
+    private static void InitializeLikedChannels()
+    {
+        if (!File.Exists(_likedChannelsPath) || new FileInfo(_likedChannelsPath).Length == 0)
+        {
+            using var fs = File.Create(_likedChannelsPath);
+
+            JsonSerializer.Serialize(fs, LikedChannels, NativefyJsonContext.Default.ListChannel);
         }
     }
 }

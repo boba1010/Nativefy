@@ -257,7 +257,7 @@
                 </Border>
 
                 <StackPanel Grid.Row="1" Spacing="10">
-                    <TextBlock Text="{x:Bind ViewModel.Playlist.Name}" FontSize="32"/>
+                    <TextBlock Text="{x:Bind ViewModel.Playlist.Title}" FontSize="32"/>
 
                     <TextBlock FontSize="14" Foreground="LightGray">
                         <Run Text="{x:Bind ViewModel.Playlist.Items.Count}" />

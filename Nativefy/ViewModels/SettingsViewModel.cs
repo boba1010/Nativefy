@@ -10,6 +10,9 @@ public sealed partial class SettingsViewModel(ISearchQueriesService search, IHis
     [ObservableProperty]
     public partial int MediaCacheSize { get; set; } = Config.MediaCacheSize / 1024;
 
+    [ObservableProperty]
+    public partial bool DeleteDuplicateVideosWithDifferentResolutions { get; set; } = Config.DeleteDuplicateVideosWithDifferentResolutions;
+
     public int MaxMediaCacheSize => Config.MaxMediaCacheSize / 1024;
     public int MinMediaCacheSize => Config.MinMediaCacheSize / 1024;
 
@@ -43,7 +46,7 @@ public sealed partial class SettingsViewModel(ISearchQueriesService search, IHis
     }
 
     [RelayCommand]
-    public void SaveCacheConfig()
+    public void SaveConfig()
     {
         Config.SaveConfig();
     }

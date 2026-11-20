@@ -89,3 +89,15 @@ public sealed partial class TimeSpanTooltipConverter : IValueConverter
     public object ConvertBack(object value, Type targetType, object parameter, string language)
         => throw new NotImplementedException();
 }
+
+public sealed partial class BoolToStringConvertor : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        var isLiked = System.Convert.ToBoolean(value);
+        return isLiked ? "Unlike" : "Like";
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+        => throw new NotImplementedException();
+}

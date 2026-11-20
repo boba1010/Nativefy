@@ -7,6 +7,7 @@ namespace Nativefy.Models;
 public partial class SidebarGroup : ObservableObject
 {
     public string HeaderText { get; set; } = string.Empty;
+
     public string GroupTag { get; set; } = string.Empty;
 
     [ObservableProperty]
@@ -17,9 +18,19 @@ public partial class SidebarGroup : ObservableObject
     [NotifyPropertyChangedFor(nameof(HasCompactMode))]
     public partial string? CompactGlyph { get; set; }
 
-    [ObservableProperty]
-    public partial ICommand? CompactCommand { get; set; }
+    public ICommand? CompactCommand { get; set; }
+    
     public bool HasCompactMode => !string.IsNullOrEmpty(CompactGlyph) && CompactCommand is not null;
+    
     public string ChevronGlyph => IsExpanded ? "\uE70D" : "\uE70E";
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasAction))]
+    public partial string? ActionGlyph { get; set; }
+
+    public ICommand? ActionCommand { get; set; }
+
+    public bool HasAction => !string.IsNullOrEmpty(ActionGlyph) && ActionCommand is not null;
+
     public ObservableCollection<SidebarMenuItem> Items { get; set; } = [];
 }

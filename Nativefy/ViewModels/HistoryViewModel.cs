@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Nativefy.Models.Media;
-using Nativefy.Services;
 using Nativefy.Services.LocalMetadata;
 using System.Collections.ObjectModel;
 

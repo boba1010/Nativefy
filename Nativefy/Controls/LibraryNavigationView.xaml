@@ -29,6 +29,7 @@
                             <StackPanel Spacing="12" Padding="8,4"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
+
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="models:SidebarGroup">
                             <StackPanel Spacing="2">
@@ -44,14 +45,28 @@
                                     Click="OnGroupHeaderClicked">
                                     <Grid>
                                         <!-- Full Nav View -->
-                                        <Grid x:Name="HeaderFullContent">
+                                        <Grid ColumnSpacing="5" x:Name="HeaderFullContent">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
                                             <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Left">
                                                 <SymbolIcon Symbol="Library"/>
                                                 <TextBlock Text="{x:Bind HeaderText}" VerticalAlignment="Center"/>
                                             </StackPanel>
 
+                                            <Button 
+                                                Padding="4" Grid.Column="1" 
+                                                x:Name="ActionButton"
+                                                Command="{x:Bind ActionCommand}">
+                                                <FontIcon Glyph="{x:Bind CompactGlyph, Mode=OneWay}" FontSize="14" />
+                                            </Button>
+
                                             <FontIcon 
                                                 x:Name="GroupChevronGlyph"
+                                                Grid.Column="2"
                                                 FontFamily="{ThemeResource SymbolThemeFontFamily}" 
                                                 Glyph="{x:Bind ChevronGlyph, Mode=OneWay}" FontSize="12"
                                                 HorizontalAlignment="Right" VerticalAlignment="Center"/>
@@ -92,7 +107,7 @@
                                             <StackPanel Spacing="2"/>
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
-                                    
+
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="models:SidebarMenuItem">
                                             <Button Tag="{x:Bind Tag}" BorderThickness="0" Background="Transparent" Click="OnSubmenuItemClicked" Height="36" CornerRadius="4" HorizontalAlignment="Stretch">
@@ -100,42 +115,57 @@
                                                     <FontIcon 
                                                         Glyph="{x:Bind Glyph}" Visibility="{x:Bind HasGlyph}"
                                                         VerticalAlignment="Center"/>
-                                                    
+
                                                     <Border CornerRadius="4" Visibility="{x:Bind HasImage}">
-                                                        <Image Source="{x:Bind ImageUrl}" />                                                        
+                                                        <Image Source="{x:Bind ImageUrl}" />
                                                     </Border>
-                                                    
+
                                                     <TextBlock 
                                                         x:Name="ItemText" 
                                                         Text="{x:Bind Text}" 
                                                         VerticalAlignment="Center" 
                                                         Loaded="OnItemTextLoaded"/>
                                                 </StackPanel>
+
+                                                <Button.ContextFlyout>
+                                                    <MenuFlyout>
+                                                        <MenuFlyoutItem
+                                                            Text="Rename" Icon="Rename"
+                                                            CommandParameter="{x:Bind Tag}"
+                                                            Command="{x:Bind RenameCommand}" />
+                                                        
+                                                        <MenuFlyoutSeparator />
+                                                        
+                                                        <MenuFlyoutItem
+                                                            Text="Delete" Icon="Delete"
+                                                            CommandParameter="{x:Bind Tag}"
+                                                            Command="{x:Bind DeleteCommand}" />
+                                                    </MenuFlyout>
+                                                </Button.ContextFlyout>
                                             </Button>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-
-            <!-- Custom Resize Grip Border -->
-            <Border
-                x:Name="resizeGrip"
-                Width="4"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Stretch"
-                Background="Transparent"
-                PointerPressed="ResizeGrip_PointerPressed"
-                PointerMoved="ResizeGrip_PointerMoved"
-                PointerReleased="ResizeGrip_PointerReleased"
-                PointerEntered="ResizeGrip_PointerEntered"
-                PointerExited="ResizeGrip_PointerExited"
-                Canvas.ZIndex="100"/>
         </Grid>
+        
+        <!-- Custom Resize Grip Border -->
+        <Border
+            x:Name="resizeGrip"
+            Width="4"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Stretch"
+            Background="Transparent"
+            PointerPressed="ResizeGrip_PointerPressed"
+            PointerMoved="ResizeGrip_PointerMoved"
+            PointerReleased="ResizeGrip_PointerReleased"
+            PointerEntered="ResizeGrip_PointerEntered"
+            PointerExited="ResizeGrip_PointerExited"
+            Canvas.ZIndex="100"/>
 
         <Grid Grid.Column="1">
             <Grid.ColumnDefinitions>

@@ -4,8 +4,8 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Nativefy.Controls;
 using Nativefy.Messages;
+using Nativefy.Models.Media;
 using Nativefy.Views;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -15,24 +15,21 @@ public sealed partial class MainWindow : Window
 {
     private const int MinWidth = 1400;
     private const int MinHeight = 800;
-    private readonly IntPtr _hwnd;
-    private readonly Win32.SUBCLASSPROC _subclassProc;
     private bool _isFullscreen;
 
     public ShellViewModel ViewModel { get; set; }
-    public ICommand AddCommand { get; set; }
 
     public MainWindow()
     {
         InitializeComponent();
         AppWindow.SetIcon("Assets/Nativefy.ico");
 
-        _hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        OverlappedPresenter presenter = OverlappedPresenter.Create();
 
-        _subclassProc = new Win32.SUBCLASSPROC(WindowSubclass);
-        Win32.SetWindowSubclass(_hwnd, _subclassProc, 0, IntPtr.Zero);
+        presenter.PreferredMinimumHeight = MinHeight;
+        presenter.PreferredMinimumWidth = MinWidth;
 
-        Closed += OnWindowClosed;
+        AppWindow.SetPresenter(presenter);
 
         ViewModel = App.Services.GetRequiredService<ShellViewModel>();
 
@@ -45,9 +42,6 @@ public sealed partial class MainWindow : Window
 
         ContentFrame.Navigated += OnNavigated;
 
-        AddCommand = new RelayCommand(AddPlaylist);
-
-        WeakReferenceMessenger.Default.Register<OpenNewPlaylistDialogMessage>(this, (r, m) => m.Reply(ShowDialogAsync(m)));
         WeakReferenceMessenger.Default.Register<RefreshPlaylistsMessage>(this, (r, m) => Load());
         WeakReferenceMessenger.Default.Register<NavigationMessage>(this, (r, m) =>
         {
@@ -56,49 +50,20 @@ public sealed partial class MainWindow : Window
         });
     }
 
-    private async Task<DialogResponse> ShowDialogAsync(OpenNewPlaylistDialogMessage m)
+    private async Task<LocalPlaylist?> ShowCreatePlaylistDialogAsync()
     {
         var dialog = new NewPlaylistDialog
         {
             XamlRoot = Content.XamlRoot,
-            Title = m.Title,
-            PrimaryButtonText = m.PrimaryButton,
-            CloseButtonText = m.ExitButton ?? string.Empty,
+            Title = "Create a new playlist",
+            PrimaryButtonText = "Create",
+            CloseButtonText = "Cancel",
             DefaultButton = ContentDialogButton.Primary
         };
 
         var result = await dialog.ShowAsync();
 
-        return result == ContentDialogResult.Primary
-            ? new DialogResponse(DialogResult.Primary, dialog.Playlist)
-            : new DialogResponse(DialogResult.Exit);
-    }
-
-    private void OnWindowClosed(object sender, WindowEventArgs args)
-    {
-        // Break the native lifecycle connection to prevent unmanaged memory leaks
-        Win32.RemoveWindowSubclass(_hwnd, _subclassProc, 0);
-        Closed -= OnWindowClosed;
-        ContentFrame.Navigated -= OnNavigated;
-    }
-
-    private IntPtr WindowSubclass(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, IntPtr dwRefData)
-    {
-        if (uMsg == Win32.WM_GETMINMAXINFO)
-        {
-            // Marshal the unmanaged memory pointer into our structure
-            Win32.MINMAXINFO mmi = Marshal.PtrToStructure<Win32.MINMAXINFO>(lParam);
-
-            // Enforce our minimum dimensions
-            mmi.ptMinTrackSize.X = MinWidth;
-            mmi.ptMinTrackSize.Y = MinHeight;
-
-            // Copy the updated structure back to the unmanaged memory pointer
-            Marshal.StructureToPtr(mmi, lParam, false);
-            return IntPtr.Zero;
-        }
-
-        return Win32.DefSubclassProc(hWnd, uMsg, wParam, lParam);
+        return result == ContentDialogResult.Primary ? dialog.Playlist : null;
     }
 
     private void OnNavigated(object sender, NavigationEventArgs e)
@@ -122,7 +87,8 @@ public sealed partial class MainWindow : Window
                  ContentFrame.Navigate(typeof(LikedMediaPage));
                 break;
 
-            case "LikedAuthors":
+            case "LikedChannels":
+                ContentFrame.Navigate(typeof(LikedChannelsPage));
                 break;
 
             case "History":
@@ -155,9 +121,68 @@ public sealed partial class MainWindow : Window
         Load();
     }
 
-    public void AddPlaylist()
+    [RelayCommand]
+    public async Task AddPlaylist()
     {
-        _ = ViewModel.CreatePlaylistAsync();
+        var response = await ShowCreatePlaylistDialogAsync();
+        if (response is null)
+            return;
+
+        ViewModel.CreatePlaylist(response);
+        Load();
+    }
+
+    [RelayCommand]
+    public async Task RenamePlaylist(string id)
+    {
+        var playlistTitle = ViewModel.MenuItems.FirstOrDefault(p => p.Tag == id)?.Text;
+
+        TextBox titleBox = new()
+        {
+            Text = playlistTitle
+        };
+
+        var deleteDialog = new ContentDialog
+        {
+            XamlRoot = Root.XamlRoot,
+            Title = "Rename playlist",
+            Content = titleBox,
+            PrimaryButtonText = "Save",
+            SecondaryButtonText = "Cancel"
+        };
+
+        var result = await deleteDialog.ShowAsync();
+        if (result is ContentDialogResult.Secondary)
+            return;
+
+        var newName = titleBox.Text;
+
+        if (string.IsNullOrEmpty(newName))
+            return;
+
+        ViewModel.RenamePlaylist(id, newName);
+        Load();
+    }
+
+    [RelayCommand]
+    public async Task DeletePlaylist(string id)
+    {
+        var playlistTitle = ViewModel.MenuItems.FirstOrDefault(p => p.Tag == id)?.Text;
+
+        var deleteDialog = new ContentDialog
+        {
+            XamlRoot = Root.XamlRoot,
+            Title = "Are you sure you want to delete this playlist?",
+            Content = $"Playlist: {playlistTitle}",
+            PrimaryButtonText = "Delete",
+            SecondaryButtonText = "Cancel"
+        };
+
+        var result = await deleteDialog.ShowAsync();
+        if (result is ContentDialogResult.Secondary)
+            return;
+
+        ViewModel.DeletePlaylist(id);
         Load();
     }
 
@@ -168,7 +193,11 @@ public sealed partial class MainWindow : Window
         MainNavView.ClearGroupItems("PlaylistGroup");
 
         foreach (var item in ViewModel.MenuItems)
-            MainNavView.AddItemToGroup("PlaylistGroup", item.Tag, item.Text, imageUrl: item.ImageUrl!);
+        {
+            item.DeleteCommand = DeletePlaylistCommand;
+            item.RenameCommand = RenamePlaylistCommand;
+            MainNavView.AddItemToGroup(item, "PlaylistGroup");
+        }
     }
 
     private void Searchbox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
@@ -254,37 +283,4 @@ public sealed partial class MainWindow : Window
     {
         ContentFrame.Navigate(typeof(SettingsPage));
     }
-}
-
-internal static class Win32
-{
-    public const uint WM_GETMINMAXINFO = 0x0024;
-
-    public delegate IntPtr SUBCLASSPROC(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, IntPtr dwRefData);
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct POINT
-    {
-        public int X;
-        public int Y;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct MINMAXINFO
-    {
-        public POINT ptReserved;
-        public POINT ptMaxSize;
-        public POINT ptMaxPosition;
-        public POINT ptMinTrackSize; // This controls the minimum resize limit
-        public POINT ptMaxTrackSize;
-    }
-
-    [DllImport("Comctl32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    public static extern bool SetWindowSubclass(IntPtr hWnd, SUBCLASSPROC pfnSubclass, uint uIdSubclass, IntPtr dwRefData);
-
-    [DllImport("Comctl32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    public static extern bool RemoveWindowSubclass(IntPtr hWnd, SUBCLASSPROC pfnSubclass, uint uIdSubclass);
-
-    [DllImport("Comctl32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    public static extern IntPtr DefSubclassProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
 }

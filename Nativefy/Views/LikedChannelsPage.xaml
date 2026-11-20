@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Nativefy.Views.LikedChannelsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Nativefy.Views"
+    xmlns:models="using:Nativefy.Models.Media">
+
+    <StackPanel Spacing="10" Padding="15">
+        <TextBlock Text="Liked Channels" FontSize="30"/>
+
+        <ScrollViewer>
+            <ItemsRepeater ItemsSource="{x:Bind ViewModel.Channels, Mode=OneWay}">
+                <ItemsRepeater.Layout>
+                    <StackLayout Spacing="10" />
+                </ItemsRepeater.Layout>
+
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate x:DataType="models:Channel">
+                        <Button 
+                            Click="LikedChannel_Click"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Tag="{x:Bind Id}">
+                            
+                            <Grid ColumnSpacing="8" Height="120" Padding="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border Width="180">
+                                    <PersonPicture Width="60" Height="60">
+                                        <PersonPicture.ProfilePicture>
+                                            <BitmapImage UriSource="{x:Bind ImageUrl}" DecodePixelWidth="128" />
+                                        </PersonPicture.ProfilePicture>
+                                    </PersonPicture>
+                                </Border>
+
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="{x:Bind Title}" FontSize="18" />
+                                </StackPanel>
+
+                                <Button 
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Click="Unlike_Click"
+                                    Tag="{x:Bind Id}"
+                                    Style="{StaticResource InversedHeartHoverButtonStyle}"/>
+                            </Grid>
+                        </Button>
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </ScrollViewer>
+    </StackPanel>
+</Page>

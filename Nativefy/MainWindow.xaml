@@ -105,7 +105,7 @@
             Grid.Row="1"
             IsPaneOpen="True"
             ItemInvoked="OnItemInvoked"
-            AddCommand="{x:Bind AddCommand}">
+            AddCommand="{x:Bind AddPlaylistCommand}">
 
             <controls:LibraryNavigationView.InnerContent>
                 <Frame x:Name="ContentFrame" CacheSize="1" Loading="ContentFrame_Loading"/>
