@@ -1,10 +1,21 @@
-﻿using Nativefy.Engine;
-using Nativefy.Models.Media;
+﻿using Nativefy.Models.Media;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Media.Core;
 
 namespace Nativefy.Services.Playback;
+
+public enum Resolution
+{
+    Low144p,
+    Low240p,
+    Standard360p,
+    Standard480p,
+    HD720p,
+    FullHD1080p,
+
+    QHD1440p,
+}
 
 public interface IStreamingBackend
 {

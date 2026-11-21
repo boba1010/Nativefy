@@ -12,13 +12,13 @@
     <Page.Resources>
         <DataTemplate x:Key="MediaTemplate" x:DataType="models:Video">
             <ItemContainer>
-                <Grid ColumnSpacing="8" Height="120" Padding="10">
+                <Grid ColumnSpacing="8" Height="200" Padding="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Border Width="180" CornerRadius="6">
+                    <Border Width="320" CornerRadius="6">
                         <Grid>
                             <Image Source="{x:Bind ImageUrl}" VerticalAlignment="Center" />
 
@@ -35,9 +35,19 @@
                         </Grid>
                     </Border>
 
-                    <StackPanel Grid.Column="1">
+                    <StackPanel Grid.Column="1" Spacing="10">
                         <TextBlock Text="{x:Bind Title}" FontSize="18" />
-                        <TextBlock Text="{x:Bind Author}" Foreground="{ThemeResource TextFillColorSecondary}"/>
+
+                        <TextBlock>
+                            <Run Text="{x:Bind Views}" />
+                            <Run Text="•" />
+                            <Run Text="{x:Bind PublishedTime}" />
+                        </TextBlock>
+
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <PersonPicture Width="32" Height="32" ProfilePicture="{x:Bind AuthorImageUrl}" />
+                            <TextBlock Text="{x:Bind Author}" VerticalAlignment="Center" />
+                        </StackPanel>
                     </StackPanel>
 
                     <Button 
@@ -53,13 +63,13 @@
 
         <DataTemplate x:Key="PlaylistTemplate" x:DataType="models:Playlist">
             <ItemContainer>
-                <Grid ColumnSpacing="8" Height="120" Padding="10">
+                <Grid ColumnSpacing="8" Height="200" Padding="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Border Width="180" CornerRadius="6">
+                    <Border Width="320" CornerRadius="6">
                         <Grid>
                             <Image Source="{x:Bind ImageUrl}" VerticalAlignment="Center" />
 
@@ -92,22 +102,27 @@
         
         <DataTemplate x:Key="ChannelTemplate" x:DataType="models:Channel">
             <ItemContainer>
-                <Grid ColumnSpacing="8" Height="120" Padding="10">
+                <Grid ColumnSpacing="8" Height="150" Padding="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Border Width="180">
-                        <PersonPicture Width="60" Height="60">
+                    <Border Width="320">
+                        <PersonPicture Width="128" Height="128">
                             <PersonPicture.ProfilePicture>
                                 <BitmapImage UriSource="{x:Bind ImageUrl}" DecodePixelWidth="128" />
                             </PersonPicture.ProfilePicture>
                         </PersonPicture>                        
                     </Border>
 
-                    <StackPanel Grid.Column="1">
+                    <StackPanel Grid.Column="1" Spacing="5">
                         <TextBlock Text="{x:Bind Title}" FontSize="18" />
+                        <TextBlock>
+                            <Run Text="{x:Bind Subscribers}" FontSize="14" />
+                            <Run Text="•" FontSize="14" />
+                            <Run Text="{x:Bind Handle}" FontSize="14" />
+                        </TextBlock>
                     </StackPanel>
 
                     <Button 

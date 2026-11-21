@@ -35,48 +35,6 @@ public partial class NullToVisibilityConverter : IValueConverter
     }
 }
 
-public partial class SecondsToMinutesConverter : IValueConverter
-{
-    public object Convert(object value, Type targetType, object parameter, string language)
-    {
-        if (value is int seconds)
-        {
-            TimeSpan time = TimeSpan.FromSeconds(seconds);
-
-            return time.TotalHours >= 1
-                ? time.ToString(@"h\:mm\:ss")
-                : time.ToString(@"mm\:ss");
-        }
-        return "00:00";
-    }
-
-    public object ConvertBack(object value, Type targetType, object parameter, string language) => throw new NotImplementedException();
-}
-
-public partial class ImageSourceFallbackConverter : IValueConverter
-{
-    private static readonly BitmapImage DefaultArt = new(new Uri("ms-appx:///Assets/DefaultAlbumArt.png"));
-
-    public object Convert(object value, Type targetType, object parameter, string language)
-    {
-        if (value is string uriStr && !string.IsNullOrWhiteSpace(uriStr))
-        {
-            try
-            {
-                return new BitmapImage(new Uri(uriStr));
-            }
-            catch
-            {
-                return DefaultArt;
-            }
-        }
-        return DefaultArt;
-    }
-
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
-        => throw new NotImplementedException();
-}
-
 public sealed partial class TimeSpanTooltipConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)

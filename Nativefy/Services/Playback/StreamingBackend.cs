@@ -278,14 +278,11 @@ public sealed class StreamingBackend : IStreamingBackend
             Resolution.Standard360p => (360, 30),
             Resolution.Standard480p => (480, 30),
 
-            Resolution.Hd720p => (720, 30),
-            Resolution.Hd720p60 => (720, 60),
+            Resolution.HD720p => (720, 30),
 
-            Resolution.FullHd1080p => (1080, 30),
-            Resolution.FullHd1080p60 => (1080, 60),
+            Resolution.FullHD1080p => (1080, 30),
 
-            Resolution.Qhd1440p => (1440, 30),
-            Resolution.Qhd1440p60 => (1440, 60),
+            Resolution.QHD1440p => (1440, 30),
 
             _ => throw new ArgumentOutOfRangeException(nameof(resolution))
         };

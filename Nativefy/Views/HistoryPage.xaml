@@ -129,8 +129,8 @@
                     <StackPanel Grid.Column="1">
                         <TextBlock Text="{x:Bind Query}" FontSize="18" />
                         <TextBlock 
-                        Text="{x:Bind helpers:DatetimeHelper.FormatToEnglish(UpdatedAt)}" 
-                        Foreground="{ThemeResource TextFillColorSecondary}"/>
+                            Text="{x:Bind helpers:DatetimeHelper.FormatToEnglish(UpdatedAt)}" 
+                            Foreground="{ThemeResource TextFillColorSecondary}"/>
                     </StackPanel>
                 </Grid>                
             </ItemContainer>

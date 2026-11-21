@@ -99,13 +99,18 @@
 
                         <DataTemplate x:DataType="models:FeedResult">
                             <Button MinWidth="350" MinHeight="270" Padding="10" Click="Play_Clicked" Tag="{x:Bind Id}">
-                                <Grid RowSpacing="10">
+                                <Grid RowSpacing="10" ColumnSpacing="5">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="191" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid Grid.ColumnSpan="2">
                                         <Image 
                                             Stretch="UniformToFill"
                                             HorizontalAlignment="Center" 
@@ -122,9 +127,24 @@
                                         </Border>
                                     </Grid>
 
-                                    <StackPanel Grid.Row="1" Spacing="2">
-                                        <TextBlock Text="{x:Bind Title}" TextTrimming="CharacterEllipsis" FontSize="16" />
-                                        <TextBlock Text="{x:Bind Author}" FontSize="14" />
+                                    <PersonPicture 
+                                        VerticalAlignment="Center" 
+                                        Grid.Row="1" Grid.Column="0" 
+                                        Width="32" Height="32"
+                                        ProfilePicture="{x:Bind AuthorImageUrl}"/>
+
+                                    <StackPanel Grid.Column="1" Grid.Row="1" Spacing="2">
+                                        <TextBlock 
+                                            ToolTipService.ToolTip="{x:Bind Title}" 
+                                            Text="{x:Bind Title}" 
+                                            TextTrimming="CharacterEllipsis" 
+                                            FontSize="16" />
+
+                                        <TextBlock 
+                                            TextTrimming="CharacterEllipsis" 
+                                            Text="{x:Bind FormatedDetails}" 
+                                            ToolTipService.ToolTip="{x:Bind FormatedDetails}"
+                                            FontSize="12"/>
                                     </StackPanel>
                                 </Grid>
                             </Button>

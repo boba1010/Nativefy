@@ -1,5 +1,4 @@
-﻿using ABI.System;
-using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using Nativefy.Engine;
 using Nativefy.Engine.Search;
 using Nativefy.Messages;
@@ -9,7 +8,6 @@ using Nativefy.Services.LocalMetadata;
 using Nativefy.Services.OnlineMetadata;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using YoutubeExplode.Common;
 
 namespace Nativefy.ViewModels;
@@ -23,7 +21,7 @@ public sealed partial class SearchViewModel(
     IPlaylistsService playlists) : BaseViewModel
 {
     public ObservableCollection<ISearchResult> Results { get; } = [];
-    public ObservableCollection<byte> DummyResults { get; } = new(Enumerable.Repeat(0, 100).Select(x => (byte)x));
+    public ObservableCollection<byte> DummyResults { get; } = [with(Enumerable.Repeat(0, 100).Select(x => (byte)x))];
 
     public async Task ExecuteSearchAsync(string query)
     {

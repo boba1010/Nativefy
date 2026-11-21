@@ -1,7 +1,6 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Nativefy.Messages;
 using Nativefy.Models.Media;
-using Windows.UI;
 
 namespace Nativefy.Views;
 
@@ -39,7 +38,7 @@ public sealed partial class HistoryPage : Page
     private void ItemContainer_Tapped(object sender, TappedRoutedEventArgs e)
     {
         DependencyObject? source = e.OriginalSource as DependencyObject;
-        while (source != null && source != sender)
+        while (source != null && !ReferenceEquals(source, sender))
         {
             if (source is ButtonBase)
                 return;

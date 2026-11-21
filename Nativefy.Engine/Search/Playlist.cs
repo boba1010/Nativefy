@@ -1,5 +1,4 @@
-﻿using YoutubeExplode.Common;
-using YoutubeExplode.Search;
+﻿using TubeSharp.Search;
 
 namespace Nativefy.Engine.Search;
 
@@ -20,10 +19,10 @@ public sealed class Playlist : IPlayableSearchResult
         Id = playlist.Id;
         Title = playlist.Title;
         Url = playlist.Url;
-        Author = playlist.Author?.ChannelTitle ?? "Unknown Creator";
+        Author = playlist.Channel?.Name ?? "Unknown Creator";
         try
         {
-            ImageUrl = playlist.Thumbnails.GetWithHighestResolution().Url ?? "playlist.png";
+            ImageUrl = playlist.ThumbnailUrl ?? "playlist.png";
         }
         catch (Exception)
         {

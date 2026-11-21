@@ -5,11 +5,11 @@ namespace Nativefy.Engine;
 public sealed class NativefyEngine : IDisposable
 {
     private readonly HttpClient _httpClient;
-    private readonly YoutubeClient _youtube;
+    private readonly YoutubeClient _youtubeClient;
+    private readonly TubeSharp.YoutubeClient _youtube;
 
     public SearchEngine Search { get; }
     public PlaylistEngine Playlist { get; }
-    public StreamingEngine Streaming { get; }
     public FeedEngine Feed { get; }
     public ChannelEngine Channel { get; }
 
@@ -25,17 +25,18 @@ public sealed class NativefyEngine : IDisposable
         _httpClient.DefaultRequestHeaders.Add("X-YouTube-Client-Name", "1");
         _httpClient.DefaultRequestHeaders.Add("X-YouTube-Client-Version", "2.20240301.00.00");
 
-        _youtube = new YoutubeClient(_httpClient);
+        _youtubeClient = new YoutubeClient(_httpClient);
+        _youtube = new();
 
         Search = new(_youtube);
-        Playlist = new(_youtube);
-        Streaming = new(_youtube);
+        Playlist = new(_youtubeClient);
         Feed = new(Search);
-        Channel = new(_youtube);
+        Channel = new(_youtubeClient);
     }
 
     public void Dispose()
     {
         _httpClient.Dispose();
+        _youtube.Dispose();
     }
 }
