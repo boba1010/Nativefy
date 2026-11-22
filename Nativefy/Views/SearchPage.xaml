@@ -10,8 +10,18 @@
     xmlns:helpers="using:Nativefy.Helpers">
 
     <Page.Resources>
+        <root:ImageUrlFallbackConverter x:Name="ImageFallback"/>
+
         <DataTemplate x:Key="MediaTemplate" x:DataType="models:Video">
-            <ItemContainer>
+            <Button 
+                Click="Result_ItemInvoked"
+                Tag="{x:Bind}"
+                Padding="0"
+                Background="Transparent" 
+                BorderBrush="Transparent" 
+                HorizontalAlignment="Stretch" 
+                HorizontalContentAlignment="Stretch" 
+                VerticalContentAlignment="Stretch">
                 <Grid ColumnSpacing="8" Height="200" Padding="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -20,9 +30,10 @@
 
                     <Border Width="320" CornerRadius="6">
                         <Grid>
-                            <Image Source="{x:Bind ImageUrl}" VerticalAlignment="Center" />
+                            <Image Source="{x:Bind ImageUrl, Converter={StaticResource ImageFallback}}" VerticalAlignment="Center" />
 
                             <Border 
+                                Margin="5"
                                 Padding="2" CornerRadius="2"
                                 HorizontalAlignment="Right" 
                                 VerticalAlignment="Bottom"
@@ -45,7 +56,10 @@
                         </TextBlock>
 
                         <StackPanel Orientation="Horizontal" Spacing="10">
-                            <PersonPicture Width="32" Height="32" ProfilePicture="{x:Bind AuthorImageUrl}" />
+                            <Border Width="32" Height="32" CornerRadius="80" Background="{ThemeResource CardBackgroundFillColorDefault}">
+                                <Image Source="{x:Bind AuthorImageUrl, Converter={StaticResource ImageFallback}}" Stretch="UniformToFill" />
+                            </Border>
+                            
                             <TextBlock Text="{x:Bind Author}" VerticalAlignment="Center" />
                         </StackPanel>
                     </StackPanel>
@@ -58,11 +72,19 @@
                         Tag="{x:Bind Id}"
                         Style="{StaticResource HeartHoverButtonStyle}"/>
                 </Grid>
-            </ItemContainer>
+            </Button>
         </DataTemplate>
 
         <DataTemplate x:Key="PlaylistTemplate" x:DataType="models:Playlist">
-            <ItemContainer>
+            <Button
+                Click="Result_ItemInvoked"
+                Tag="{x:Bind}"
+                Padding="0"
+                Background="Transparent" 
+                BorderBrush="Transparent" 
+                HorizontalAlignment="Stretch" 
+                HorizontalContentAlignment="Stretch" 
+                VerticalContentAlignment="Stretch">
                 <Grid ColumnSpacing="8" Height="200" Padding="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -71,7 +93,7 @@
 
                     <Border Width="320" CornerRadius="6">
                         <Grid>
-                            <Image Source="{x:Bind ImageUrl}" VerticalAlignment="Center" />
+                            <Image Source="{x:Bind ImageUrl, Converter={StaticResource ImageFallback}}" VerticalAlignment="Center" />
 
                             <Border 
                                 Padding="2" CornerRadius="2"
@@ -97,11 +119,19 @@
                         Tag="{x:Bind Id}"
                         Style="{StaticResource HeartHoverButtonStyle}"/>
                 </Grid>
-            </ItemContainer>
+            </Button>
         </DataTemplate>
         
         <DataTemplate x:Key="ChannelTemplate" x:DataType="models:Channel">
-            <ItemContainer>
+            <Button
+                Click="Result_ItemInvoked"
+                Tag="{x:Bind}"
+                Padding="0"
+                Background="Transparent" 
+                BorderBrush="Transparent" 
+                HorizontalAlignment="Stretch" 
+                HorizontalContentAlignment="Stretch" 
+                VerticalContentAlignment="Stretch">
                 <Grid ColumnSpacing="8" Height="150" Padding="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -109,11 +139,9 @@
                     </Grid.ColumnDefinitions>
 
                     <Border Width="320">
-                        <PersonPicture Width="128" Height="128">
-                            <PersonPicture.ProfilePicture>
-                                <BitmapImage UriSource="{x:Bind ImageUrl}" DecodePixelWidth="128" />
-                            </PersonPicture.ProfilePicture>
-                        </PersonPicture>                        
+                        <Border Width="128" Height="128" CornerRadius="80" Background="{ThemeResource CardBackgroundFillColorDefault}">
+                            <Image Source="{x:Bind ImageUrl, Converter={StaticResource ImageFallback}}" Stretch="UniformToFill" />
+                        </Border>
                     </Border>
 
                     <StackPanel Grid.Column="1" Spacing="5">
@@ -133,7 +161,7 @@
                         Tag="{x:Bind Id}"
                         Style="{StaticResource HeartHoverButtonStyle}"/>
                 </Grid>
-            </ItemContainer>
+            </Button>
         </DataTemplate>
 
         <root:SearchTemplateSelector 
@@ -220,11 +248,8 @@
             </NavigationView>
 
             <ScrollViewer Padding="8" Grid.Row="2">
-                <ItemsView 
-                    SelectionMode="None"
-                    IsItemInvokedEnabled="True"
-                    ItemInvoked="Result_ItemInvoked"
-                    ItemsSource="{x:Bind ViewModel.Results}"
+                <ItemsRepeater 
+                    ItemsSource="{x:Bind ViewModel.Results, Mode=OneWay}"
                     ItemTemplate="{StaticResource SearchTemplateSelector}" />
             </ScrollViewer>
         </Grid>

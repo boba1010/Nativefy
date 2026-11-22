@@ -33,9 +33,11 @@ public sealed partial class SearchPage : Page
         }
     }
 
-    private void Result_ItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs args)
+    private void Result_ItemInvoked(object sender, RoutedEventArgs e)
     {
-        if (args.InvokedItem is IPlayableSearchResult playable)
+        var result = (sender as Button)?.Tag as ISearchResult;
+
+        if (result is IPlayableSearchResult playable)
         {
             if (playable is Playlist playlist)
                 Frame.Navigate(typeof(OnlinePlaylistPage), playlist.Id);
@@ -53,7 +55,7 @@ public sealed partial class SearchPage : Page
                 }));
             }
         }
-        else if (args.InvokedItem is Channel channel)
+        else if (result is Channel channel)
             Frame.Navigate(typeof(ChannelPage), channel.Id);
     }
 
