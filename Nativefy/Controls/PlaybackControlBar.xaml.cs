@@ -103,4 +103,16 @@ public sealed partial class PlaybackControlBar : UserControl
     {
         WeakReferenceMessenger.Default.Send(new NavigationMessage(typeof(MediaPlayerPage)));
     }
+
+    private void ProgressRing_PointerEntered(object sender, PointerRoutedEventArgs e)
+    {
+        CancelButton.Visibility = Visibility.Visible;
+        DownloadProgressRing.Visibility = Visibility.Collapsed;
+    }
+
+    private void CancelButton_PointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        CancelButton.Visibility = Visibility.Collapsed;
+        DownloadProgressRing.Visibility = Visibility.Visible;
+    }
 }

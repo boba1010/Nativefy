@@ -1,6 +1,7 @@
 ﻿using Nativefy.Engine;
 using Nativefy.Models.Media;
 using Nativefy.Services.Cache;
+using Nativefy.Settings;
 using System.Diagnostics;
 using System.Globalization;
 using System.Security.Cryptography;
@@ -27,6 +28,20 @@ public sealed class StreamingBackend : IStreamingBackend
         _videosDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Nativefy", "Videos");
 
         Directory.CreateDirectory(_videosDirectory);
+    }
+
+    public async Task<bool> Exists(MediaItem item, Resolution resolution, CancellationToken cancellationToken = default)
+    {
+        if (item is null)
+            return false;
+
+        cancellationToken.ThrowIfCancellationRequested();
+
+        string? videoPath = await _cache.TryGetPathAsync(item.Id, resolution, cancellationToken);
+        if (videoPath is null)
+            return false;
+
+        return true;
     }
 
     public async Task<MediaSource> CreateSourceAsync(
@@ -83,7 +98,7 @@ public sealed class StreamingBackend : IStreamingBackend
             StandardErrorEncoding = Encoding.UTF8
         };
 
-        string[] arguments =
+        List<string> arguments =
         [
             "--no-playlist",
             "--newline",
@@ -101,10 +116,18 @@ public sealed class StreamingBackend : IStreamingBackend
             "--print",
             "after_move:filepath:%(filepath)s",
 
-            "--progress",
-
-            $"https://www.youtube.com/watch?v={Uri.EscapeDataString(videoId)}"
+            "--progress"
         ];
+
+        string? browser = GetBrowserArgument(Config.Browser);
+
+        if (browser is not null)
+        {
+            arguments.Add("--cookies-from-browser");
+            arguments.Add(browser);
+        }
+
+        arguments.Add($"https://www.youtube.com/watch?v={Uri.EscapeDataString(videoId)}");
 
         foreach (string argument in arguments)
             startInfo.ArgumentList.Add(argument);
@@ -195,6 +218,15 @@ public sealed class StreamingBackend : IStreamingBackend
             TryDeleteDirectory(stagingDirectory);
         }
     }
+
+    private static string? GetBrowserArgument(Browser browser) => browser switch
+    {
+        Browser.MicrosoftEdge => "edge",
+        Browser.GoogleChrome => "chrome",
+        Browser.MozillaFirefox => "firefox",
+        Browser.Brave => "brave",
+        _ => null
+    };
 
     private static async Task StopProcessAsync(Process process)
     {

@@ -4,6 +4,15 @@ using Path = System.IO.Path;
 
 namespace Nativefy.Settings;
 
+public enum Browser
+{
+    None,
+    MicrosoftEdge,
+    GoogleChrome,
+    MozillaFirefox,
+    Brave
+}
+
 public static partial class Config
 {
     // cache size in MB
@@ -17,6 +26,8 @@ public static partial class Config
 
     public static bool DeleteDuplicateVideosWithDifferentResolutions { get; set; } = true;
 
+    public static Browser Browser { get; set; } = Browser.None;
+
     static Config()
     {
         string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -29,9 +40,10 @@ public static partial class Config
         {
             using var fs = File.OpenRead(_path);
 
-            var config = JsonSerializer.Deserialize(fs, ConfigJsonContext.Default.ConfigDto) ?? new(5120, true);
+            var config = JsonSerializer.Deserialize(fs, ConfigJsonContext.Default.ConfigDto) ?? new();
             MediaCacheSize = config.MediaCacheSize;
             DeleteDuplicateVideosWithDifferentResolutions = config.DeleteDuplicateVideosWithDifferentResolutions;
+            Browser = config.Browser;
         }
     }
 
@@ -39,15 +51,18 @@ public static partial class Config
     {
         using var fs = File.Create(_path);
 
-        var config = new ConfigDto(MediaCacheSize, DeleteDuplicateVideosWithDifferentResolutions);
+        var config = new ConfigDto(MediaCacheSize, DeleteDuplicateVideosWithDifferentResolutions, Browser);
 
         JsonSerializer.Serialize(fs, config, ConfigJsonContext.Default.ConfigDto);
     }
 
-    private sealed class ConfigDto(int mediaCacheSize = 5120, bool deleteDuplicateVideosWithDifferentResolutions = true)
+    private sealed class ConfigDto(int mediaCacheSize = 5120, bool deleteDuplicateVideosWithDifferentResolutions = true, Browser browser = Browser.None)
     {
         public int MediaCacheSize { get; set; } = mediaCacheSize;
+
         public bool DeleteDuplicateVideosWithDifferentResolutions { get; set; } = deleteDuplicateVideosWithDifferentResolutions;
+
+        public Browser Browser { get; set; } = browser;
     }
 
     [JsonSourceGenerationOptions(WriteIndented = true)]

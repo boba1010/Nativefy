@@ -1,4 +1,4 @@
-using Nativefy.Services.Playback;
+using Nativefy.Playback;
 
 namespace Nativefy.Views;
 
@@ -12,12 +12,12 @@ public sealed partial class MediaPlayerPage : Page
 
         _controller = App.Services.GetRequiredService<PlaybackController>();
 
-        MediaPlayerElement.SetMediaPlayer(_controller.Player);
+        MediaPlayerElement.SetMediaPlayer(_controller.Session.Player);
     }
 
     private void MediaPlayerElement_PointerReleased(object sender, PointerRoutedEventArgs e)
     {
-        if (_controller.IsPlaying)
+        if (_controller.Context.IsPlaying)
             _controller.Pause();
         else
             _controller.Play();

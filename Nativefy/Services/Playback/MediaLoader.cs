@@ -1,10 +1,8 @@
-﻿using Nativefy.Engine;
-using Nativefy.Models.Media;
+﻿using Nativefy.Models.Media;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
-using Playlist = Nativefy.Models.Media.Playlist;
 
 namespace Nativefy.Services.Playback;
 
@@ -26,6 +24,11 @@ public sealed record MediaReportMessage(
 
 public sealed class MediaLoader(IStreamingBackend streaming)
 {
+    public async Task<bool> Exists(MediaItem item, Resolution resolution, CancellationToken cancellationToken = default)
+    {
+        return await streaming.Exists(item, resolution, cancellationToken);
+    }
+
     public async Task<MediaPlaybackItem> CreatePlaybackItemAsync(
         MediaItem item,
         IProgress<DownloadProgress>? progress = null,

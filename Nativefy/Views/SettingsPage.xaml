@@ -23,8 +23,7 @@
                 HorizontalAlignment="Stretch"
                 Header="Playback"
                 Description="Video and audio playback preferences"
-                IsExpanded="False"
-                IsEnabled="False">
+                IsExpanded="False">
 
                 <!-- Optional: Add an icon to the main header -->
                 <controls:SettingsExpander.HeaderIcon>
@@ -34,6 +33,7 @@
                 <!-- Collapsible Drop-Down Items -->
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
+                        IsEnabled="False"
                         Header="Default video quality"
                         Description="Preferred resolution for video playback.">
 
@@ -48,8 +48,17 @@
                         </ComboBox>
 
                     </controls:SettingsCard>
-                </controls:SettingsExpander.Items>
 
+                    <controls:SettingsCard
+                        Header="Select your browser"
+                        Description="Selecting a browser allows Nativefy to use its cookies and may help prevent playback errors.">
+
+                        <ComboBox 
+                            Width="200"
+                            ItemsSource="{x:Bind ViewModel.Browsers}" 
+                            SelectedValue="{x:Bind ViewModel.SelectedBrowser, Mode=TwoWay}" />
+                    </controls:SettingsCard>
+                </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
 
             <TextBlock Text="Storage" FontSize="20" FontWeight="SemiBold"/>

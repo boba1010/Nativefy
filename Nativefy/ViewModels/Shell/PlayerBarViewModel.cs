@@ -4,11 +4,23 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Dispatching;
 using Nativefy.Messages;
 using Nativefy.Models.Media;
+using Nativefy.Playback;
 using Nativefy.Services.LocalMetadata;
 using Nativefy.Services.Playback;
 using System.Threading.Tasks;
 
 namespace Nativefy.ViewModels.Shell;
+
+public enum DownloadStatus
+{
+    Downloading,
+
+    Downloaded,
+
+    Failed,
+
+    Canceled,
+}
 
 public sealed partial class PlayerBarViewModel : BaseViewModel
 {
@@ -57,19 +69,14 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
     public bool IsUserScrubbing { get; set; }
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsNotDownloading))]
-    public partial bool IsDownloading { get; set; }
-
-    public bool IsNotDownloading => !IsDownloading;
-
-    [ObservableProperty]
     public partial double DownloadProgress { get; set; }
 
-    [ObservableProperty]
-    public partial string DownloadSpeed { get; set; } = string.Empty;
+    public string DownloadSpeed { get; set; } = string.Empty;
+
+    public string DownloadEta { get; set; } = string.Empty;
 
     [ObservableProperty]
-    public partial string DownloadEta { get; set; } = string.Empty;
+    public partial DownloadStatus DownloadStatus { get; set; }
 
     public PlayerBarViewModel(PlaybackController controller, IHistoryService history)
     {
@@ -134,7 +141,7 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
                     switch (m.Stage)
                     {
                         case MediaReportStage.Downloading:
-                            IsDownloading = true;
+                            DownloadStatus = DownloadStatus.Downloading;
                             DownloadProgress = 0;
                             break;
 
@@ -154,15 +161,21 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
                             break;
 
                         case MediaReportStage.Downloaded:
-                            IsDownloading = false;
+                            DownloadStatus = DownloadStatus.Downloaded;
                             DownloadProgress = 100;
                             DownloadSpeed = string.Empty;
                             DownloadEta = string.Empty;
                             break;
 
                         case MediaReportStage.Cancelled:
+                            DownloadStatus = DownloadStatus.Canceled;
+                            DownloadProgress = 100;
+                            DownloadSpeed = string.Empty;
+                            DownloadEta = string.Empty;
+                            break;
                         case MediaReportStage.Failed:
-                            IsDownloading = false;
+                            DownloadStatus = DownloadStatus.Failed;
+                            DownloadProgress = 100;
                             DownloadSpeed = string.Empty;
                             DownloadEta = string.Empty;
                             break;
@@ -194,7 +207,7 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
         PlaybackController.SeekCompleted += Player_SeekCompleted;
     }
 
-    private void Show()
+    private static void Show()
     {
         WeakReferenceMessenger.Default.Send<PlayerBarVisiblityChangedMessage>(new(true));
     }
@@ -226,13 +239,21 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
     public void ToggleRepeat() => PlaybackController.ToggleRepeat();
 
     [RelayCommand]
-    public void SkipBackward() => PlaybackController.SkipPrevious();
+    public void SkipBackward()
+    {
+        DownloadStatus = DownloadStatus.Downloaded;
+        PlaybackController.SkipPrevious();
+    }
 
     [RelayCommand]
     public void PlayPause() => PlaybackController.TogglePlayPause();
 
     [RelayCommand]
-    public void SkipForward() => PlaybackController.SkipNext();
+    public void SkipForward()
+    {
+        DownloadStatus = DownloadStatus.Downloaded;
+        PlaybackController.SkipNext();
+    }
 
     public void ToggleShuffle() => PlaybackController.ToggleShuffle();
 
@@ -240,6 +261,9 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
     public async Task ToggleDetailsPanelAsync()
     {
     }
+
+    [RelayCommand]
+    public void CancelDownload() => PlaybackController.CancelDownload();
 
     public void SetVolume(double value) => PlaybackController.SetVolume(value);
 

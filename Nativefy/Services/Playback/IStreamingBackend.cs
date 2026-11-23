@@ -24,6 +24,8 @@ public interface IStreamingBackend
         Resolution resolution,
         IProgress<DownloadProgress>? progress = null,
         CancellationToken cancellationToken = default);
+
+    Task<bool> Exists(MediaItem item, Resolution resolution, CancellationToken cancellationToken = default);
 }
 
 public readonly record struct DownloadProgress(

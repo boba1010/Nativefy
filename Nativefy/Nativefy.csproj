@@ -1,19 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net11.0-windows10.0.19041.0</TargetFramework>
+        <TargetFramework>net11.0-windows10.0.26100.0</TargetFramework>
         <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
         <RootNamespace>Nativefy</RootNamespace>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <Platforms>x86;x64;ARM64</Platforms>
-        <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
-        <PublishProfile>win-$(Platform).pubxml</PublishProfile>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString().ToLowerInvariant())</RuntimeIdentifier>
+		<PublishProfile Condition="Exists('Properties\PublishProfiles\win-$(Platform).pubxml')">win-$(Platform).pubxml</PublishProfile>
 	  
         <UseWinUI>true</UseWinUI>
         <WinUISDKReferences>false</WinUISDKReferences>
         <EnableMsixTooling>true</EnableMsixTooling>
 
 		<PublishAot>true</PublishAot>
+		<OptimizationPreference>Size</OptimizationPreference>
+		<WindowsAppSDKSelfContained>false</WindowsAppSDKSelfContained>
+		
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Nullable>enable</Nullable>
     </PropertyGroup>
@@ -182,14 +185,21 @@
 		<PublishReadyToRun>False</PublishReadyToRun>
 		<PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
 		<PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
+		<DebugType Condition="'$(Configuration)' == 'Release'">none</DebugType>
 		<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
 		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-		<PackageCertificateThumbprint>ABA5CB737D13A74BE6DE05331D6789018DEB5E1E</PackageCertificateThumbprint>
+		<PackageCertificateThumbprint>B2839248B59C735CC4BE244151188E1B59E49C48</PackageCertificateThumbprint>
 		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-		<AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+		<AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+		<AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
 		<GenerateTestArtifacts>False</GenerateTestArtifacts>
 		<AppxBundle>Never</AppxBundle>
 		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-		<AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
 	</PropertyGroup>
+
+	<Target Name="StripJitFilesFromAotMsix" BeforeTargets="_GenerateAppxPackageRecipe">
+		<ItemGroup>
+			<AppxPackagePayload Remove="@(AppxPackagePayload)" Condition="('%(Extension)' == '.dll' or '%(Extension)' == '.pdb' or '%(Extension)' == '.json')&#xD;&#xA;                                   and '%(Filename)' != 'Microsoft.Graphics.Canvas'&#xD;&#xA;                                   and '%(Filename)' != 'Microsoft.Web.WebView2.Core'&#xD;&#xA;                                   and '%(Filename)' != 'lib_lightgbm'&#xD;&#xA;                                   and '%(Filename)' != 'WebView2Loader'" />
+		</ItemGroup>
+	</Target>
 </Project>

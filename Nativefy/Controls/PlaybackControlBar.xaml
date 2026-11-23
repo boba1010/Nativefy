@@ -5,12 +5,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Nativefy.Controls"
     xmlns:local="using:Nativefy"
+    xmlns:convertors="using:Nativefy.Convertors"
     xmlns:brushes="using:Nativefy.Brushes" 
     xmlns:system="using:System" 
     xmlns:ic="using:FluentIcons.WinUI">
 
     <UserControl.Resources>
         <local:TimeSpanTooltipConverter x:Key="TimeSpanTooltipConverter"/>
+        <convertors:DownloadStatusToVisiblityConvertor x:Name="DownloadStatusToVisiblityConvertor"/>
+        <convertors:InverseDownloadStatusToVisiblityConvertor x:Name="InverseDownloadStatusToVisiblityConvertor"/>
+        <convertors:DownloadStatusToBrushConvertor x:Name="DownloadStatusToBrushConvertor"/>
     </UserControl.Resources>
 
     <Grid 
@@ -99,7 +103,7 @@
             </Button>
             
             <Button 
-                Visibility="{x:Bind ViewModel.IsNotDownloading, Mode=OneWay}"
+                Visibility="{x:Bind ViewModel.DownloadStatus, Mode=OneWay, Converter={StaticResource InverseDownloadStatusToVisiblityConvertor}}"
                 ToolTipService.ToolTip="{x:Bind ViewModel.PlayPauseTooltip, Mode=OneWay}" 
                 Background="Transparent" 
                 BorderBrush="Transparent" 
@@ -108,9 +112,24 @@
             </Button>
 
             <ProgressRing 
-                Visibility="{x:Bind ViewModel.IsDownloading, Mode=OneWay}"
+                x:Name="DownloadProgressRing"
+                IsHitTestVisible="True"
+                Background="Gray"
+                Visibility="{x:Bind ViewModel.DownloadStatus, Mode=OneWay, Converter={StaticResource DownloadStatusToVisiblityConvertor}}"
+                Foreground="{x:Bind ViewModel.DownloadStatus, Mode=OneWay, Converter={StaticResource DownloadStatusToBrushConvertor}}"
                 IsIndeterminate="False"
-                Value="{x:Bind ViewModel.DownloadProgress, Mode=OneWay}"/>
+                Value="{x:Bind ViewModel.DownloadProgress, Mode=OneWay}"
+                PointerEntered="ProgressRing_PointerEntered"/>
+
+            <Button 
+                Padding="5"
+                CornerRadius="80"
+                x:Name="CancelButton" 
+                Visibility="Collapsed"
+                Command="{x:Bind ViewModel.CancelDownloadCommand}"
+                PointerExited="CancelButton_PointerExited">
+                <SymbolIcon Symbol="Cancel" />
+            </Button>
 
             <Button
                 IsEnabled="{x:Bind ViewModel.IsForwardEnabled, Mode=OneWay}"

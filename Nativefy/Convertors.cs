@@ -1,5 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Media.Imaging;
-using System.Diagnostics;
+using Nativefy.ViewModels.Shell;
 
 namespace Nativefy;
 
@@ -7,8 +7,6 @@ public sealed partial class ImageUrlFallbackConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        Debug.WriteLine($"[Image Binding] {value ?? "<null>"}");
-
         if (value is string url && Uri.TryCreate(url, UriKind.Absolute, out Uri? uri))
             return new BitmapImage(uri);
 

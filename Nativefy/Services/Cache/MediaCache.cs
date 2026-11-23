@@ -313,7 +313,5 @@ public sealed partial class MediaCache
 
     [JsonSourceGenerationOptions(WriteIndented = true)]
     [JsonSerializable(typeof(Dictionary<string, CacheRecord>))]
-    private sealed partial class CacheJsonContext : JsonSerializerContext
-    {
-    }
+    private sealed partial class CacheJsonContext : JsonSerializerContext;
 }

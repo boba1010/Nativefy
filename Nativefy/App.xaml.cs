@@ -1,5 +1,6 @@
 ﻿using Nativefy.DbContexts;
 using Nativefy.Engine.DI;
+using Nativefy.Playback;
 using Nativefy.Services;
 using Nativefy.Services.Cache;
 using Nativefy.Services.Feed;
@@ -45,6 +46,7 @@ public partial class App : Application
         services.AddSingleton<MediaLoader>();
         services.AddSingleton<MediaCache>();
         services.AddSingleton<PlaybackController>();
+        services.AddSingleton<PlaybackMediaController>();
         services.AddNativefyEngine();
 
         services.AddSingleton<ShellViewModel>();
