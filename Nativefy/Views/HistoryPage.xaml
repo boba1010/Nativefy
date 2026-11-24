@@ -9,15 +9,6 @@
     xmlns:helpers="using:Nativefy.Helpers">
 
     <Page.Resources>
-        <Style x:Key="PillRadioButtonStyle" TargetType="RadioButton" BasedOn="{StaticResource DefaultToggleButtonStyle}">
-            <Setter Property="CornerRadius" Value="20" />
-            <Setter Property="MinWidth" Value="50"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-        </Style>
-
         <Style x:Key="ItemStyle" TargetType="Grid">
             <Setter Property="CornerRadius" Value="5" />
             <Setter Property="ColumnSpacing" Value="8" />

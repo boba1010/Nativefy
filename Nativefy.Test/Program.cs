@@ -1,69 +1,60 @@
-﻿//using Nativefy.Engine.Feed;
-//using Nativefy.Engine.Playable;
+﻿using Nativefy.Engine;
+using System.Text.Json;
 
-//var mediaA = CreateMedia("A", "Learn C# Programming");
-//var mediaB = CreateMedia("B", "C# Memory Management");
-//var mediaC = CreateMedia("C", "GPU Graphics Programming");
-//var mediaD = CreateMedia("D", "Game Engine Architecture");
+using var nativefy = new NativefyEngine();
 
-//var candidates = new List<RankedCandidate>
-//{
-//    new(mediaA, 2.0f),
-//    new(mediaB, 1.5f),
-//    new(mediaA, 1.0f), // Duplicate
-//    new(mediaC, 0.8f),
-//    new(mediaD, 0.5f)
-//};
+const string Id = "UC_x5XG1OV2P6uZZ5FSM9Ttw";
 
-//var watchHistory = new List<WatchActivity>
-//{
-//    new(mediaB, 0.95f)
-//};
+Console.Write("Enter the test name: ");
+var method = Console.ReadLine()?.Trim().ToLowerInvariant();
 
-//Console.WriteLine("========== INPUT CANDIDATES ==========");
+switch (method)
+{
+    case "channel.videos":
+        await ChannelVideos();
+        break;
 
-//foreach (var candidate in candidates)
-//    Console.WriteLine($"{candidate.Score:F2} | {candidate.Media.Title}");
+    case "channel.home":
+        break;
 
-//Console.WriteLine("\n========== WATCH HISTORY ==========");
+    case "channel":
+        break;
 
-//foreach (var watch in watchHistory)
-//    Console.WriteLine($"{watch.Media.Id} | {watch.Media.Title} | {watch.Completion:P0}");
+    default:
+        Console.WriteLine($"Unknown test: {method}");
+        break;
+}
 
-//var result = FeedFilter.Filter(candidates, watchHistory, maxResults: 3);
+async Task ChannelVideos()
+{
+    var page = await nativefy.Channel.GetVideosSectionAsync(Id);
 
-//Console.WriteLine("\n========== FILTERED FEED ==========");
+    var json = JsonSerializer.Serialize(page, new JsonSerializerOptions { WriteIndented = true });
 
-//foreach (var candidate in result)
-//    Console.WriteLine($"{candidate.Score:F2} | {candidate.Media.Title}");
+    Console.WriteLine(json);
+    Console.WriteLine();
 
-//Console.WriteLine($"\nTotal results: {result.Count}");
+    while (true)
+    {
+        if (string.IsNullOrEmpty(page.ContinuationToken))
+        {
+            Console.WriteLine("-- End --");
+            return;
+        }
 
-//Console.WriteLine("\n========== TEST ASSERTIONS ==========");
+        Console.WriteLine("Do you want to continue?");
+        var answer = Console.ReadLine();
 
-//Assert(result.Count == 3, "Result limit");
-//Assert(result[0].Media.Id == "A", "Highest-ranked candidate retained");
-//Assert(result[1].Media.Id == "C", "Watched candidate excluded");
-//Assert(result[2].Media.Id == "D", "Duplicate candidate excluded");
+        answer = answer?.Trim().ToLower();
 
-//Assert(result.All(x => x.Media.Id != "B"), "Watched videos excluded");
+        if (answer is "y" or "yes")
+        {
+            page = await nativefy.Channel.GetNextVideosSectionAsync(Id, page.ContinuationToken);
+            json = JsonSerializer.Serialize(page, new JsonSerializerOptions { WriteIndented = true });
 
-//Assert(result.Select(x => x.Media.Id).Distinct().Count() == result.Count, "No duplicate IDs");
-
-//Console.WriteLine("\nAll tests passed!");
-
-//static PlayableMedia CreateMedia(string id, string title)
-//{
-//    //return new PlayableMedia(new Nativefy.Engine.Search.Video(id, title));
-//}
-
-//static void Assert(bool condition, string name)
-//{
-//    Console.WriteLine($"{(condition ? "[PASS]" : "[FAIL]")} {name}");
-
-//    if (!condition)
-//        throw new Exception($"Test failed: {name}");
-//}
-
-//// Minimal test adapter for the Search.Video constructor.
-//// Replace this with your actual Search.Video wrapper if needed.
+            Console.WriteLine(json);
+        }
+        else
+            return;
+    }
+}

@@ -21,7 +21,7 @@ public sealed class MediaItem
     {
         Id = media.Id;
         Url = media.Url;
-        ImageUrl = media.ImageUrl;
+        ImageUrl = media.ImageUrl!;
         Title = media.Title;
         Author = media.Author;
         Duration = media.Duration;

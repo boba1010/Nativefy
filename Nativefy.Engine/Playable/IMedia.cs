@@ -3,4 +3,6 @@
 public interface IMedia : IPlayable
 {
     TimeSpan Duration { get; }
+
+    string? Views { get; }
 }

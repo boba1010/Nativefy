@@ -1,3 +1,5 @@
+using Nativefy.Engine.Channels;
+
 namespace Nativefy.Views;
 
 public sealed partial class ChannelPage : Page
@@ -19,12 +21,29 @@ public sealed partial class ChannelPage : Page
             _ = ViewModel.LoadChannelAsync(id);
     }
 
-    private void Play_Clicked(object sender, RoutedEventArgs e)
+    private void Play_Clicked(string id)
     {
-        var tag = (sender as Button)?.Tag;
-        if (tag is null)
-            return;
+        ViewModel.Play(id);
+    }
 
-        ViewModel.Play((string)tag);
+    private void Description_Click(object sender, RoutedEventArgs e)
+    {
+        var description = (sender as Button)?.Tag;
+
+        var dialog = new ContentDialog
+        {
+            XamlRoot = XamlRoot,
+            Content = description,
+            Title = ViewModel.Title,
+            PrimaryButtonText = "Close",
+        };
+
+        _ = dialog.ShowAsync();
+    }
+
+    private void Tab_Changed(object sender, RoutedEventArgs e)
+    {
+        if (sender is RadioButton { Tag: ChannelTab tab })
+            ViewModel.SelectedTab = tab;
     }
 }

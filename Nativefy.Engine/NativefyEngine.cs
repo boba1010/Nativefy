@@ -31,7 +31,7 @@ public sealed class NativefyEngine : IDisposable
         Search = new(_youtube);
         Playlist = new(_youtubeClient);
         Feed = new(Search);
-        Channel = new(_youtubeClient);
+        Channel = new(_youtube);
     }
 
     public void Dispose()

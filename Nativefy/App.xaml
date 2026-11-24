@@ -22,6 +22,15 @@
             <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent"/>
             <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{ThemeResource SystemAccentColor}"/>
 
+            <Style x:Key="PillRadioButtonStyle" TargetType="RadioButton" BasedOn="{StaticResource DefaultToggleButtonStyle}">
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="MinWidth" Value="50"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+            </Style>
+
             <Style x:Key="HeartHoverButtonStyle" TargetType="Button">
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="BorderBrush" Value="Transparent"/>
