@@ -235,7 +235,7 @@
                 </controls:SettingsExpander.HeaderIcon>
 
                 <TextBlock
-                    Text="26.11.7.0-Alpha"
+                    Text="26.11.8.0-Alpha"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     VerticalAlignment="Center" />
 
@@ -243,7 +243,7 @@
                     
                     <controls:SettingsCard Header="Version">
                         <TextBlock
-                            Text="26.11.7.0-Alpha"
+                            Text="26.11.8.0-Alpha"
                             IsTextSelectionEnabled="True"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     </controls:SettingsCard>
