@@ -43,7 +43,9 @@ public sealed partial class ChannelPage : Page
 
     private void Tab_Changed(object sender, RoutedEventArgs e)
     {
-        if (sender is RadioButton { Tag: ChannelTab tab })
+        var radioBtn = sender as RadioButton;
+
+        if (radioBtn?.Tag is ChannelTab tab)
             ViewModel.SelectedTab = tab;
     }
 }

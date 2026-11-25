@@ -42,7 +42,7 @@ public sealed class Channel
         foreach (var tab in channel.Tabs)
         {
             if (tab.Title is "Home" or "Videos")
-                Tabs.Add(new(tab.Title, tab.BrowseId));
+                Tabs.Add(new(tab.Title, tab.BrowseId) { IsSelected = tab.IsSelected });
         }
     }
 }

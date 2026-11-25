@@ -195,7 +195,7 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
                 ImageUrl = item.ImageUrl;
                 ItemTitle = item.Title;
                 ChannelName = item.Author;
-                Duration = item.Duration.TotalMilliseconds;
+                Duration = item.Duration.Add(new(0, 0, 1)).TotalMilliseconds;
                 Position = 0;
             });
 

@@ -134,7 +134,7 @@
 
                                 <Button 
                                     Click="Description_Click"
-                                    Width="600" 
+                                    Width="600" Padding="5"
                                     HorizontalContentAlignment="Stretch" 
                                     Background="Transparent" 
                                     BorderThickness="0"
@@ -162,6 +162,7 @@
                                 <RadioButton
                                     Height="40"
                                     Content="{x:Bind Title}"
+                                    IsChecked="{x:Bind IsSelected}"
                                     Checked="Tab_Changed"
                                     Tag="{x:Bind}"
                                     Style="{StaticResource PillRadioButtonStyle}" />

@@ -79,6 +79,7 @@ public sealed partial class ChannelViewModel(NativefyEngine nativefy, ILikedChan
 
     partial void OnSelectedTabChanged(ChannelTab value)
     {
+        value.IsSelected = true;
         _ = LoadCurrentTabAsync();
     }
 
@@ -108,7 +109,6 @@ public sealed partial class ChannelViewModel(NativefyEngine nativefy, ILikedChan
             if (channel.Tabs.Count > 0)
             {
                 var tab = channel.Tabs[0];
-                tab.IsSelected = true;
                 SelectedTab = tab;
             }
 

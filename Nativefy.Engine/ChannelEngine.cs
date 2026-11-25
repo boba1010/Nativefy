@@ -43,7 +43,7 @@ public sealed class ChannelEngine(YoutubeClient youtube)
             foreach (var video in shelf.Videos)
                 videos.Add(new(video));
 
-            shelves.Add(new(shelf.Title, shelf.Url, videos));
+            shelves.Add(new(shelf.Title, shelf.Subtitle, shelf.Url, videos));
         }
 
         return new(shelves);

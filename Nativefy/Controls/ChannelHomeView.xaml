@@ -22,7 +22,10 @@
 
         <DataTemplate x:DataType="channels:ChannelHomeShelf">
             <StackPanel Spacing="15">
-                <TextBlock Text="{x:Bind Title}" FontSize="32" />
+                <StackPanel>
+                    <TextBlock Text="{x:Bind Title}" FontSize="32" />
+                    <TextBlock Text="{x:Bind Subtitle}" Foreground="LightGray" TextWrapping="Wrap" MaxLines="2" MaxWidth="1000" HorizontalAlignment="Left" />
+                </StackPanel>
 
                 <ScrollView
                     IgnoredInputKinds="MouseWheel"
