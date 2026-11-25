@@ -35,7 +35,7 @@ public sealed class OnlinePlaylistService(NativefyEngine nativefy) : IOnlinePlay
                 Url = v.Url,
                 Author = v.Author,
                 Duration = v.Duration,
-                ImageUrl = v.ImageUrl,
+                ImageUrl = v.ImageUrl ?? "video.png",
                 Title = v.Title,
                 Position = i,
             });

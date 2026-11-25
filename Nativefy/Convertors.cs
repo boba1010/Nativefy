@@ -1,7 +1,20 @@
 ﻿using Microsoft.UI.Xaml.Media.Imaging;
-using Nativefy.ViewModels.Shell;
 
 namespace Nativefy;
+
+public static class Converters
+{
+    public static Visibility NullToVisibility(string? value) => string.IsNullOrEmpty(value) ? Visibility.Collapsed : Visibility.Visible;
+
+    public static string SeverityToGlyph(Severity severity) => severity switch
+    {
+        Severity.Info => "\uE946",
+        Severity.Warning => "\uE7BA",
+        Severity.Success => "\uE73E",
+        Severity.Failure => "\uEA39",
+        _ => "\uE946"
+    };
+}
 
 public sealed partial class ImageUrlFallbackConverter : IValueConverter
 {

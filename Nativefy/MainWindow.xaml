@@ -18,7 +18,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
+
         <TitleBar
             Padding="5"
             VerticalAlignment="Top"
@@ -68,11 +68,55 @@
 
             <TitleBar.RightHeader>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="4">
-                    <AppBarButton Width="40">
-                        <AppBarButton.Icon>
+                    <Button Background="Transparent" BorderBrush="Transparent" Padding="5, 8" Width="40" HorizontalContentAlignment="Stretch">
+                        <Grid>
                             <FontIcon Glyph="&#xEA8F;" />
-                        </AppBarButton.Icon>
-                    </AppBarButton>
+                            <InfoBadge Value="{x:Bind ViewModel.NotificationCount, Mode=OneWay}" Width="15" Height="15" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+                        </Grid>
+
+                        <Button.Flyout>
+                            <Flyout Placement="Bottom" Opened="NotificationsCenter_Opened">
+                                <Flyout.SystemBackdrop>
+                                    <MicaBackdrop />
+                                </Flyout.SystemBackdrop>
+                                
+                                <StackPanel Spacing="10">
+                                    <TextBlock Text="Notifications"/>
+
+                                    <ScrollViewer MaxHeight="400" MinWidth="400" VerticalScrollBarVisibility="Auto">
+                                        <ItemsRepeater ItemsSource="{x:Bind ViewModel.Notifications, Mode=OneWay}">
+                                            <ItemsRepeater.Layout>
+                                                <StackLayout Spacing="8" />
+                                            </ItemsRepeater.Layout>
+
+                                            <ItemsRepeater.ItemTemplate>
+                                                <DataTemplate x:DataType="models:Notification">
+                                                    <Grid Padding="12" ColumnSpacing="10">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <FontIcon 
+                                                            Glyph="{x:Bind local:Converters.SeverityToGlyph(Severity), Mode=OneWay}" 
+                                                            VerticalAlignment="Top" />
+
+                                                        <StackPanel Grid.Column="1" Spacing="4">
+                                                            <TextBlock Text="{x:Bind Title}" FontWeight="SemiBold" />
+                                                            <TextBlock 
+                                                                Visibility="{x:Bind local:Converters.NullToVisibility(Message), Mode=OneWay}" 
+                                                                Text="{x:Bind Message, Mode=OneWay}"
+                                                                MinHeight="0" TextWrapping="Wrap" />
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ItemsRepeater.ItemTemplate>
+                                        </ItemsRepeater>
+                                    </ScrollViewer>                                    
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
 
                     <AppBarSeparator />
 
@@ -82,9 +126,7 @@
                         </AppBarButton.Icon>
                     </AppBarButton>
 
-                    <AppBarToggleButton 
-                        Width="40" 
-                        IsChecked="{x:Bind ViewModel.IsPlayerbarVisible, Mode=TwoWay}">
+                    <AppBarToggleButton Width="40" IsChecked="{x:Bind ViewModel.IsPlayerbarVisible, Mode=TwoWay}">
                         <AppBarToggleButton.Icon>
                             <SymbolIcon Symbol="DockBottom" />
                         </AppBarToggleButton.Icon>

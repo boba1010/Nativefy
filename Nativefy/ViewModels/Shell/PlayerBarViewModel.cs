@@ -27,6 +27,11 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly IHistoryService _history;
 
+    private Notification _downloadedNotification = new() { Severity = Severity.Info };
+    private Notification _downloadProgressNotification = new() { Severity = Severity.Info };
+    private Notification _downloadFailedNotification = new() { Severity = Severity.Failure };
+    private Notification _downloadCanceledNotification = new() { Severity = Severity.Warning };
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PlayPauseGlyph))]
     [NotifyPropertyChangedFor(nameof(PlayPauseTooltip))]
@@ -144,6 +149,11 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
                         case MediaReportStage.Downloading:
                             DownloadStatus = DownloadStatus.Downloading;
                             DownloadProgress = 0;
+
+                            UpdateNotifications();
+
+                            _downloadProgressNotification.Title = $"Downloading '{ItemTitle}'";
+                            WeakReferenceMessenger.Default.Send(new NotificationMessage(_downloadProgressNotification));
                             break;
 
                         case MediaReportStage.DownloadProgress:
@@ -151,14 +161,15 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
                                 break;
 
                             DownloadProgress = progress.Percentage;
+                            DownloadSpeed = progress.BytesPerSecond is { } speed ? $"{speed / 1024 / 1024:F2} MB/s" : string.Empty;
+                            DownloadEta = progress.EstimatedRemaining is { } eta ? eta.ToString(@"mm\:ss") : string.Empty;
 
-                            DownloadSpeed = progress.BytesPerSecond is { } speed
-                                ? $"{speed / 1024 / 1024:F2} MB/s"
-                                : string.Empty;
+                            var message = $"Progress: {progress.Percentage:F1}%\n";
+                            message += $"Speed: {DownloadSpeed}\n";
+                            message += $"ETA: {DownloadEta}";
 
-                            DownloadEta = progress.EstimatedRemaining is { } eta
-                                ? eta.ToString(@"mm\:ss")
-                                : string.Empty;
+                            _downloadProgressNotification.Message = message;
+                            WeakReferenceMessenger.Default.Send(new NotificationMessage(_downloadProgressNotification));
                             break;
 
                         case MediaReportStage.Downloaded:
@@ -166,6 +177,9 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
                             DownloadProgress = 100;
                             DownloadSpeed = string.Empty;
                             DownloadEta = string.Empty;
+
+                            _downloadedNotification.Title = $"Downloaded '{ItemTitle}' Successfully";
+                            WeakReferenceMessenger.Default.Send(new NotificationMessage(_downloadedNotification));
                             break;
 
                         case MediaReportStage.Loaded:
@@ -177,12 +191,18 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
                             DownloadProgress = 100;
                             DownloadSpeed = string.Empty;
                             DownloadEta = string.Empty;
+
+                            _downloadCanceledNotification.Title = $"Download '{ItemTitle}' Canceled";
+                            WeakReferenceMessenger.Default.Send(new NotificationMessage(_downloadCanceledNotification));
                             break;
                         case MediaReportStage.Failed:
                             DownloadStatus = DownloadStatus.Failed;
                             DownloadProgress = 100;
                             DownloadSpeed = string.Empty;
                             DownloadEta = string.Empty;
+
+                            _downloadFailedNotification.Title = $"Download '{ItemTitle}' Failed";
+                            WeakReferenceMessenger.Default.Send(new NotificationMessage(_downloadFailedNotification));
                             break;
                     }
                 });
@@ -210,6 +230,14 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
         PlaybackController.StateChanged += Player_StateChanged;
         PlaybackController.PositionChanged += Player_PositionChanged;
         PlaybackController.SeekCompleted += Player_SeekCompleted;
+    }
+
+    private void UpdateNotifications()
+    {
+        _downloadedNotification = new() { Severity = Severity.Success };
+        _downloadProgressNotification = new() { Severity = Severity.Info };
+        _downloadFailedNotification = new() { Severity = Severity.Failure };
+        _downloadCanceledNotification = new() { Severity = Severity.Warning };
     }
 
     private static void Show()

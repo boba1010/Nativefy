@@ -13,14 +13,59 @@ public sealed partial class ShellViewModel : ObservableObject
 
     public ObservableCollection<SidebarMenuItem> MenuItems { get; } = [];
 
+    public ObservableCollection<Notification> Notifications { get; } = [];
+
     [ObservableProperty]
-    public partial bool IsPlayerbarVisible { get; set; } = false;
+    public partial int NotificationCount { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsPlayerbarVisible { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsNotificationsCenterOpen { get; set; }
 
     public ShellViewModel(IPlaylistsService playlistsService)
     {
         this.playlistsService = playlistsService;
 
         WeakReferenceMessenger.Default.Register<PlayerBarVisiblityChangedMessage>(this, (r, m) => IsPlayerbarVisible = m.IsVisible);
+        WeakReferenceMessenger.Default.Register<NotificationMessage>(this, (r, m) => 
+        {
+            foreach (var notification in Notifications)
+            {
+                if (notification.Id == m.Notification.Id)
+                {
+                    notification.Message = m.Notification.Message;
+                    notification.Title = m.Notification.Title;
+                    return;
+                }
+            }
+
+            Notifications.Insert(0, m.Notification);
+
+            int count = 0;
+
+            foreach (var notification in Notifications)
+            {
+                if (IsNotificationsCenterOpen)
+                {
+                    notification.Read = true;
+                    count++;
+                }
+                else if (!notification.Read)
+                    count++;
+            }
+
+            NotificationCount = count;
+        });
+    }
+
+    public void ClearUnreadCount()
+    {
+        foreach (var notification in Notifications)
+            notification.Read = true;
+
+        NotificationCount = 0;
     }
 
     public void LoadPlaylists()

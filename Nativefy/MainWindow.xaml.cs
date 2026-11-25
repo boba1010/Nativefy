@@ -283,4 +283,10 @@ public sealed partial class MainWindow : Window
     {
         ContentFrame.Navigate(typeof(SettingsPage));
     }
+
+    private void NotificationsCenter_Opened(object sender, object e)
+    {
+        ViewModel.IsNotificationsCenterOpen = true;
+        ViewModel.ClearUnreadCount();
+    }
 }
