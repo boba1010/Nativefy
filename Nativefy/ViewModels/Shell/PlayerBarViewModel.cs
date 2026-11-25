@@ -123,6 +123,7 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
             ImageUrl = item.ImageUrl;
             ItemTitle = item.Title;
             ChannelName = item.Author;
+            item.Duration = item.Duration.Subtract(new(0, 0, 1));
             Duration = item.Duration.TotalMilliseconds;
             Position = 0;
             Show();
@@ -165,6 +166,10 @@ public sealed partial class PlayerBarViewModel : BaseViewModel
                             DownloadProgress = 100;
                             DownloadSpeed = string.Empty;
                             DownloadEta = string.Empty;
+                            break;
+
+                        case MediaReportStage.Loaded:
+                            DownloadStatus = DownloadStatus.Downloaded;
                             break;
 
                         case MediaReportStage.Cancelled:

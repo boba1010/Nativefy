@@ -99,9 +99,13 @@ public sealed partial class PlaybackController : IDisposable
         Debug.WriteLine($"MediaEnded: Repeat={RepeatState}, Playlist={Context.Playlist is not null}");
 
         if (Context.Playlist is null)
+        {
+            if (RepeatState is RepeatState.RepeatOne)
+                Play();
             return;
+        }
 
-        if (RepeatState == RepeatState.RepeatOne)
+        if (RepeatState is RepeatState.RepeatOne)
         {
             await SelectPlaylistItemAsync(Context.PlaylistIndex);
             return;
