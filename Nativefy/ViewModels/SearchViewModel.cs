@@ -8,7 +8,6 @@ using Nativefy.Services.LocalMetadata;
 using Nativefy.Services.OnlineMetadata;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using YoutubeExplode.Common;
 
 namespace Nativefy.ViewModels;
 

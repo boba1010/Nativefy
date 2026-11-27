@@ -1,5 +1,5 @@
-﻿using YoutubeExplode.Common;
-using YoutubeExplode.Playlists;
+﻿using TubeSharp.Playlists;
+using TubeSharp.Videos;
 
 namespace Nativefy.Engine.Playable;
 
@@ -14,13 +14,13 @@ public sealed class PlayablePlaylist : IPlaylist
     public List<string> Keywords { get; } = [];
     public string? Description { get; }
 
-    public PlayablePlaylist(Playlist playlist, List<PlaylistVideo> videos)
+    public PlayablePlaylist(YoutubePlaylist playlist, List<YoutubeVideo> videos)
     {
         Id = playlist.Id;
         Title = playlist.Title;
         Url = playlist.Url;
-        Author = playlist.Author?.ChannelTitle ?? "Unknown Creator";
-        ImageUrl = playlist.Thumbnails.GetWithHighestResolution().Url;
+        Author = playlist.Channel?.Name ?? "Unknown Creator";
+        ImageUrl = playlist.Thumbnail;
         Description = playlist.Description;
 
         foreach (var video in videos)
